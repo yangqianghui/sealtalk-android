@@ -153,7 +153,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
-            android:scaleType=""
+            android:scaleType="centerCrop"
             app:sriv_left_bottom_corner_radius="3dip"
             app:sriv_left_top_corner_radius="3dip"
             app:sriv_right_bottom_corner_radius="3dip"
