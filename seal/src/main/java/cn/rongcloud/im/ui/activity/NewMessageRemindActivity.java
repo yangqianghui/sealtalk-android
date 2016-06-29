@@ -22,7 +22,7 @@ public class NewMessageRemindActivity extends BaseActionBarActivity  {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
 
-        RelativeLayout  mNotice = (RelativeLayout) findViewById(R.id.re_notice);
+        RelativeLayout  mNotice = (RelativeLayout) findViewById(R.id.seal_notice);
 
         mNotice.setOnClickListener(new View.OnClickListener() {
             @Override

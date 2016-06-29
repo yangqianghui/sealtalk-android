@@ -13,7 +13,7 @@ import de.greenrobot.dao.internal.DaoConfig;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -27,7 +27,7 @@ public class DaoSession extends AbstractDaoSession {
     private final BlackListDao blackListDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
-            daoConfigMap) {
+                      daoConfigMap) {
         super(db);
 
         friendDaoConfig = daoConfigMap.get(FriendDao.class).clone();

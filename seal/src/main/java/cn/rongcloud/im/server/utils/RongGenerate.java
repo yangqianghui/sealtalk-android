@@ -35,9 +35,9 @@ public class RongGenerate {
         String color = getColorRGB(userid);
         String string = getAllFirstLetter(username);
         createDir(SAVEADDRESS);
-        File f = new File(SAVEADDRESS, string +"_"+ userid);
+        File f = new File(SAVEADDRESS, string + "_" + userid);
         if (f.exists()) {
-            return SCHEMA+f.getPath();
+            return SCHEMA + f.getPath();
         }
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
@@ -54,7 +54,7 @@ public class RongGenerate {
         int textLeft = (int) ((width - paint.measureText(s)) / 2);
         int textTop = (int) (height - width / 2 + Math.abs(fm.ascent) / 2 - 25);
         canvas.drawText(s, textLeft, textTop, paint);
-        return saveBitmap(bitmap, string +"_"+ userid);
+        return saveBitmap(bitmap, string + "_" + userid);
     }
 
     private static void createDir(String saveaddress) {
@@ -85,7 +85,7 @@ public class RongGenerate {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return SCHEMA+f.getPath();
+        return SCHEMA + f.getPath();
     }
 
     private static String getColorRGB(String userId) {
@@ -123,11 +123,13 @@ public class RongGenerate {
 
 
     private final static int[] li_SecPosValue = {1601, 1637, 1833, 2078, 2274,
-            2302, 2433, 2594, 2787, 3106, 3212, 3472, 3635, 3722, 3730, 3858,
-            4027, 4086, 4390, 4558, 4684, 4925, 5249, 5590};
+                                                 2302, 2433, 2594, 2787, 3106, 3212, 3472, 3635, 3722, 3730, 3858,
+                                                 4027, 4086, 4390, 4558, 4684, 4925, 5249, 5590
+                                                };
     private final static String[] lc_FirstLetter = {"a", "b", "c", "d", "e",
-            "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-            "t", "w", "x", "y", "z"};
+                                                    "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+                                                    "t", "w", "x", "y", "z"
+                                                   };
 
     /**
      * 取得给定汉字串的首字母串,即声母串

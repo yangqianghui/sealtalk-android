@@ -5,7 +5,7 @@ package cn.rongcloud.im.server.response;
  * Created by AMing on 16/1/7.
  * Company RongCloud
  */
-public class FriendInvitationResponse{
+public class FriendInvitationResponse {
 
     /**
      * code : 200

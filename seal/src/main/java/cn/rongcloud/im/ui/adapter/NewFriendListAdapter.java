@@ -42,7 +42,7 @@ public class NewFriendListAdapter extends BaseAdapters {
         holer.mName.setText(bean.getUser().getNickname());
         if (TextUtils.isEmpty(bean.getUser().getPortraitUri())) {
             ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(bean.getUser().getNickname(), bean.getUser().getId()), holer.mHead, App.getOptions());
-        }else {
+        } else {
             ImageLoader.getInstance().displayImage(bean.getUser().getPortraitUri(), holer.mHead, App.getOptions());
         }
         holer.mMessage.setText(bean.getMessage());

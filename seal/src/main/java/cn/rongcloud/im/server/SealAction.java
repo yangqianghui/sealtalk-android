@@ -144,7 +144,7 @@ public class SealAction extends BaseAction {
         return response;
     }
 
-        /*
+    /*
     * 200: 验证成功
     1000: 验证码错误
     2000: 验证码过期

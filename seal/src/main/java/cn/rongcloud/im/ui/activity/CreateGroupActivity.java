@@ -1,5 +1,6 @@
 package cn.rongcloud.im.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -69,7 +71,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
-        getSupportActionBar().setTitle(R.string.create_groups);
+        getSupportActionBar().setTitle(R.string.create_group);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
         memberList = (List<Friend>) getIntent().getSerializableExtra("GroupMember");
@@ -202,6 +204,7 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        hintKbTwo();
         finish();
         return super.onOptionsItemSelected(item);
     }
@@ -280,5 +283,14 @@ public class CreateGroupActivity extends BaseActivity implements View.OnClickLis
                 }
             }
         }, null);
+    }
+
+    private void hintKbTwo() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive() && getCurrentFocus() != null) {
+            if (getCurrentFocus().getWindowToken() != null) {
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
     }
 }

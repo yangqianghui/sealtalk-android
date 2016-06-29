@@ -53,7 +53,7 @@ public class Resource implements Parcelable {
     }
 
     public boolean equals(Resource o) {
-        return o != null && (o.getUri() != null || this.getUri() == null)?o.getUri().equals(this.getUri()):false;
+        return o != null && (o.getUri() != null || this.getUri() == null) ? o.getUri().equals(this.getUri()) : false;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

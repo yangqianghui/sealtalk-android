@@ -108,7 +108,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     } else {
                         Toast.makeText(mContext, R.string.Illegal_phone_number, Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                } else {
                     mGetCode.setClickable(false);
                     mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
                 }
@@ -289,15 +289,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.reg_login:
-                startActivity(new Intent(this,LoginActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
             case R.id.reg_forget:
-                startActivity(new Intent(this,ForgetPasswordActivity.class));
+                startActivity(new Intent(this, ForgetPasswordActivity.class));
                 break;
             case R.id.reg_getcode:
                 if (TextUtils.isEmpty(mPhoneEdit.getText().toString().trim())) {
-                    NToast.longToast(mContext,R.string.phone_number_is_null);
-                }else {
+                    NToast.longToast(mContext, R.string.phone_number_is_null);
+                } else {
                     isRequestCode = true;
                     downTimer = new DownTimer();
                     downTimer.setListener(this);
@@ -350,7 +350,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 }
 
                 LoadDialog.show(mContext);
-                request(VERIFYCODE,true);
+                request(VERIFYCODE, true);
 
                 break;
         }

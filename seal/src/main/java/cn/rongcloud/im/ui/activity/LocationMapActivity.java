@@ -38,7 +38,7 @@ public abstract class LocationMapActivity extends BasicMapActivity implements AM
         mLocationManagerProxy = LocationManagerProxy.getInstance(this);
 
         mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, 5 * 1000, 1, this);
+            LocationProviderProxy.AMapNetwork, 5 * 1000, 1, this);
 
         mLocationManagerProxy.setGpsEnable(true);
     }

@@ -5,7 +5,7 @@ package cn.rongcloud.im.server.request;
  * Created by AMing on 16/1/8.
  * Company RongCloud
  */
-public class AgreeFriendsRequest{
+public class AgreeFriendsRequest {
 
     private String friendId;
 

@@ -28,7 +28,7 @@ public class RegisterResponse  {
         this.result = result;
     }
 
-    public static class ResultEntity{
+    public static class ResultEntity {
         private String id;
 
         public String getId() {

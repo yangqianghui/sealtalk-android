@@ -73,5 +73,5 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoSession newSession(IdentityScopeType type) {
         return new DaoSession(db, type, daoConfigMap);
     }
-    
+
 }

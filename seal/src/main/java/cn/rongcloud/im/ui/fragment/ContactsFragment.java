@@ -3,6 +3,7 @@ package cn.rongcloud.im.ui.fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -17,10 +18,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cn.rongcloud.im.App;
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.SealAppContext;
 import cn.rongcloud.im.db.DBManager;
@@ -31,6 +35,8 @@ import cn.rongcloud.im.server.pinyin.PinyinComparator;
 import cn.rongcloud.im.server.pinyin.SideBar;
 import cn.rongcloud.im.server.utils.CommonUtils;
 import cn.rongcloud.im.server.utils.NToast;
+import cn.rongcloud.im.server.utils.RongGenerate;
+import cn.rongcloud.im.server.widget.SelectableRoundedImageView;
 import cn.rongcloud.im.ui.activity.FriendDetailActivity;
 import cn.rongcloud.im.ui.activity.GroupListActivity;
 import cn.rongcloud.im.ui.activity.NewFriendListActivity;
@@ -43,6 +49,17 @@ import io.rong.imkit.RongIM;
  * Created by Bob on 2015/1/25.
  */
 public class ContactsFragment extends Fragment implements View.OnClickListener {
+
+
+    public static ContactsFragment instance = null;
+
+    public static ContactsFragment getInstance() {
+        if (instance == null) {
+            instance = new ContactsFragment();
+        }
+        return instance;
+    }
+
     private static final int DELETEFRIEND = 40;
 
     private EditText mSearch;
@@ -81,6 +98,9 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
     private TextView mNoFriends;
     private TextView unread;
+
+    private String id;
+    private String cacheName;
 //    private String deleteId;
 //    private AsyncTaskManager atm = AsyncTaskManager.getInstance(getActivity());
 
@@ -108,11 +128,22 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
         infalter = LayoutInflater.from(getActivity());
         View headView = infalter.inflate(R.layout.item_contact_list_header,
-                null);
+                                         null);
         unread = (TextView) headView.findViewById(R.id.tv_unread);
         RelativeLayout re_newfriends = (RelativeLayout) headView.findViewById(R.id.re_newfriends);
         RelativeLayout re_group = (RelativeLayout) headView.findViewById(R.id.re_chatroom);
         RelativeLayout re_public = (RelativeLayout) headView.findViewById(R.id.publicservice);
+        RelativeLayout seal_me = (RelativeLayout) headView.findViewById(R.id.contact_me_item);
+        SelectableRoundedImageView img = (SelectableRoundedImageView) headView.findViewById(R.id.contact_me_img);
+        TextView name = (TextView) headView.findViewById(R.id.contact_me_name);
+        SharedPreferences sp = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
+        id = sp.getString("loginid", "");
+        cacheName = sp.getString("loginnickname", "");
+        String header = sp.getString("loginPortrait", "");
+        name.setText(cacheName);
+        ImageLoader.getInstance().displayImage(TextUtils.isEmpty(header) ? RongGenerate.generateDefaultAvatar(cacheName, id) : header, img, App.getOptions());
+
+        seal_me.setOnClickListener(this);
         re_group.setOnClickListener(this);
         re_newfriends.setOnClickListener(this);
         re_public.setOnClickListener(this);
@@ -123,17 +154,17 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                        if (!CommonUtils.isNetworkConnected(getActivity())) {
-                            NToast.shortToast(getActivity(), "请检查网络");
-                            return;
-                        }
-                        if (isFilter) {
-                            Friend bean = tempList.get(position - 1);
-                            RongIM.getInstance().startPrivateChat(getActivity(), bean.getUserId(), bean.getName());
-                        }else {
-                            Friend bean = sourceDataList.get(position - 1);
-                            RongIM.getInstance().startPrivateChat(getActivity(), bean.getUserId(), bean.getName());
-                        }
+                    if (!CommonUtils.isNetworkConnected(getActivity())) {
+                        NToast.shortToast(getActivity(), "请检查网络");
+                        return;
+                    }
+                    if (isFilter) {
+                        Friend bean = tempList.get(position - 1);
+                        RongIM.getInstance().startPrivateChat(getActivity(), bean.getUserId(), bean.getName());
+                    } else {
+                        Friend bean = sourceDataList.get(position - 1);
+                        RongIM.getInstance().startPrivateChat(getActivity(), bean.getUserId(), bean.getName());
+                    }
                 }
             }
         });
@@ -167,7 +198,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void startFriendDetailsPage(Friend friend) {
-        Intent intent = new Intent(getActivity(),FriendDetailActivity.class);
+        Intent intent = new Intent(getActivity(), FriendDetailActivity.class);
         intent.putExtra("FriendDetails", friend);
         startActivity(intent);
     }
@@ -182,7 +213,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
         }
     }
-
 
 
     private void initView(View view) {
@@ -228,6 +258,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     }
 
     boolean isFilter;
+
     /**
      * 根据输入框中的值来过滤数据并更新ListView
      *
@@ -294,11 +325,14 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intent, 20);
                 break;
             case R.id.re_chatroom:
-                startActivity(new Intent(getActivity(),GroupListActivity.class));
+                startActivity(new Intent(getActivity(), GroupListActivity.class));
                 break;
             case R.id.publicservice:
                 Intent intentPublic = new Intent(getActivity(), PublicServiceActivity.class);
                 startActivity(intentPublic);
+                break;
+            case R.id.contact_me_item:
+                RongIM.getInstance().startPrivateChat(getActivity(), id, cacheName);
                 break;
         }
     }

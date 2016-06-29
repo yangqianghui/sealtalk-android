@@ -23,7 +23,7 @@ public class ConversationListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sp = getSharedPreferences("config",MODE_PRIVATE);
+        sp = getSharedPreferences("config", MODE_PRIVATE);
         mDialog = new LoadingDialog(this);
         Intent intent = getIntent();
 
@@ -98,7 +98,7 @@ public class ConversationListActivity extends BaseActivity {
                     mDialog.dismiss();
 
 
-                startActivity(new Intent(ConversationListActivity.this,MainActivity.class));
+                startActivity(new Intent(ConversationListActivity.this, MainActivity.class));
                 finish();
             }
 

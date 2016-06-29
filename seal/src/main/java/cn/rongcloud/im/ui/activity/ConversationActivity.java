@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.rongcloud.im.R;
+import cn.rongcloud.im.SealAppContext;
 import cn.rongcloud.im.model.RongEvent;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.response.GetUserInfoByIdResponse;
@@ -129,7 +130,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
         }
         //intent.getData().getLastPathSegment();//获得当前会话类型
         mConversationType = Conversation.ConversationType.valueOf(intent.getData()
-                .getLastPathSegment().toUpperCase(Locale.getDefault()));
+                            .getLastPathSegment().toUpperCase(Locale.getDefault()));
 
         title = intent.getData().getQueryParameter("title");
 
@@ -153,20 +154,20 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
                 public void onPermissionRequest(String[] permissions, final int requestCode) {
                     for (final String permission : permissions) {
                         if (shouldShowRequestPermissionRationale(permission)) {
-                            requestPermissions(new String[]{permission}, requestCode);
+                            requestPermissions(new String[] {permission}, requestCode);
                         } else {
                             int isPermissionGranted = checkSelfPermission(permission);
                             if (isPermissionGranted != PackageManager.PERMISSION_GRANTED) {
                                 new AlertDialog.Builder(ConversationActivity.this)
-                                        .setMessage("你需要在设置里打开以下权限:" + permission)
-                                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                requestPermissions(new String[]{permission}, requestCode);
-                                            }
-                                        })
-                                        .setNegativeButton("取消", null)
-                                        .create().show();
+                                .setMessage("你需要在设置里打开以下权限:" + permission)
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        requestPermissions(new String[] {permission}, requestCode);
+                                    }
+                                })
+                                .setNegativeButton("取消", null)
+                                .create().show();
                             }
                             return;
                         }
@@ -223,6 +224,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             }
         });
 
+        SealAppContext.getInstance().pushActivity(mConversationType, mTargetId, this);
     }
 
     @Override
@@ -306,7 +308,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
                 }
                 isFromPush = true;
                 enterActivity();
-            }else if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED)) {
+            } else if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED)) {
                 if (mDialog != null && !mDialog.isShowing()) {
                     mDialog.show();
                 }
@@ -406,8 +408,8 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
         fragment = new ConversationFragment();
 
         Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-                .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
-                .appendQueryParameter("targetId", mTargetId).build();
+                  .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
+                  .appendQueryParameter("targetId", mTargetId).build();
 
         fragment.setUri(uri);
         fragment.setInputBoardListener(new InputView.IInputBoardListener() {
@@ -483,7 +485,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             return;
 
         RongIM.getInstance().getPublicServiceProfile(Conversation.PublicServiceType.APP_PUBLIC_SERVICE
-                , targetId, new RongIMClient.ResultCallback<PublicServiceProfile>() {
+        , targetId, new RongIMClient.ResultCallback<PublicServiceProfile>() {
             @Override
             public void onSuccess(PublicServiceProfile publicServiceProfile) {
                 getSupportActionBar().setTitle(publicServiceProfile.getName());
@@ -506,7 +508,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
 
 
         RongIM.getInstance().getPublicServiceProfile(Conversation.PublicServiceType.PUBLIC_SERVICE
-                , targetId, new RongIMClient.ResultCallback<PublicServiceProfile>() {
+        , targetId, new RongIMClient.ResultCallback<PublicServiceProfile>() {
             @Override
             public void onSuccess(PublicServiceProfile publicServiceProfile) {
                 getSupportActionBar().setTitle(publicServiceProfile.getName().toString());
@@ -527,7 +529,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
         if (targetId != null) {
 
             RongIM.getInstance().getDiscussion(targetId
-                    , new RongIMClient.ResultCallback<Discussion>() {
+            , new RongIMClient.ResultCallback<Discussion>() {
                 @Override
                 public void onSuccess(Discussion discussion) {
                     getSupportActionBar().setTitle(discussion.getName());
@@ -593,12 +595,12 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             case android.R.id.home:
                 if (!closeRealTimeLocation()) {
                     hintKbTwo();
-                        if (isFromPush) {
-                            NLog.e("back",isFromPush);
-                            isFromPush = false;
-                            startActivity(new Intent(this, MainActivity.class));
-                            finish();
-                        }
+                    if (isFromPush) {
+                        NLog.e("back", isFromPush);
+                        isFromPush = false;
+                        startActivity(new Intent(this, MainActivity.class));
+                        finish();
+                    }
                     finish();
                 }
                 break;
@@ -617,13 +619,13 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
 
             RongIM.getInstance().startPublicServiceProfile(this, mConversationType, mTargetId);
         } else {
-                UriFragment fragment = (UriFragment) getSupportFragmentManager().getFragments().get(0);
-                //得到讨论组的 targetId
-                mTargetId = fragment.getUri().getQueryParameter("targetId");
+            UriFragment fragment = (UriFragment) getSupportFragmentManager().getFragments().get(0);
+            //得到讨论组的 targetId
+            mTargetId = fragment.getUri().getQueryParameter("targetId");
 
-                if (TextUtils.isEmpty(mTargetId)) {
-                    WinToast.toast(ConversationActivity.this, "讨论组尚未创建成功");
-                }
+            if (TextUtils.isEmpty(mTargetId)) {
+                WinToast.toast(ConversationActivity.this, "讨论组尚未创建成功");
+            }
 
 
             Intent intent = null;
@@ -675,7 +677,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
     }
 
 
-/*－－－－－－－－－－－－－地理位置共享 start－－－－－－－－－*/
+    /*－－－－－－－－－－－－－地理位置共享 start－－－－－－－－－*/
 
     private void setRealTime() {
 
@@ -762,10 +764,10 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             closeRealTimeLocation();
         }
-            if (isFromPush) {
-                NLog.e("back onBackPressed",isFromPush);
-                isFromPush = false;
-                startActivity(new Intent(this, MainActivity.class));
+        if (isFromPush) {
+            NLog.e("back onBackPressed", isFromPush);
+            isFromPush = false;
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         }
 
@@ -786,7 +788,11 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             }
         }
 
-        final AlterDialogFragment alterDialogFragment = AlterDialogFragment.newInstance("提示", "退出当前页面将会终止实时位置共享,确定退出？", "否", "是");
+        final AlterDialogFragment alterDialogFragment =
+            AlterDialogFragment.newInstance(getApplicationContext().getString(R.string.prompt),
+                                            getApplicationContext().getString(R.string.location_sharing_exit_promt),
+                                            getApplicationContext().getString(R.string.cancel),
+                                            getApplicationContext().getString(R.string.confirm));
         alterDialogFragment.setOnAlterDialogBtnListener(new AlterDialogFragment.AlterDialogBtnListener() {
             @Override
             public void onDialogPositiveClick(AlterDialogFragment dialog) {
@@ -823,7 +829,11 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
                 if (userIds != null && userIds.size() > 0) {
                     if (mRealTimeBar != null) {
                         TextView textView = (TextView) mRealTimeBar.findViewById(android.R.id.text1);
-                        textView.setText(userIds.size() + " 人正在共享位置");
+                        if (userIds.size() <= 1) {
+                            textView.setText(userIds.size() + " " + getApplicationContext().getString(R.string.person_is_sharing_loaction));
+                        } else {
+                            textView.setText(userIds.size() + " " + getApplicationContext().getString(R.string.persons_are_sharing_loaction));
+                        }
                     }
                 } else {
                     if (mRealTimeBar != null && mRealTimeBar.getVisibility() == View.VISIBLE) {
@@ -834,12 +844,16 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
 
         } else if (status != null && status == RealTimeLocationConstant.RealTimeLocationStatus.RC_REAL_TIME_LOCATION_STATUS_OUTGOING) {
             TextView textView = (TextView) mRealTimeBar.findViewById(android.R.id.text1);
-            textView.setText("你正在共享位置");
+            textView.setText(getApplicationContext().getString(R.string.you_are_sharing_location));
         } else {
 
             if (mRealTimeBar != null && userIds != null) {
                 TextView textView = (TextView) mRealTimeBar.findViewById(android.R.id.text1);
-                textView.setText(userIds.size() + " 人正在共享位置");
+                if (userIds.size() <= 1) {
+                    textView.setText(userIds.size() + " " + getApplicationContext().getString(R.string.person_is_sharing_loaction));
+                } else {
+                    textView.setText(userIds.size() + " " + getApplicationContext().getString(R.string.persons_are_sharing_loaction));
+                }
             }
         }
 
@@ -872,6 +886,8 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
     protected void onDestroy() {
         if ("ConversationActivity".equals(this.getClass().getSimpleName()))
             EventBus.getDefault().unregister(this);
+
+        SealAppContext.getInstance().popActivity(mConversationType, mTargetId);
         super.onDestroy();
     }
 
@@ -888,7 +904,8 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             RealTimeLocationConstant.RealTimeLocationErrorCode errorCode = RongIMClient.getInstance().getRealTimeLocation(mConversationType, mTargetId);
 
             if (errorCode == RealTimeLocationConstant.RealTimeLocationErrorCode.RC_REAL_TIME_LOCATION_SUCCESS) {
-                RongIM.getInstance().insertMessage(mConversationType, mTargetId, RongIM.getInstance().getCurrentUserId(), InformationNotificationMessage.obtain("位置共享已结束"));
+                RongIM.getInstance().insertMessage(mConversationType, mTargetId, RongIM.getInstance().getCurrentUserId(),
+                                                   InformationNotificationMessage.obtain(getApplicationContext().getString(R.string.location_sharing_ended)));
             }
         } else if (status == RealTimeLocationConstant.RealTimeLocationStatus.RC_REAL_TIME_LOCATION_STATUS_OUTGOING) {//发自定义消息
             showRealTimeLocationBar(status);
@@ -934,7 +951,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             if (!closeRealTimeLocation()) {
                 if (fragment != null && !fragment.onBackPressed()) {
                     if (isFromPush) {
-                        NLog.e("back onKeyDown",isFromPush);
+                        NLog.e("back onKeyDown", isFromPush);
                         isFromPush = false;
                         startActivity(new Intent(this, MainActivity.class));
                     }

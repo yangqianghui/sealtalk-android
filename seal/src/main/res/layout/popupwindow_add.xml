@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="147dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/popwindow_bg"
+        android:orientation="vertical"
+        android:paddingTop="12dp">
+
+        <RelativeLayout
+            android:id="@+id/re_chatroom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="14dp"
+                android:drawableLeft="@drawable/pop_chat"
+                android:drawablePadding="14dp"
+                android:gravity="center_vertical"
+                android:text="发起聊天"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/re_addfriends"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="14dp"
+                android:drawableLeft="@drawable/pop_group"
+                android:drawablePadding="14dp"
+                android:gravity="center_vertical"
+                android:text="创建群组"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/re_scanner"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="14dp"
+                android:drawableLeft="@drawable/pop_add"
+                android:drawablePadding="14dp"
+                android:gravity="center_vertical"
+                android:text="添加好友"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

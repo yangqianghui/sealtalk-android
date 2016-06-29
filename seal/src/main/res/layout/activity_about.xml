@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/de_action_white"
+    android:background="@color/seal_bg"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="85dp"
-        android:layout_marginRight="85dp"
-        android:layout_marginTop="47dp"
-        android:src="@drawable/de_ic_logo" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/about_seal" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
-        android:layout_marginTop="55dp">
+        android:layout_marginTop="25dp">
 
         <TextView
             android:id="@+id/update_log"
@@ -50,7 +50,12 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/de_merge_view" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="#dfdfdd" />
 
     <RelativeLayout
         android:id="@+id/rl_function_introduce"
@@ -77,36 +82,13 @@
             android:src="@drawable/de_ic_new" />
     </RelativeLayout>
 
-    <include layout="@layout/de_merge_view" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="#dfdfdd" />
 
-    <RelativeLayout
-        android:id="@+id/rl_dv_document"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_marginTop="16dp">
-
-        <TextView
-            android:id="@+id/dv_document"
-            style="@style/DemoTextStyleBigBlack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:text="@string/dv_document" />
-
-        <ImageView
-            android:id="@+id/iv_dv_document"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/dv_document"
-            android:src="@drawable/de_ic_new"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/de_merge_view" />
 
     <RelativeLayout
         android:id="@+id/rl_rongcloud_web"
@@ -135,34 +117,89 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/de_merge_view" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="#dfdfdd" />
 
     <RelativeLayout
-        android:id="@+id/rl_new_version_update"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_marginTop="16dp">
+        android:layout_width="match_parent"
+        android:layout_height="47.5dp">
 
         <TextView
-            android:id="@+id/new_version_update"
-            style="@style/DemoTextStyleBigBlack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:text="@string/new_version_update" />
-
-        <TextView
-            android:id="@+id/version_new"
-            style="@style/DemoTextStyleMiddle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/new_version_update" />
+            android:layout_marginLeft="25dp"
+            android:text="SealTalk 版本"
+            android:textColor="#353535"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:text="1.0.2"
+            android:textColor="#999"
+            android:textSize="14sp" />
+
     </RelativeLayout>
 
-    <include layout="@layout/de_merge_view" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="#dfdfdd" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="47.5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:text="SDK 版本"
+            android:textColor="#353535"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sdk_version_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:text="2.6.4 Stable"
+            android:textColor="#999"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="#dfdfdd" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:gravity="bottom"
+        android:text="Powered RongCloud"
+        android:textColor="#999"
+        android:textSize="14sp" />
 
 </LinearLayout>

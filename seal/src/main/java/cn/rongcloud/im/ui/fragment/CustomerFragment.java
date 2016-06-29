@@ -35,15 +35,15 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
         mCustomerChat.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                    startDoubleChatroom(getActivity(),"OIBbeKlkx","675NdFjkx");
+                startDoubleChatroom(getActivity(), "OIBbeKlkx", "675NdFjkx");
                 return true;
             }
         });
         return view;
     }
 
-    private void startDoubleChatroom(Context context ,String chatroomId1,String chatroomId2) {
-        if (TextUtils.isEmpty(chatroomId1)&&TextUtils.isEmpty(chatroomId2)) {
+    private void startDoubleChatroom(Context context , String chatroomId1, String chatroomId2) {
+        if (TextUtils.isEmpty(chatroomId1) && TextUtils.isEmpty(chatroomId2)) {
             NToast.shortToast(context, "chatroom ids is null");
             return;
         }
@@ -51,9 +51,9 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             NToast.shortToast(context, "please connection");
             return;
         }
-        Intent intent = new Intent(context,DoubleChatRoomActivity.class);
-        intent.putExtra("chatroomId1",chatroomId1);
-        intent.putExtra("chatroomId2",chatroomId2);
+        Intent intent = new Intent(context, DoubleChatRoomActivity.class);
+        intent.putExtra("chatroomId1", chatroomId1);
+        intent.putExtra("chatroomId2", chatroomId2);
         startActivity(intent);
 
     }
@@ -64,7 +64,7 @@ public class CustomerFragment extends Fragment implements View.OnClickListener {
             case R.id.customer_chat:
                 if (RongIM.getInstance() != null)
                     // KEFU146001495753714 正式  KEFU145930951497220 测试
-                    RongIM.getInstance().startCustomerServiceChat(getActivity(),"KEFU146001495753714","在线客服",null);
+                    RongIM.getInstance().startCustomerServiceChat(getActivity(), "KEFU146001495753714", "在线客服", null);
                 break;
         }
     }

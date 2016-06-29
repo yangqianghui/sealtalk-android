@@ -102,8 +102,8 @@ public class SearchFriendActivity extends BaseActivity {
                         mFriendId = guifres.getResult().getId();
                         searchItem.setVisibility(View.VISIBLE);
                         if (TextUtils.isEmpty(guifres.getResult().getPortraitUri())) {
-                            ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(guifres.getResult().getNickname(), guifres.getResult().getId()) ,searchImage, App.getOptions());
-                        }else {
+                            ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(guifres.getResult().getNickname(), guifres.getResult().getId()) , searchImage, App.getOptions());
+                        } else {
                             ImageLoader.getInstance().displayImage(guifres.getResult().getPortraitUri(), searchImage, App.getOptions());
                         }
                         searchName.setText(guifres.getResult().getNickname());
@@ -128,10 +128,9 @@ public class SearchFriendActivity extends BaseActivity {
 
                                     @Override
                                     public void exectEditEvent(String editText) {
-//                                        String name = getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
                                         addFriendMessage = editText;
                                         if (TextUtils.isEmpty(editText)) {
-                                            addFriendMessage = getString(R.string.request_friends);
+                                            addFriendMessage = "我是" + getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
                                         }
                                         if (!TextUtils.isEmpty(mFriendId)) {
                                             LoadDialog.show(mContext);
@@ -164,7 +163,7 @@ public class SearchFriendActivity extends BaseActivity {
     public void onFailure(int requestCode, int state, Object result) {
         switch (requestCode) {
             case ADDFRIEND:
-                NToast.shortToast(mContext, "好友邀请请求失败");
+                NToast.shortToast(mContext, "你们已经是好友");
                 LoadDialog.dismiss(mContext);
                 break;
             case SEARCHPHONE:

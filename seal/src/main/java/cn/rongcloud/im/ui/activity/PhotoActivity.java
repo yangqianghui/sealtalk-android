@@ -36,10 +36,10 @@ public class PhotoActivity extends BaseActionBarActivity {
         Message message = getIntent().getParcelableExtra("message");
         ImageMessage imageMessage = (ImageMessage) message.getContent();
         if (imageMessage != null) {
-        Uri uri = imageMessage.getLocalUri() == null ? imageMessage.getRemoteUri() : imageMessage.getLocalUri();
-        mUri = uri;
-        if (uri != null)
-            mPhotoFragment.initPhoto(message, new PhotoFragment.PhotoDownloadListener() {
+            Uri uri = imageMessage.getLocalUri() == null ? imageMessage.getRemoteUri() : imageMessage.getLocalUri();
+            mUri = uri;
+            if (uri != null)
+                mPhotoFragment.initPhoto(message, new PhotoFragment.PhotoDownloadListener() {
                 @Override
                 public void onDownloaded(Uri uri) {
                     mDownloaded = uri;

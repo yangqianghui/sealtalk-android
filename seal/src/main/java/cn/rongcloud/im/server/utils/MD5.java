@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
 
-	 /**全局数组**/
+    /**全局数组**/
     private final static String[] strDigits = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
 
     /**
@@ -44,7 +44,7 @@ public class MD5 {
     public static String encrypt(String str) {
         String result = null;
         try {
-        	result = new String(str);
+            result = new String(str);
             MessageDigest md = MessageDigest.getInstance("MD5");
             result = byteToString(md.digest(str.getBytes()));
         } catch (NoSuchAlgorithmException ex) {
@@ -52,21 +52,21 @@ public class MD5 {
         }
         return result;
     }
-    
+
     /**
      * MD5加密
      * @param str 待加密的字符串
      * @param lowerCase 大小写
      * @return
      */
-    public static String encrypt(String str,boolean lowerCase) {
+    public static String encrypt(String str, boolean lowerCase) {
         String result = null;
         try {
-        	result = new String(str);
+            result = new String(str);
             MessageDigest md = MessageDigest.getInstance("MD5");
             result = byteToString(md.digest(str.getBytes()));
-            if(lowerCase){
-            	result = result.toLowerCase();	
+            if (lowerCase) {
+                result = result.toLowerCase();
             }
         } catch (NoSuchAlgorithmException ex) {
             ex.printStackTrace();

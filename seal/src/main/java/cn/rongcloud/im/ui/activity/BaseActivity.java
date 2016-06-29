@@ -1,10 +1,12 @@
 package cn.rongcloud.im.ui.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
+
+import com.umeng.analytics.MobclickAgent;
 
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.server.SealAction;
@@ -13,7 +15,7 @@ import cn.rongcloud.im.server.network.async.OnDataListener;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.utils.NToast;
 
-public abstract class BaseActivity extends ActionBarActivity implements OnDataListener{
+public abstract class BaseActivity extends ActionBarActivity implements OnDataListener {
 
     protected Context mContext;
     private AsyncTaskManager mAsyncTaskManager;
@@ -25,6 +27,9 @@ public abstract class BaseActivity extends ActionBarActivity implements OnDataLi
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);// 使得音量键控制媒体声音
         mContext = this;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         mAsyncTaskManager = AsyncTaskManager.getInstance(mContext);
         // Activity管理
@@ -32,15 +37,15 @@ public abstract class BaseActivity extends ActionBarActivity implements OnDataLi
 
     }
 
-//    protected void onResume() {
-//        super.onResume();
-////        MobclickAgent.onResume(this);
-//    }
-//
-//    protected void onPause() {
-//        super.onPause();
-////        MobclickAgent.onPause(this);
-//    }
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 
     /**
@@ -110,6 +115,16 @@ public abstract class BaseActivity extends ActionBarActivity implements OnDataLi
 //        super.onActivityResult(requestCode, resultCode, data);
 //    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

@@ -5,7 +5,7 @@ package cn.rongcloud.im.server.request;
  * Created by AMing on 15/12/23.
  * Company RongCloud
  */
-public class VerifyCodeRequest{
+public class VerifyCodeRequest {
 
 
     //String region, String phone, String code

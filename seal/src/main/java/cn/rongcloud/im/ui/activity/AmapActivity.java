@@ -54,7 +54,7 @@ public class AmapActivity extends FragmentActivity implements AMapLocationListen
     private AMap aMap;
     private LocationManagerProxy mLocationManagerProxy;
     private Handler handler = new Handler();
-    private LocationSource.OnLocationChangedListener listener;
+    private OnLocationChangedListener listener;
     private LatLng myLocation = null;
     private Marker centerMarker;
     private boolean isMovingMarker = false;
@@ -114,7 +114,7 @@ public class AmapActivity extends FragmentActivity implements AMapLocationListen
         // 自定义系统定位蓝点
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.drawable.img_location_now));
+                                       fromResource(R.drawable.img_location_now));
         myLocationStyle.strokeWidth(0);
         myLocationStyle.radiusFillColor(Color.TRANSPARENT);
         aMap.setMyLocationStyle(myLocationStyle);
@@ -202,7 +202,7 @@ public class AmapActivity extends FragmentActivity implements AMapLocationListen
         listener = onLocationChangedListener;
         mLocationManagerProxy = LocationManagerProxy.getInstance(this);
         mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, -1, 100, this);
+            LocationProviderProxy.AMapNetwork, -1, 100, this);
     }
 
     public void deactivate() {
@@ -286,18 +286,18 @@ public class AmapActivity extends FragmentActivity implements AMapLocationListen
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        if(i == 0){
-            if(regeocodeResult != null&& regeocodeResult.getRegeocodeAddress() != null){
+        if (i == 0) {
+            if (regeocodeResult != null && regeocodeResult.getRegeocodeAddress() != null) {
                 endAnim();
                 centerMarker.setIcon(successDescripter);
                 RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
                 String formatAddress = regeocodeResult.getRegeocodeAddress().getFormatAddress();
                 String shortAdd = formatAddress.replace(regeocodeAddress.getProvince(), "").replace(regeocodeAddress.getCity(), "").replace(regeocodeAddress.getDistrict(), "");
                 tvCurLocation.setText(shortAdd);
-            }else{
+            } else {
 //                ToastUtil.show(AmapActivity.this, R.string.no_result);
             }
-        }else{
+        } else {
 //            ToastUtil.show(AmapActivity.this, R.string.error_network);
         }
     }

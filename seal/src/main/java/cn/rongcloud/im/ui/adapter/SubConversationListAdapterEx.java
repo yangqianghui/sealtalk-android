@@ -11,7 +11,7 @@ import io.rong.imlib.model.Conversation;
 /**
  * Created by weiqinxiao on 15/11/6.
  */
-public class SubConversationListAdapterEx extends SubConversationListAdapter{
+public class SubConversationListAdapterEx extends SubConversationListAdapter {
 
     public SubConversationListAdapterEx(Context context) {
         super(context);
@@ -24,7 +24,7 @@ public class SubConversationListAdapterEx extends SubConversationListAdapter{
 
     @Override
     protected void bindView(View v, int position, UIConversation data) {
-        if(data.getConversationType().equals(Conversation.ConversationType.DISCUSSION))
+        if (data.getConversationType().equals(Conversation.ConversationType.DISCUSSION))
             data.setUnreadType(UIConversation.UnreadRemindType.REMIND_ONLY);
         super.bindView(v, position, data);
     }

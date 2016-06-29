@@ -50,7 +50,7 @@ public class NewTextMessageActivity extends BaseActivity implements AdapterView.
     private void initDate() {
 
         Intent intent = getIntent();
-        if(intent!=null && intent.hasExtra("DEMO_REPLY_CONVERSATIONTYPE")&&intent.hasExtra("DEMO_REPLY_TARGETID")) {
+        if (intent != null && intent.hasExtra("DEMO_REPLY_CONVERSATIONTYPE") && intent.hasExtra("DEMO_REPLY_TARGETID")) {
 
             String conversationType = intent.getStringExtra("DEMO_REPLY_CONVERSATIONTYPE");
             mTargetId = intent.getStringExtra("DEMO_REPLY_TARGETID");
@@ -101,9 +101,9 @@ public class NewTextMessageActivity extends BaseActivity implements AdapterView.
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         Intent intent = new Intent();
-        intent.putExtra("REPLY_ID",mNumberlist.get(i).toString());
-        intent.putExtra("REPLY_NAME",mUserInfoList.get(i).getName().toString());
-        setResult(Constants.MESSAGE_REPLY,intent);
+        intent.putExtra("REPLY_ID", mNumberlist.get(i).toString());
+        intent.putExtra("REPLY_NAME", mUserInfoList.get(i).getName().toString());
+        setResult(Constants.MESSAGE_REPLY, intent);
         finish();
     }
 }

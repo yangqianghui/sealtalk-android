@@ -2,9 +2,7 @@ package cn.rongcloud.im.ui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +10,11 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.SealAppContext;
@@ -25,12 +28,8 @@ import cn.rongcloud.im.server.utils.CommonUtils;
 import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.server.widget.LoadDialog;
 import cn.rongcloud.im.ui.adapter.NewFriendListAdapter;
-import cn.rongcloud.im.message.AgreedFriendRequestMessage;
 import cn.rongcloud.im.utils.Constants;
-import io.rong.imkit.RongIM;
-import io.rong.imlib.RongIMClient;
-import io.rong.imlib.model.Conversation;
-import io.rong.imlib.model.UserInfo;
+
 
 /**
  * Created by Bob on 2015/3/26.
@@ -106,7 +105,19 @@ public class NewFriendListActivity extends BaseActivity implements NewFriendList
                         return;
                     }
 
-//                    friendId = urres.getResult().get(index).getUser().getId();
+                    Collections.sort(urres.getResult(), new Comparator<UserRelationshipResponse.ResultEntity>() {
+
+                        @Override
+                        public int compare(UserRelationshipResponse.ResultEntity lhs, UserRelationshipResponse.ResultEntity rhs) {
+                            Date date1 = stringToDate(lhs);
+                            Date date2 = stringToDate(rhs);
+                            if (date1.before(date2)) {
+                                return 1;
+                            }
+                            return -1;
+                        }
+                    });
+
                     adapter.removeAll();
                     adapter.addData(urres.getResult());
 
@@ -124,8 +135,7 @@ public class NewFriendListActivity extends BaseActivity implements NewFriendList
                                 , bean.getDisplayName()
                                 , String.valueOf(bean.getStatus())
                                 , null  //TODO 不是时间戳 格式错误 2016-01-07T06:22:55.000Z
-                        ));
-                        sendMessage(friendId);
+                                                                                                                 ));
                         // 通知好友列表刷新数据
                         NToast.shortToast(mContext, R.string.agreed_friend);
                         LoadDialog.dismiss(mContext);
@@ -207,36 +217,17 @@ public class NewFriendListActivity extends BaseActivity implements NewFriendList
         return false;
     }
 
-
-    /**
-     * 添加好友成功后，向对方发送一条消息
-     *
-     * @param id 对方id
-     */
-    private void sendMessage(String id) {
-        final AgreedFriendRequestMessage message = new AgreedFriendRequestMessage(id, "agree");
-
-            //获取当前用户的 userid
-            String userid = sp.getString("loginid", "");
-            String username = sp.getString("loginnickname", "");
-            String userportrait = sp.getString("loginPortrait", "");
-
-            UserInfo userInfo = new UserInfo(userid, username, Uri.parse(userportrait));
-            //把用户信息设置到消息体中，直接发送给对方，可以不设置，非必选项
-            message.setUserInfo(userInfo);
-
-                //发送一条添加成功的自定义消息，此条消息不会在ui上展示
-                RongIM.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, id, message, null, null, new RongIMClient.SendMessageCallback() {
-                    @Override
-                    public void onError(Integer messageId, RongIMClient.ErrorCode e) {
-                        Log.e(TAG, Constants.DEBUG + "------DeAgreedFriendRequestMessage----onError--");
-                    }
-
-                    @Override
-                    public void onSuccess(Integer integer) {
-                        Log.e(TAG, Constants.DEBUG + "------DeAgreedFriendRequestMessage----onSuccess--" + message.getMessage());
-
-                    }
-                });
+    private Date stringToDate(UserRelationshipResponse.ResultEntity resultEntity) {
+        String updatedAt = resultEntity.getUpdatedAt();
+        String updatedAtDateStr = updatedAt.substring(0, 10) + " " + updatedAt.substring(11, 16);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date updateAtDate = null;
+        try {
+            updateAtDate = simpleDateFormat.parse(updatedAtDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return updateAtDate;
     }
+
 }

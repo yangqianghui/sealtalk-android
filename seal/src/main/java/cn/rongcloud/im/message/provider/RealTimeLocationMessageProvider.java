@@ -37,7 +37,7 @@ public class RealTimeLocationMessageProvider extends IContainerItemProvider.Mess
 
     @Override
     public View newView(Context context, ViewGroup group) {
-        View view = LayoutInflater.from(context).inflate(cn.rongcloud.im.R.layout.de_share_location_message, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.de_share_location_message, null);
 
         ViewHolder holder = new ViewHolder();
         holder.message = (TextView) view.findViewById(android.R.id.text1);
@@ -77,13 +77,13 @@ public class RealTimeLocationMessageProvider extends IContainerItemProvider.Mess
         String[] items;
 
         Resources res = view.getContext().getResources();
-        items = new String[]{res.getString(R.string.rc_dialog_item_message_delete)};
+        items = new String[] {res.getString(R.string.rc_dialog_item_message_delete)};
 
         ArraysDialogFragment.newInstance(name, items).setArraysDialogItemListener(new ArraysDialogFragment.OnArraysDialogItemListener() {
             @Override
             public void OnArraysDialogItemClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    RongIM.getInstance().getRongIMClient().deleteMessages(new int[]{message.getMessageId()}, null);
+                    RongIM.getInstance().getRongIMClient().deleteMessages(new int[] {message.getMessageId()}, null);
                 }
 
             }

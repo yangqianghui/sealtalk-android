@@ -985,7 +985,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     }
 
     protected boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        mFlingTracker.fling(mNextX, 0, (int) -velocityX, 0, 0, mMaxX, 0, 0);
+        mFlingTracker.fling(mNextX, 0, (int) - velocityX, 0, 0, mMaxX, 0, 0);
         setCurrentScrollState(OnScrollStateChangedListener.ScrollState.SCROLL_STATE_FLING);
         requestLayout();
         return true;
@@ -1092,7 +1092,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
                 if (onItemLongClickListener != null) {
                     int adapterIndex = mLeftViewAdapterIndex + index;
                     boolean handled = onItemLongClickListener.onItemLongClick(HorizontalListView.this, child, adapterIndex, mAdapter
-                            .getItemId(adapterIndex));
+                                      .getItemId(adapterIndex));
 
                     if (handled) {
                         // BZZZTT!!1!

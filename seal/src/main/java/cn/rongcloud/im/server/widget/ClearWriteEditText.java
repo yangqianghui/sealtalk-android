@@ -27,7 +27,7 @@ public class ClearWriteEditText extends EditText implements View.OnFocusChangeLi
     private Drawable mClearDrawable;
 
     public ClearWriteEditText(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ClearWriteEditText(Context context, AttributeSet attrs) {
@@ -64,7 +64,7 @@ public class ClearWriteEditText extends EditText implements View.OnFocusChangeLi
     protected void setClearIconVisible(boolean visible) {
         Drawable right = visible ? mClearDrawable : null;
         setCompoundDrawables(getCompoundDrawables()[0],
-                getCompoundDrawables()[1], right, getCompoundDrawables()[3]);
+                             getCompoundDrawables()[1], right, getCompoundDrawables()[3]);
     }
 
     /**
@@ -77,8 +77,8 @@ public class ClearWriteEditText extends EditText implements View.OnFocusChangeLi
         if (getCompoundDrawables()[2] != null) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 boolean touchable = event.getX() > (getWidth()
-                        - getPaddingRight() - mClearDrawable.getIntrinsicWidth())
-                        && (event.getX() < ((getWidth() - getPaddingRight())));
+                                                    - getPaddingRight() - mClearDrawable.getIntrinsicWidth())
+                                    && (event.getX() < ((getWidth() - getPaddingRight())));
                 if (touchable) {
                     this.setText("");
                 }
@@ -113,7 +113,9 @@ public class ClearWriteEditText extends EditText implements View.OnFocusChangeLi
     /**
      * 设置晃动动画
      */
-    public void setShakeAnimation(){this.startAnimation(shakeAnimation(3));}
+    public void setShakeAnimation() {
+        this.startAnimation(shakeAnimation(3));
+    }
 
 
 
@@ -122,7 +124,7 @@ public class ClearWriteEditText extends EditText implements View.OnFocusChangeLi
      * @param counts 半秒钟晃动多少下
      * @return
      */
-    public static Animation shakeAnimation(int counts){
+    public static Animation shakeAnimation(int counts) {
         Animation translateAnimation = new TranslateAnimation(0, 10, 0, 0);
         translateAnimation.setInterpolator(new CycleInterpolator(counts));
         translateAnimation.setDuration(500);

@@ -5,7 +5,7 @@ package cn.rongcloud.im.server.request;
  * Created by AMing on 15/12/24.
  * Company RongCloud
  */
-public class ChangePasswordRequest{
+public class ChangePasswordRequest {
 
     private String oldPassword;
 

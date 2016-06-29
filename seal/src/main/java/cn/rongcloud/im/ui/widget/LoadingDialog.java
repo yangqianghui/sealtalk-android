@@ -13,7 +13,7 @@ import cn.rongcloud.im.R;
  *
  * Created by bob on 2015/1/28.
  */
-public class LoadingDialog extends Dialog{
+public class LoadingDialog extends Dialog {
 
     private TextView mTextView;
 

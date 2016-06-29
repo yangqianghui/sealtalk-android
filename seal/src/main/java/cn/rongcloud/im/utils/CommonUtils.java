@@ -139,7 +139,7 @@ public class CommonUtils {
         Intent GPSIntent = new Intent();
 
         GPSIntent.setClassName("com.android.settings",
-                "com.android.settings.widget.SettingsAppWidgetProvider");
+                               "com.android.settings.widget.SettingsAppWidgetProvider");
 
         GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
         GPSIntent.setData(Uri.parse("custom:3"));

@@ -25,14 +25,13 @@ import cn.rongcloud.im.db.Groups;
 import cn.rongcloud.im.server.network.async.AsyncTaskManager;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.response.GetGroupResponse;
-import cn.rongcloud.im.server.response.GetTokenResponse;
 import cn.rongcloud.im.server.response.GetUserInfoByIdResponse;
 import cn.rongcloud.im.server.response.LoginResponse;
 import cn.rongcloud.im.server.response.UserRelationshipResponse;
-import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.utils.AMUtils;
 import cn.rongcloud.im.server.utils.NLog;
 import cn.rongcloud.im.server.utils.NToast;
+import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.ClearWriteEditText;
 import cn.rongcloud.im.server.widget.LoadDialog;
 import io.rong.imkit.RongIM;
@@ -49,6 +48,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private static final int GETTOKEN = 6;
     private static final int SYNCUSERINFO = 9;
     private static final int SYNCGROUP = 17;
+    private static final int AUTOLOGIN = 19;
+
+    private static final int SYNCFRIEND = 14;
     private ImageView mImgBackgroud;
 
     private ClearWriteEditText mPhoneEdit, mPasswordEdit;
@@ -62,6 +64,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private SharedPreferences sp;
 
     SharedPreferences.Editor e;
+
+    private String autoPhone, autoPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,21 +116,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
 
-
         String oldPhone = sp.getString("loginphone", "");
         String oldPassword = sp.getString("loginpassword", "");
         if (oldPhone.equals(mPhoneEdit.getText().toString().trim())) {//和上次登录账户一致
 
         } else {
-            DBManager.getInstance(mContext).getDaoSession().getFriendDao().deleteAll();
+            //和上次登录账户不一致 或者 换设备登录  重新网络拉取好友 和 群组数据
+            DBManager.getInstance(mContext).getDaoSession().getFriendDao().deleteAll();//清空上个用户的数据库
             DBManager.getInstance(mContext).getDaoSession().getGroupsDao().deleteAll();
         }
         if (!TextUtils.isEmpty(oldPhone) && !TextUtils.isEmpty(oldPassword)) {
             mPhoneEdit.setText(oldPhone);
             mPasswordEdit.setText(oldPassword);
         }
-
-
     }
 
     @Override
@@ -203,6 +205,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (requestCode) {
             case LOGIN:
                 return action.login("86", phoneString, passwordString);
+            case AUTOLOGIN:
+                return action.login("86", autoPhone, autoPassword);
             case GETTOKEN:
                 return action.getToken();
             case SYNCUSERINFO:
@@ -223,6 +227,46 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     LoginResponse lrres = (LoginResponse) result;
                     if (lrres.getCode() == 200) {
                         loginToken = lrres.getResult().getToken();
+                        if (!TextUtils.isEmpty(loginToken)) {
+                            e.putString("loginToken", loginToken);
+                            e.putString("loginphone", phoneString);
+                            e.putString("loginpassword", passwordString);
+                            e.apply();
+
+                            RongIM.connect(loginToken, new RongIMClient.ConnectCallback() {
+                                @Override
+                                public void onTokenIncorrect() {
+                                    NLog.e("connect", "onTokenIncorrect");
+                                }
+
+                                @Override
+                                public void onSuccess(String s) {
+                                    connectResultId = s;
+                                    NLog.e("connect", "onSuccess userid:" + s);
+                                    e.putString("loginid", s);
+                                    e.commit();
+
+                                    request(SYNCUSERINFO, true);
+                                }
+
+                                @Override
+                                public void onError(RongIMClient.ErrorCode errorCode) {
+                                    NLog.e("connect", "onError errorcode:" + errorCode.getValue());
+                                }
+                            });
+                        }
+                    } else if (lrres.getCode() == 100) {
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
+                    } else if (lrres.getCode() == 1000) {
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, R.string.phone_or_psw_error);
+                    }
+                    break;
+                case AUTOLOGIN:
+                    LoginResponse autolrres = (LoginResponse) result;
+                    if (autolrres.getCode() == 200) {
+                        loginToken = autolrres.getResult().getToken();
                         if (!TextUtils.isEmpty(loginToken)) {
                             e.putString("loginToken", loginToken);
                             e.putString("loginphone", phoneString);
@@ -251,10 +295,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 }
                             });
                         }
-                    } else if (lrres.getCode() == 100) {
+                    } else if (autolrres.getCode() == 100) {
                         LoadDialog.dismiss(mContext);
                         NToast.shortToast(mContext, R.string.phone_or_psw_error);
-                    } else if (lrres.getCode() == 1000) {
+                    } else if (autolrres.getCode() == 1000) {
                         LoadDialog.dismiss(mContext);
                         NToast.shortToast(mContext, R.string.phone_or_psw_error);
                     }
@@ -290,11 +334,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (list.size() > 0 && list != null) {
                             for (GetGroupResponse.ResultEntity g : list) {
                                 DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
-                                        new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
+                                    new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
                                 );
                             }
                         }
-                        initAMData();
+                        request(SYNCFRIEND);
                     }
                     break;
                 case SYNCFRIEND:
@@ -305,13 +349,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             for (UserRelationshipResponse.ResultEntity friend : list) {
                                 if (friend.getStatus() == 20) {
                                     DBManager.getInstance(mContext).getDaoSession().getFriendDao().insertOrReplace(new Friend(
-                                            friend.getUser().getId(),
-                                            friend.getUser().getNickname(),
-                                            friend.getUser().getPortraitUri(),
-                                            friend.getDisplayName(),
-                                            null,
-                                            null
-                                    ));
+                                                friend.getUser().getId(),
+                                                friend.getUser().getNickname(),
+                                                friend.getUser().getPortraitUri(),
+                                                friend.getDisplayName(),
+                                                null,
+                                                null
+                                            ));
                                 }
                             }
 
@@ -352,19 +396,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private static final int SYNCFRIEND = 14;
 
-    private void initAMData() {
-
-        List<Friend> dbList = DBManager.getInstance(mContext).getDaoSession().getFriendDao().loadAll();
-        if (dbList.size() == 0 || dbList == null) {
-            request(SYNCFRIEND);
-        } else {
-            LoadDialog.dismiss(mContext);
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            NToast.shortToast(mContext, R.string.login_success);
-            finish();
-        }
-
-    }
 }

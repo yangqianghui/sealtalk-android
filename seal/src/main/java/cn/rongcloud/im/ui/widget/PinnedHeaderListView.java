@@ -70,7 +70,7 @@ public class PinnedHeaderListView extends ListView implements AbsListView.OnScro
 //        a.recycle();
         setOnScrollListener(this);
     }
-    public View getPinnedHeaderView(){
+    public View getPinnedHeaderView() {
         return mHeaderView;
     }
 
@@ -82,9 +82,9 @@ public class PinnedHeaderListView extends ListView implements AbsListView.OnScro
         // fading edge;
         // in this particular case we would like to disable the top, but not the
         // bottom edge.
-		/*
-		 * if (mHeaderView != null) { setFadingEdgeLength(0); } requestLayout();
-		 */
+        /*
+         * if (mHeaderView != null) { setFadingEdgeLength(0); } requestLayout();
+         */
     }
 
     @Override
@@ -134,12 +134,12 @@ public class PinnedHeaderListView extends ListView implements AbsListView.OnScro
         if (mHeaderView == null )
             return;
 //FIXME
-        if(mAdapter == null)
+        if (mAdapter == null)
             return;
 
 //        if (mListHeaderView != null) {
 
-            position -= getHeaderViewsCount();// 添加listheaderview后会有一个position的误差
+        position -= getHeaderViewsCount();// 添加listheaderview后会有一个position的误差
 //        }
 
         int state = mAdapter.getPinnedHeaderState(position);

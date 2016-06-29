@@ -38,7 +38,7 @@ import android.widget.FrameLayout.LayoutParams;
 import java.lang.reflect.Method;
 
 /**
- * Class to manage status and navigation bar tint effects when using KitKat 
+ * Class to manage status and navigation bar tint effects when using KitKat
  * translucent system UI modes.
  *
  */
@@ -92,7 +92,8 @@ public class SystemBarTintManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // check theme attrs
             int[] attrs = {android.R.attr.windowTranslucentStatus,
-                    android.R.attr.windowTranslucentNavigation};
+                           android.R.attr.windowTranslucentNavigation
+                          };
             TypedArray a = activity.obtainStyledAttributes(attrs);
             try {
                 mStatusBarAvailable = a.getBoolean(0, false);

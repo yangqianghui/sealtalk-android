@@ -102,10 +102,10 @@ public class ProgressWheel extends View {
         float animationValue;
         if (currentApiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             animationValue = Settings.Global.getFloat(getContext().getContentResolver(),
-                    Settings.Global.ANIMATOR_DURATION_SCALE, 1);
+                             Settings.Global.ANIMATOR_DURATION_SCALE, 1);
         } else {
             animationValue = Settings.System.getFloat(getContext().getContentResolver(),
-                    Settings.System.ANIMATOR_DURATION_SCALE, 1);
+                             Settings.System.ANIMATOR_DURATION_SCALE, 1);
         }
 
         shouldAnimate = animationValue != 0;
@@ -197,7 +197,7 @@ public class ProgressWheel extends View {
         if (!fillRadius) {
             // Width should equal to Height, find the min value to setup the circle
             int minValue = Math.min(layout_width - paddingLeft - paddingRight,
-                    layout_height - paddingBottom - paddingTop);
+                                    layout_height - paddingBottom - paddingTop);
 
             int circleDiameter = Math.min(minValue, circleRadius * 2 - barWidth * 2);
 
@@ -206,11 +206,11 @@ public class ProgressWheel extends View {
             int yOffset = (layout_height - paddingTop - paddingBottom - circleDiameter) / 2 + paddingTop;
 
             circleBounds =
-                    new RectF(xOffset + barWidth, yOffset + barWidth, xOffset + circleDiameter - barWidth,
-                            yOffset + circleDiameter - barWidth);
+                new RectF(xOffset + barWidth, yOffset + barWidth, xOffset + circleDiameter - barWidth,
+                          yOffset + circleDiameter - barWidth);
         } else {
             circleBounds = new RectF(paddingLeft + barWidth, paddingTop + barWidth,
-                    layout_width - paddingRight - barWidth, layout_height - paddingBottom - barWidth);
+                                     layout_width - paddingRight - barWidth, layout_height - paddingBottom - barWidth);
         }
     }
 
@@ -225,10 +225,10 @@ public class ProgressWheel extends View {
         barWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth, metrics);
         rimWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth, metrics);
         circleRadius =
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius, metrics);
+            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius, metrics);
 
         circleRadius =
-                (int) a.getDimension(R.styleable.ProgressWheel_matProg_circleRadius, circleRadius);
+            (int) a.getDimension(R.styleable.ProgressWheel_matProg_circleRadius, circleRadius);
 
         fillRadius = a.getBoolean(R.styleable.ProgressWheel_matProg_fillRadius, false);
 
@@ -237,11 +237,11 @@ public class ProgressWheel extends View {
         rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_matProg_rimWidth, rimWidth);
 
         float baseSpinSpeed =
-                a.getFloat(R.styleable.ProgressWheel_matProg_spinSpeed, spinSpeed / 360.0f);
+            a.getFloat(R.styleable.ProgressWheel_matProg_spinSpeed, spinSpeed / 360.0f);
         spinSpeed = baseSpinSpeed * 360;
 
         barSpinCycleTime =
-                a.getInt(R.styleable.ProgressWheel_matProg_barSpinCycleTime, (int) barSpinCycleTime);
+            a.getInt(R.styleable.ProgressWheel_matProg_barSpinCycleTime, (int) barSpinCycleTime);
 
         barColor = a.getColor(R.styleable.ProgressWheel_matProg_barColor, barColor);
 
@@ -370,7 +370,7 @@ public class ProgressWheel extends View {
             }
 
             float distance =
-                    (float) Math.cos((timeStartGrowing / barSpinCycleTime + 1) * Math.PI) / 2 + 0.5f;
+                (float) Math.cos((timeStartGrowing / barSpinCycleTime + 1) * Math.PI) / 2 + 0.5f;
             float destLength = (barMaxLength - barLength);
 
             if (barGrowingFromFront) {
@@ -702,15 +702,15 @@ public class ProgressWheel extends View {
     static class WheelSavedState extends BaseSavedState {
         //required field that makes Parcelables from a Parcel
         public static final Creator<WheelSavedState> CREATOR =
-                new Creator<WheelSavedState>() {
-                    public WheelSavedState createFromParcel(Parcel in) {
-                        return new WheelSavedState(in);
-                    }
+        new Creator<WheelSavedState>() {
+            public WheelSavedState createFromParcel(Parcel in) {
+                return new WheelSavedState(in);
+            }
 
-                    public WheelSavedState[] newArray(int size) {
-                        return new WheelSavedState[size];
-                    }
-                };
+            public WheelSavedState[] newArray(int size) {
+                return new WheelSavedState[size];
+            }
+        };
         float mProgress;
         float mTargetProgress;
         boolean isSpinning;

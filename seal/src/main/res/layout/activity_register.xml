@@ -49,6 +49,7 @@
             android:maxLength="32"
             android:paddingLeft="10dip"
             android:paddingRight="10dip"
+            android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#FFF"
             android:textColorHint="#FFFFFF" />

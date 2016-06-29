@@ -67,7 +67,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
     private AMap aMap;
     private LocationManagerProxy mLocationManagerProxy;
     private Handler handler = new Handler();
-    private LocationSource.OnLocationChangedListener listener;
+    private OnLocationChangedListener listener;
     private LatLng myLocation = null;
     private Marker centerMarker;
     private boolean isMovingMarker = false;
@@ -83,7 +83,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amap);
-        getSupportActionBar().setTitle("地理位置");
+        getSupportActionBar().setTitle(getApplicationContext().getString(R.string.geographical_position));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
         mapView = (MapView) findViewById(R.id.map);
@@ -93,18 +93,18 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
             int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (checkPermission != PackageManager.PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+                    requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
                 } else {
                     new AlertDialog.Builder(this)
-                            .setMessage("您需要在设置里打开位置权限。")
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
-                                }
-                            })
-                            .setNegativeButton("取消", null)
-                            .create().show();
+                    .setMessage("您需要在设置里打开位置权限。")
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .create().show();
                 }
                 return;
             }
@@ -130,12 +130,12 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
 
             if (model) {
                 CameraPosition location = new CameraPosition.Builder()
-                        .target(new LatLng(mMsg.getLat(), mMsg.getLng())).zoom(18).bearing(0).tilt(30).build();
+                .target(new LatLng(mMsg.getLat(), mMsg.getLng())).zoom(18).bearing(0).tilt(30).build();
                 show(location);
             } else {
                 aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
-                        .position(new LatLng(mMsg.getLat(), mMsg.getLng())).title(mMsg.getPoi())
-                        .snippet(mMsg.getLat() + "," + mMsg.getLng()).draggable(false));
+                               .position(new LatLng(mMsg.getLat(), mMsg.getLng())).title(mMsg.getPoi())
+                               .snippet(mMsg.getLat() + "," + mMsg.getLng()).draggable(false));
             }
             return;
         }
@@ -169,7 +169,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
             FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                     .beginTransaction();
             fragmentTransaction.add(android.R.id.content, aMapFragment,
-                    MAP_FRAGMENT_TAG);
+                                    MAP_FRAGMENT_TAG);
             fragmentTransaction.commit();
         }
     }
@@ -200,7 +200,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
         listener = onLocationChangedListener;
         mLocationManagerProxy = LocationManagerProxy.getInstance(this);
         mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, -1, 100, this);
+            LocationProviderProxy.AMapNetwork, -1, 100, this);
     }
 
     @Override
@@ -407,7 +407,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
         // 自定义系统定位蓝点
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.drawable.img_location_now));
+                                       fromResource(R.drawable.img_location_now));
         myLocationStyle.strokeWidth(0);
         myLocationStyle.strokeColor(R.color.main_theme_color);
         myLocationStyle.radiusFillColor(Color.TRANSPARENT);
@@ -416,8 +416,8 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
 
     private Uri getMapUrl(double x, double y) {
         String url = "http://restapi.amap.com/v3/staticmap?location=" + y + "," + x +
-                "&zoom=17&scale=2&size=150*150&markers=mid,,A:" + y + ","
-                + x + "&key=" + "ee95e52bf08006f63fd29bcfbcf21df0";
+                     "&zoom=17&scale=2&size=400*230&markers=mid,,A:" + y + ","
+                     + x + "&key=" + "ee95e52bf08006f63fd29bcfbcf21df0";
         NLog.e("getMapUrl", url);
         return Uri.parse(url);
     }
@@ -443,7 +443,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
                     finish();
                 } else {
                     SealAppContext.getInstance().getLastLocationCallback()
-                            .onFailure("定位失败");
+                    .onFailure("定位失败");
                 }
                 break;
             case android.R.id.home:

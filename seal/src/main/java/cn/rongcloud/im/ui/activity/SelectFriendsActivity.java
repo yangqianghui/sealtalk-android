@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,6 +77,7 @@ public class SelectFriendsActivity extends BaseActivity {
     private SideBar mSidBar;
     /**
      * 中部展示的字母提示
+     *
      */
     public TextView dialog;
 
@@ -107,6 +109,8 @@ public class SelectFriendsActivity extends BaseActivity {
     private ArrayList<String> discListMember;
     private String addDis, deleDis;
     private ArrayList<UserInfo> addDisList, deleDisList;
+
+    private boolean isStartPrivateChat;
 
 
     @Override
@@ -148,6 +152,7 @@ public class SelectFriendsActivity extends BaseActivity {
             getSupportActionBar().setTitle("移除讨论组成员");
         } else {
             getSupportActionBar().setTitle(R.string.start_chat);
+            isStartPrivateChat = true;
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -225,9 +230,9 @@ public class SelectFriendsActivity extends BaseActivity {
                     continue;
                 }
                 dataLsit.add(new Friend(deleDisList.get(i).getUserId(),
-                        deleDisList.get(i).getName(),
-                        deleDisList.get(i).getPortraitUri().toString()
-                ));
+                                        deleDisList.get(i).getName(),
+                                        deleDisList.get(i).getPortraitUri().toString()
+                                       ));
             }
         } else if (deleteGroupMemberList != null && deleteGroupMemberList.size() > 0) {
             for (int i = 0; i < deleteGroupMemberList.size(); i++) {
@@ -235,9 +240,9 @@ public class SelectFriendsActivity extends BaseActivity {
                     continue;
                 }
                 dataLsit.add(new Friend(deleteGroupMemberList.get(i).getUser().getId(),
-                        deleteGroupMemberList.get(i).getUser().getNickname(),
-                        deleteGroupMemberList.get(i).getUser().getPortraitUri()
-                ));
+                                        deleteGroupMemberList.get(i).getUser().getNickname(),
+                                        deleteGroupMemberList.get(i).getUser().getPortraitUri()
+                                       ));
             }
         } else {
             List<cn.rongcloud.im.db.Friend> list = DBManager.getInstance(mContext).getDaoSession().getFriendDao().loadAll();
@@ -276,6 +281,7 @@ public class SelectFriendsActivity extends BaseActivity {
     class StartDiscussionAdapter extends BaseAdapter implements SectionIndexer {
 
         private Context context;
+        private ArrayList<CheckBox> checkBoxList = new ArrayList<>();
 
         public StartDiscussionAdapter(Context context, List<Friend> list) {
             this.context = context;
@@ -342,9 +348,29 @@ public class SelectFriendsActivity extends BaseActivity {
                 viewHolder.tvLetter.setVisibility(View.GONE);
             }
 
+            if (isStartPrivateChat) {
+                viewHolder.isSelect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CheckBox cb = (CheckBox) v;
+                        if (cb != null) {
+                            if (cb.isChecked()) {
+                                for (CheckBox c : checkBoxList) {
+                                    c.setChecked(false);
+                                }
+                                checkBoxList.clear();
+                                checkBoxList.add(cb);
+                            } else {
+                                checkBoxList.clear();
+                            }
+                        }
+                    }
+                });
+            }
             viewHolder.isSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.d("RYM", "isChecked = " + isChecked);
                     if (isChecked) {
                         mCBFlag.put(position, true);
                     } else {

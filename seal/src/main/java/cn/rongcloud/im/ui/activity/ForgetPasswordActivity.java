@@ -39,7 +39,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
 
     private Button mGetCode, mOK;
 
-    private String phone,mCodeToken;
+    private String phone, mCodeToken;
 
     private boolean available;
 

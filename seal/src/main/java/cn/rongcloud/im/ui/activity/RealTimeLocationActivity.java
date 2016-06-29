@@ -126,8 +126,11 @@ public class RealTimeLocationActivity extends LocationMapActivity implements Vie
                 count = userIds.size();
             }
         }
-
-        mParticipantTextView.setText(String.format(" %1$d人在共享位置", count));
+        if (count <= 1) {
+            mParticipantTextView.setText(String.format(" %1$d " + getApplicationContext().getString(R.string.person_is_sharing_loaction), count));
+        } else {
+            mParticipantTextView.setText(String.format(" %1$d " + getApplicationContext().getString(R.string.persons_are_sharing_loaction), count));
+        }
     }
 
     @Override

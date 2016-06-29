@@ -37,8 +37,8 @@ public class DoubleChatRoomActivity extends FragmentActivity {
         ConversationFragment fragment = new ConversationFragment();
 
         Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-                .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
-                .appendQueryParameter("targetId", mTargetId).build();
+                  .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
+                  .appendQueryParameter("targetId", mTargetId).build();
 
         fragment.setUri(uri);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -51,8 +51,8 @@ public class DoubleChatRoomActivity extends FragmentActivity {
         ConversationFragment fragment = new ConversationFragment();
 
         Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-                .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
-                .appendQueryParameter("targetId", mTargetId).build();
+                  .appendPath("conversation").appendPath(mConversationType.getName().toLowerCase())
+                  .appendQueryParameter("targetId", mTargetId).build();
 
         fragment.setUri(uri);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -60,22 +60,22 @@ public class DoubleChatRoomActivity extends FragmentActivity {
         transaction.commit();
     }
 
-   public void add1(View view) {
-       if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) && !TextUtils.isEmpty(chatroomId1)) {
-           enterFragment1(Conversation.ConversationType.CHATROOM, chatroomId1);
-       }
-   }
-    public void add2(View view){
+    public void add1(View view) {
+        if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) && !TextUtils.isEmpty(chatroomId1)) {
+            enterFragment1(Conversation.ConversationType.CHATROOM, chatroomId1);
+        }
+    }
+    public void add2(View view) {
         if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) && !TextUtils.isEmpty(chatroomId2)) {
             enterFragment2(Conversation.ConversationType.CHATROOM, chatroomId2);
         }
     }
-    public void quit1(View view){
+    public void quit1(View view) {
         if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) && !TextUtils.isEmpty(chatroomId1)) {
             RongIM.getInstance().quitChatRoom(chatroomId1, new RongIMClient.OperationCallback() {
                 @Override
                 public void onSuccess() {
-                    NToast.shortToast(DoubleChatRoomActivity.this,"quit success 1");
+                    NToast.shortToast(DoubleChatRoomActivity.this, "quit success 1");
                 }
 
                 @Override
@@ -85,12 +85,12 @@ public class DoubleChatRoomActivity extends FragmentActivity {
             });
         }
     }
-    public void quit2(View view){
+    public void quit2(View view) {
         if (RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) && !TextUtils.isEmpty(chatroomId2)) {
             RongIM.getInstance().quitChatRoom(chatroomId2, new RongIMClient.OperationCallback() {
                 @Override
                 public void onSuccess() {
-                    NToast.shortToast(DoubleChatRoomActivity.this,"quit success 2");
+                    NToast.shortToast(DoubleChatRoomActivity.this, "quit success 2");
                 }
 
                 @Override

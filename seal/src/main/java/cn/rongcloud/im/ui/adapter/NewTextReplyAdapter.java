@@ -22,7 +22,7 @@ public class NewTextReplyAdapter extends android.widget.BaseAdapter {
     private List<UserInfo> mNumberList;
     private LayoutInflater mLayoutInflater;
 
-    public NewTextReplyAdapter(Context context,List<UserInfo> list){
+    public NewTextReplyAdapter(Context context, List<UserInfo> list) {
         mLayoutInflater = LayoutInflater.from(context);
         this.mContext = context;
         this.mNumberList = list;
@@ -47,13 +47,13 @@ public class NewTextReplyAdapter extends android.widget.BaseAdapter {
         ViewHolder viewHolder = null;
         Resource res = new Resource(mNumberList.get(i).getPortraitUri());
         if (convertView == null || convertView.getTag() == null) {
-            convertView = mLayoutInflater.inflate(R.layout.item_reply, parent,false);
+            convertView = mLayoutInflater.inflate(R.layout.item_reply, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.mUserName = (TextView) convertView.findViewById(R.id.text1);
             viewHolder.mImageView = (AsyncImageView) convertView.findViewById(R.id.reply1);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder= (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         if (viewHolder != null) {
 

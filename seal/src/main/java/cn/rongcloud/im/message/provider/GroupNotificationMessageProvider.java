@@ -18,6 +18,7 @@ import cn.rongcloud.im.server.response.CreateGroupData;
 import cn.rongcloud.im.server.response.GroupNotificationMessageData;
 import cn.rongcloud.im.server.utils.json.JsonMananger;
 import io.rong.imkit.RongContext;
+import io.rong.imkit.RongIM;
 import io.rong.imkit.model.ProviderTag;
 import io.rong.imkit.model.UIMessage;
 import io.rong.imkit.widget.provider.IContainerItemProvider;
@@ -63,10 +64,18 @@ public class GroupNotificationMessageProvider extends IContainerItemProvider.Mes
                     if (operatorNickname.equals(memberName)) {
                         viewHolder.contentTextView.setText(memberName + context.getString(R.string.join_group));
                     } else {
-                        viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.invitation) + memberName + context.getString(R.string.join_group));
+                        if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId())) {
+                            viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.invitation) + memberName + context.getString(R.string.join_group));
+                        } else {
+                            viewHolder.contentTextView.setText(context.getString(R.string.you) + context.getString(R.string.invitation) + memberName + context.getString(R.string.join_group));
+                        }
                     }
                 } else if (groupNotificationMessage.getOperation().equals("Kicked")) {
-                    viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.will) + memberName + context.getString(R.string.remove_group));
+                    if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId()) ) {
+                        viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.will) + memberName + context.getString(R.string.remove_group));
+                    } else {
+                        viewHolder.contentTextView.setText(context.getString(R.string.you) + context.getString(R.string.will) + memberName + context.getString(R.string.remove_group));
+                    }
                 } else if (groupNotificationMessage.getOperation().equals("Create")) {
                     CreateGroupData createGroupData = null;
                     try {
@@ -74,13 +83,21 @@ public class GroupNotificationMessageProvider extends IContainerItemProvider.Mes
                     } catch (HttpException e) {
                         e.printStackTrace();
                     }
-                    viewHolder.contentTextView.setText(createGroupData.getData().getOperatorNickname() + context.getString(R.string.create_groups));
+                    if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId()) ) {
+                        viewHolder.contentTextView.setText(createGroupData.getData().getOperatorNickname() + context.getString(R.string.created_group));
+                    } else {
+                        viewHolder.contentTextView.setText(context.getString(R.string.you) + context.getString(R.string.created_group));
+                    }
                 } else if (groupNotificationMessage.getOperation().equals("Dismiss")) {
                     viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.dismiss_groups));
                 } else if (groupNotificationMessage.getOperation().equals("Quit")) {
                     viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.quit_groups));
                 } else if (groupNotificationMessage.getOperation().equals("Rename")) {
-                    viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.change_group_name));
+                    if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId()) ) {
+                        viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.change_group_name));
+                    } else {
+                        viewHolder.contentTextView.setText(context.getString(R.string.you) + context.getString(R.string.change_group_name));
+                    }
                 }
         }
     }
@@ -114,21 +131,37 @@ public class GroupNotificationMessageProvider extends IContainerItemProvider.Mes
             memberName = operatorNickname;
         }
         if (groupNotificationMessage.getOperation().equals("Add")) {
-            if (groupNotificationMessage.getOperatorUserId().toString().trim().equals(data.getData().getTargetUserIds().get(0).toString().trim())) {
+            if (groupNotificationMessage.getOperatorUserId().equals(data.getData().getTargetUserIds().get(0))) {
                 return new SpannableString(operatorNickname + context.getString(R.string.join_group));
             } else {
-                return new SpannableString(operatorNickname + context.getString(R.string.invitation) + memberName + context.getString(R.string.join_group));
+                if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId())) {
+                    return new SpannableString(operatorNickname + context.getString(R.string.invitation) + memberName + context.getString(R.string.join_group));
+                } else {
+                    return new SpannableString(context.getString(R.string.you) + context.getString(R.string.invitation) + memberName + context.getString(R.string.join_group));
+                }
             }
         } else if (groupNotificationMessage.getOperation().equals("Kicked")) {
-            return new SpannableString(operatorNickname + context.getString(R.string.will) + memberName + context.getString(R.string.remove_group));
+            if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId())) {
+                return new SpannableString(operatorNickname + context.getString(R.string.will) + memberName + context.getString(R.string.remove_group));
+            } else {
+                return new SpannableString(context.getString(R.string.you) + context.getString(R.string.will) + memberName + context.getString(R.string.remove_group));
+            }
         } else if (groupNotificationMessage.getOperation().equals("Create")) {
-            return new SpannableString(operatorNickname + context.getString(R.string.create_groups));
+            if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId())) {
+                return new SpannableString(operatorNickname + context.getString(R.string.created_group));
+            } else {
+                return new SpannableString(context.getString(R.string.you) + context.getString(R.string.created_group));
+            }
         } else if (groupNotificationMessage.getOperation().equals("Dismiss")) {
             return new SpannableString(operatorNickname + context.getString(R.string.dismiss_groups));
         } else if (groupNotificationMessage.getOperation().equals("Quit")) {
             return new SpannableString(operatorNickname + context.getString(R.string.quit_groups));
         } else if (groupNotificationMessage.getOperation().equals("Rename")) {
-            return new SpannableString(operatorNickname + context.getString(R.string.change_group_name));
+            if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId())) {
+                return new SpannableString(operatorNickname + context.getString(R.string.change_group_name));
+            } else {
+                return new SpannableString(context.getString(R.string.you) + context.getString(R.string.change_group_name));
+            }
         }
         return new SpannableString("[群组通知]");
     }

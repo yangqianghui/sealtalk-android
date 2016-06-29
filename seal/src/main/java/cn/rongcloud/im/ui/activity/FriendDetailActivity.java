@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import cn.rongcloud.im.App;
 import cn.rongcloud.im.R;
+import cn.rongcloud.im.SealAppContext;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.pinyin.Friend;
 import cn.rongcloud.im.server.response.AddToBlackListResponse;
@@ -117,13 +118,13 @@ public class FriendDetailActivity extends BaseActivity implements View.OnClickLi
             case ADDBLACKLIST:
                 if (userInfo != null) {
                     return action.addToBlackList(userInfo.getId());
-                }else {
+                } else {
                     return action.addToBlackList(friend.getUserId());
                 }
             case REMOVEBLACKLIST:
                 if (userInfo != null) {
                     return action.removeFromBlackList(userInfo.getId());
-                }else {
+                } else {
                     return action.removeFromBlackList(friend.getUserId());
                 }
             case GETBLACKLIST:
@@ -272,16 +273,14 @@ public class FriendDetailActivity extends BaseActivity implements View.OnClickLi
 
             case R.id.start_friend_chat:
 
-                if (RongIM.getInstance() != null) {
-                    if (friend != null) {
-                        RongIM.getInstance().startPrivateChat(mContext, friend.getUserId(), friend.getName());
-                    } else if (userInfo != null) {
-                        RongIM.getInstance().startPrivateChat(mContext, userInfo.getId(), userInfo.getNickname());
-                    }
-
+                String targetId = friend != null ? friend.getUserId() : (userInfo != null ? userInfo.getId() : null);
+                String name = friend != null ? friend.getName() : (userInfo != null ? userInfo.getNickname() : null);
+                if (SealAppContext.getInstance().containsInQue(Conversation.ConversationType.PRIVATE, targetId)) {
+                    finish();
+                } else {
+                    RongIM.getInstance().startPrivateChat(mContext, targetId, name);
                     finish();
                 }
-
                 break;
         }
     }
@@ -323,7 +322,7 @@ public class FriendDetailActivity extends BaseActivity implements View.OnClickLi
                 if (isChecked) {
                     LoadDialog.show(mContext);
                     request(ADDBLACKLIST);
-                }else {
+                } else {
                     LoadDialog.show(mContext);
                     request(REMOVEBLACKLIST);
                 }

@@ -70,7 +70,7 @@ public class NewCameraInputProvider extends InputProvider.ExtendProvider {
     public void onPluginClick(View arg0) {
         // 点击跳转至拍照
         photoFile = new File(Environment.getExternalStorageDirectory()
-                + "/my_camera/" + UUID.randomUUID() + ".jpg");// 图片储存路径
+                             + "/my_camera/" + UUID.randomUUID() + ".jpg");// 图片储存路径
         if (!photoFile.getParentFile().exists()) {
             photoFile.getParentFile().mkdirs();
         }
@@ -85,18 +85,18 @@ public class NewCameraInputProvider extends InputProvider.ExtendProvider {
         if (requestCode == 1) {// 拍照
             String localStrPath = photoFile.getPath();
             byte[] compressBitmap = BitmapUtils.compressBitmap(480 * 480,
-                    localStrPath);
+                                    localStrPath);
             if (null != compressBitmap) {
                 Bitmap bmPhoto = BitmapUtils
-                        .Bytes2Bimap(compressBitmap);
+                                 .Bytes2Bimap(compressBitmap);
                 if (null != bmPhoto) {
                     String strTempPhotoPath;
                     try {
                         strTempPhotoPath = BitmapUtils
-                                .saveFile(bmPhoto,
-                                        UUID.randomUUID()
-                                                + ".jpeg");
-                        if(bmPhoto != null){
+                                           .saveFile(bmPhoto,
+                                                     UUID.randomUUID()
+                                                     + ".jpeg");
+                        if (bmPhoto != null) {
                             bmPhoto.recycle();
                             bmPhoto = null;
                         }
@@ -137,28 +137,28 @@ public class NewCameraInputProvider extends InputProvider.ExtendProvider {
             if (RongIM.getInstance() != null
                     && RongIM.getInstance().getRongIMClient() != null)
                 RongIM.getInstance()
-                        .getRongIMClient()
-                        .sendImageMessage(getCurrentConversation().getConversationType(),getCurrentConversation().getTargetId(),content,null,null,new RongIMClient.SendImageMessageCallback() {
-                            @Override
-                            public void onAttached(Message message) {
+                .getRongIMClient()
+                .sendImageMessage(getCurrentConversation().getConversationType(), getCurrentConversation().getTargetId(), content, null, null, new RongIMClient.SendImageMessageCallback() {
+                @Override
+                public void onAttached(Message message) {
 
-                            }
+                }
 
-                            @Override
-                            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+                @Override
+                public void onError(Message message, RongIMClient.ErrorCode errorCode) {
 
-                            }
+                }
 
-                            @Override
-                            public void onSuccess(Message message) {
+                @Override
+                public void onSuccess(Message message) {
 
-                            }
+                }
 
-                            @Override
-                            public void onProgress(Message message, int i) {
+                @Override
+                public void onProgress(Message message, int i) {
 
-                            }
-                        });
+                }
+            });
 
         }
     }

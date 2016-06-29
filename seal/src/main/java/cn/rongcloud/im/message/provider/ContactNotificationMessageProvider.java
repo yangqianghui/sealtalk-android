@@ -76,7 +76,7 @@ public class ContactNotificationMessageProvider extends IContainerItemProvider.M
 
     @Override
     public void onItemClick(View view, int position, ContactNotificationMessage
-            content, UIMessage message) {
+                            content, UIMessage message) {
     }
 
     @Override
@@ -95,13 +95,13 @@ public class ContactNotificationMessageProvider extends IContainerItemProvider.M
         }
         String[] items;
 
-        items = new String[]{view.getContext().getResources().getString(R.string.de_dialog_item_message_delete)};
+        items = new String[] {view.getContext().getResources().getString(R.string.de_dialog_item_message_delete)};
 
         ArraysDialogFragment.newInstance(name, items).setArraysDialogItemListener(new ArraysDialogFragment.OnArraysDialogItemListener() {
             @Override
             public void OnArraysDialogItemClick(DialogInterface dialog, int which) {
                 if (which == 0)
-                    RongIM.getInstance().getRongIMClient().deleteMessages(new int[]{message.getMessageId()}, null);
+                    RongIM.getInstance().getRongIMClient().deleteMessages(new int[] {message.getMessageId()}, null);
 
             }
         }).show(((FragmentActivity) view.getContext()).getSupportFragmentManager());

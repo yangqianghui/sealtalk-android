@@ -15,6 +15,8 @@ import cn.rongcloud.im.R;
  */
 public class AboutRongCloudActivity extends BaseActionBarActivity {
 
+    private TextView mSDKVersion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +25,8 @@ public class AboutRongCloudActivity extends BaseActionBarActivity {
         getSupportActionBar().setTitle(R.string.set_rongcloud);
         RelativeLayout mUpdateLog = (RelativeLayout) findViewById(R.id.rl_update_log);
         RelativeLayout mFunctionIntroduce = (RelativeLayout) findViewById(R.id.rl_function_introduce);
-        RelativeLayout mDVDocument = (RelativeLayout) findViewById(R.id.rl_dv_document);
         RelativeLayout mRongCloudWeb = (RelativeLayout) findViewById(R.id.rl_rongcloud_web);
-        TextView mCurrentVersion = (TextView) findViewById(R.id.version_new);
+        mSDKVersion = (TextView) findViewById(R.id.sdk_version_text);
 
         mUpdateLog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,12 +40,7 @@ public class AboutRongCloudActivity extends BaseActionBarActivity {
                 startActivity(new Intent(AboutRongCloudActivity.this, FunctionIntroducedActivity.class));
             }
         });
-        mDVDocument.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(AboutRongCloudActivity.this, DocumentActivity.class));
-            }
-        });
+
         mRongCloudWeb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,7 +49,7 @@ public class AboutRongCloudActivity extends BaseActionBarActivity {
         });
 
         String[] versionInfo = getVersionInfo();
-        mCurrentVersion.setText(versionInfo[1]);
+        mSDKVersion.setText(versionInfo[1]);
     }
 
     private String[] getVersionInfo() {

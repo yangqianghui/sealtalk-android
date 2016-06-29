@@ -40,7 +40,20 @@ public class UserRelationshipResponse {
         return result;
     }
 
-    public static class ResultEntity {
+    public static class ResultEntity implements Comparable {
+
+        public ResultEntity(String displayName, String message, int status, String updatedAt, UserEntity user) {
+            this.displayName = displayName;
+            this.message = message;
+            this.status = status;
+            this.updatedAt = updatedAt;
+            this.user = user;
+        }
+
+        public ResultEntity() {
+
+        }
+
         private String displayName;
         private String message;
         private int status;
@@ -91,6 +104,11 @@ public class UserRelationshipResponse {
 
         public UserEntity getUser() {
             return user;
+        }
+
+        @Override
+        public int compareTo(Object another) {
+            return 0;
         }
 
         public static class UserEntity {

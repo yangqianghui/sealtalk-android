@@ -58,7 +58,7 @@ public class BitmapUtils {
         if (!file.exists()) {
             try {
                 bitmap.compress(CompressFormat.JPEG, 30, new FileOutputStream(
-                        file));
+                                    file));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -73,7 +73,7 @@ public class BitmapUtils {
     // -------------------------------------------------------------------------------------------------------------------
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Config.ARGB_8888);
+                                            bitmap.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;
@@ -142,9 +142,9 @@ public class BitmapUtils {
         final int color = 0xff424242;
         final Paint paint = new Paint();
         final Rect src = new Rect((int) left, (int) top, (int) right,
-                (int) bottom);
+                                  (int) bottom);
         final Rect dst = new Rect((int) dst_left, (int) dst_top,
-                (int) dst_right, (int) dst_bottom);
+                                  (int) dst_right, (int) dst_bottom);
         final RectF rectF = new RectF(dst);
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
@@ -153,7 +153,7 @@ public class BitmapUtils {
         paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
         canvas.drawBitmap(bitmap, src, dst, paint);
 
-        if(null != bitmap) {
+        if (null != bitmap) {
             bitmap.recycle();
             bitmap = null;
         }
@@ -191,7 +191,7 @@ public class BitmapUtils {
         if (bytes != null)
             if (opts != null)
                 return BitmapFactory.decodeByteArray(bytes, 0, bytes.length,
-                        opts);
+                                                     opts);
             else
                 return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         return null;
@@ -215,7 +215,7 @@ public class BitmapUtils {
         float scaleHeight = (float) h / (float) height;
         matrix.postScale(scaleWidth, scaleHeight);
         Bitmap newBmp = Bitmap.createBitmap(bitmap, 0, 0, width, height,
-                matrix, true);
+                                            matrix, true);
         return newBmp;
     }
 
@@ -227,7 +227,7 @@ public class BitmapUtils {
         float scaleHeight = (float) h / (float) height;
         matrix.postScale(scaleWidth, scaleHeight);
         Bitmap newBmp = Bitmap.createBitmap(bitmap, 0, 0, width, height,
-                matrix, true);
+                                            matrix, true);
         return newBmp;
     }
 
@@ -259,7 +259,7 @@ public class BitmapUtils {
         bitmap.compress(CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();
         String data = Base64.encodeToString(bytes, 0, bytes.length,
-                Base64.DEFAULT);
+                                            Base64.DEFAULT);
 
         if (bitmap != null) {
             bitmap.recycle();
@@ -316,15 +316,15 @@ public class BitmapUtils {
     public static Bitmap drawableToBitmap(Drawable drawable) {
 
         Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Config.ARGB_8888
-                                : Config.RGB_565);
+                        .createBitmap(
+                            drawable.getIntrinsicWidth(),
+                            drawable.getIntrinsicHeight(),
+                            drawable.getOpacity() != PixelFormat.OPAQUE ? Config.ARGB_8888
+                            : Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
 
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
+                           drawable.getIntrinsicHeight());
         drawable.draw(canvas);
 
         return bitmap;
@@ -344,7 +344,7 @@ public class BitmapUtils {
             if (mid > maxSize) {
                 double i = mid / maxSize;
                 bBitmap = compressBitmap((int) (maxNumOfPixels / Math.abs(i)),
-                        imgpath);
+                                         imgpath);
             }
             return bBitmap;
         } else {
@@ -393,7 +393,7 @@ public class BitmapUtils {
                 maxNumOfPixels = 128 * 128;
             }
             options.inSampleSize = computeSampleSize(options, -1,
-                    maxNumOfPixels);
+                                   maxNumOfPixels);
             // 使用获取到的inSampleSize值再次解析图片
             options.inJustDecodeBounds = false;
             bitmap = BitmapFactory.decodeStream(f, null, options);
@@ -412,7 +412,7 @@ public class BitmapUtils {
 
         int initialSize = computeInitialSampleSize(options, minSideLength,
 
-                maxNumOfPixels);
+                          maxNumOfPixels);
 
         int roundedSize;
 
@@ -437,7 +437,7 @@ public class BitmapUtils {
 
     private static int computeInitialSampleSize(BitmapFactory.Options options,
 
-                                                int minSideLength, int maxNumOfPixels) {
+            int minSideLength, int maxNumOfPixels) {
 
         double w = options.outWidth;
 
@@ -445,13 +445,13 @@ public class BitmapUtils {
 
         int lowerBound = (maxNumOfPixels == -1) ? 1 :
 
-                (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
+                         (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
 
         int upperBound = (minSideLength == -1) ? 128 :
 
-                (int) Math.min(Math.floor(w / minSideLength),
+                         (int) Math.min(Math.floor(w / minSideLength),
 
-                        Math.floor(h / minSideLength));
+                                        Math.floor(h / minSideLength));
 
         if (upperBound < lowerBound) {
 
@@ -499,9 +499,9 @@ public class BitmapUtils {
      * @throws IOException
      */
     public static String saveFile(Bitmap bm, String fileName) throws IOException {
-        String path = getSDPath() +"/revoeye/";
+        String path = getSDPath() + "/revoeye/";
         File dirFile = new File(path);
-        if(!dirFile.exists()){
+        if (!dirFile.exists()) {
             dirFile.mkdir();
         }
         File myCaptureFile = new File(path + fileName);
@@ -511,7 +511,7 @@ public class BitmapUtils {
         bos.close();
         return myCaptureFile.getPath();
     }
-    public static String getSDPath(){
+    public static String getSDPath() {
         File sdDir = null;
         boolean sdCardExist = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED); //判断sd卡是否存在
         if (sdCardExist)

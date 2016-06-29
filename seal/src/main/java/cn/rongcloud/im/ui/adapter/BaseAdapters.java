@@ -33,25 +33,25 @@ public abstract class BaseAdapters<T> extends android.widget.BaseAdapter {
     }
 
     public void addData(T data) {
-        if(data != null){
+        if (data != null) {
             this.dataSet.add(data);
         }
     }
 
     public void addData(Collection<T> data) {
-        if(data != null){
+        if (data != null) {
             this.dataSet.addAll(data);
         }
     }
 
     public void addData(int index, Collection<T> data) {
-        if(data != null){
+        if (data != null) {
             this.dataSet.addAll(index, data);
         }
     }
 
     public void removeData(Collection<T> data) {
-        if(data != null){
+        if (data != null) {
             this.dataSet.removeAll(data);
         }
     }
@@ -61,7 +61,7 @@ public abstract class BaseAdapters<T> extends android.widget.BaseAdapter {
     }
 
     public void remove(T data) {
-        if(data != null){
+        if (data != null) {
             this.dataSet.remove(data);
         }
     }

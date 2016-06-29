@@ -122,10 +122,12 @@ public class RequestParams {
      * @param value the value string for the initial param.
      */
     @SuppressWarnings("serial")
-	public RequestParams(final String key, final String value) {
-        this(new HashMap<String, String>() {{
-            put(key, value);
-        }});
+    public RequestParams(final String key, final String value) {
+        this(new HashMap<String, String>() {
+            {
+                put(key, value);
+            }
+        });
     }
 
     /**
@@ -239,7 +241,7 @@ public class RequestParams {
      * @param value the value string for the new param.
      */
     @SuppressWarnings("unchecked")
-	public void add(String key, String value) {
+    public void add(String key, String value) {
         if (key != null && value != null) {
             Object params = urlParamsWithObjects.get(key);
             if (params == null) {
@@ -358,7 +360,7 @@ public class RequestParams {
             StreamWrapper stream = entry.getValue();
             if (stream.inputStream != null) {
                 entity.addPart(entry.getKey(), stream.name, stream.inputStream,
-                        stream.contentType);
+                               stream.contentType);
             }
         }
 
@@ -383,18 +385,18 @@ public class RequestParams {
 
         //sort
         List<String> keyList = new ArrayList<String>();
-        for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-        	keyList.add(entry.getKey());
+        for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+            keyList.add(entry.getKey());
         }
         Collections.sort(keyList);
-        
+
         //order a-z sort add
-        for(String key : keyList){
-        	for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-        		if(key.equals(entry.getKey())){
-        			lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        		}
-        	}
+        for (String key : keyList) {
+            for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+                if (key.equals(entry.getKey())) {
+                    lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
+            }
         }
 
         lparams.addAll(getParamsList(null, urlParamsWithObjects));
@@ -403,7 +405,7 @@ public class RequestParams {
     }
 
     @SuppressWarnings("unchecked")
-	private List<BasicNameValuePair> getParamsList(String key, Object value) {
+    private List<BasicNameValuePair> getParamsList(String key, Object value) {
         List<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();
         if (value instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) value;
@@ -414,7 +416,7 @@ public class RequestParams {
                 Object nestedValue = map.get(nestedKey);
                 if (nestedValue != null) {
                     params.addAll(getParamsList(key == null ? nestedKey : String.format("%s[%s]", key, nestedKey),
-                            nestedValue));
+                                                nestedValue));
                 }
             }
         } else if (value instanceof List) {
@@ -444,27 +446,27 @@ public class RequestParams {
      * @return
      */
     public String getParamString(boolean isSimple) {
-    	StringBuilder sb = new StringBuilder();
-    	if(isSimple){
-        	//sort
+        StringBuilder sb = new StringBuilder();
+        if (isSimple) {
+            //sort
             List<String> keyList = new ArrayList<String>();
-            for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-            	keyList.add(entry.getKey());
+            for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+                keyList.add(entry.getKey());
             }
             Collections.sort(keyList);
-            
+
             //order a-z sort add
-            for(String key : keyList){
-            	for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-            		if(key.equals(entry.getKey())){
-            			sb.append(entry.getKey()).append(entry.getValue());
-            		}
-            	}
+            for (String key : keyList) {
+                for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+                    if (key.equals(entry.getKey())) {
+                        sb.append(entry.getKey()).append(entry.getValue());
+                    }
+                }
             }
-    	}
-    	return sb.toString();
+        }
+        return sb.toString();
     }
-    
+
     public String getParamString() {
         return URLEncodedUtils.format(getParamsList(), HTTP.UTF_8);
     }
@@ -491,11 +493,11 @@ public class RequestParams {
         }
     }
 
-	public ConcurrentHashMap<String, String> getUrlParams() {
-		return urlParams;
-	}
+    public ConcurrentHashMap<String, String> getUrlParams() {
+        return urlParams;
+    }
 
-	public void setUrlParams(ConcurrentHashMap<String, String> urlParams) {
-		this.urlParams = urlParams;
-	}
+    public void setUrlParams(ConcurrentHashMap<String, String> urlParams) {
+        this.urlParams = urlParams;
+    }
 }

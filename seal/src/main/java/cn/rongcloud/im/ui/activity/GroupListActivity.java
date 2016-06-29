@@ -90,7 +90,7 @@ public class GroupListActivity extends BaseActivity {
                                     if (list.size() > 0 && list != null) { //服务端上也没有群组数据
                                         for (GetGroupResponse.ResultEntity g : list) {
                                             DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
-                                                    new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
+                                                new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
                                             );
                                         }
                                     }
@@ -135,7 +135,7 @@ public class GroupListActivity extends BaseActivity {
 //                    intent.putExtra("QunBean", (Serializable) adapter.getItem(position));
 //                    startActivityForResult(intent, 99);
                     Groups bean = (Groups) adapter.getItem(position);
-                    RongIM.getInstance().startGroupChat(GroupListActivity.this,bean.getQunId(),bean.getName());
+                    RongIM.getInstance().startGroupChat(GroupListActivity.this, bean.getQunId(), bean.getName());
                 }
             });
         } else {
@@ -207,14 +207,14 @@ public class GroupListActivity extends BaseActivity {
             }
             viewHolder.tvTitle.setText(mContent.getName());
             if (TextUtils.isEmpty(mContent.getPortraitUri())) {
-                ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(mContent.getName(), mContent.getQunId()),viewHolder.mImageView, App.getOptions());
-            }else {
+                ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(mContent.getName(), mContent.getQunId()), viewHolder.mImageView, App.getOptions());
+            } else {
                 ImageLoader.getInstance().displayImage(mContent.getPortraitUri(), viewHolder.mImageView, App.getOptions());
             }
             viewHolder.groupChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.GROUP,mContent.getQunId(),mContent.getName());
+                    RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.GROUP, mContent.getQunId(), mContent.getName());
                 }
             });
             return convertView;

@@ -86,7 +86,7 @@ public class TextHttpResponseHandler extends AsyncHttpResponseHandler {
      * @param responseBody the body of the HTTP response from the server
      */
     @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void onSuccess(int statusCode, Header[] headers, String responseBody) {
         onSuccess(statusCode, responseBody);
     }

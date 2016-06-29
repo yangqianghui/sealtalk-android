@@ -178,34 +178,34 @@ public class DisturbActivity extends BaseActionBarActivity implements View.OnCli
             } else {
                 if (RongIM.getInstance() != null)
                     mThreadHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            RongIM.getInstance().getNotificationQuietHours(new RongIMClient.GetNotificationQuietHoursCallback() {
-                                @Override
-                                public void onSuccess(String startTime, int spanMins) {
-                                    Log.e(TAG, "----yb----获取会话通知周期-onSuccess起始时间startTime:" + startTime + ",间隔分钟数spanMins:" + spanMins);
-                                    if (spanMins > 0) {
-                                        Message msg = Message.obtain();
-                                        msg.what = 1;
-                                        msg.obj = startTime;
-                                        msg.arg1 = spanMins;
-                                        mHandler.sendMessage(msg);
-                                    } else {
-                                        Message mssg = Message.obtain();
-                                        mssg.what = 2;
-                                        mHandler.sendMessage(mssg);
-                                    }
+                    @Override
+                    public void run() {
+                        RongIM.getInstance().getNotificationQuietHours(new RongIMClient.GetNotificationQuietHoursCallback() {
+                            @Override
+                            public void onSuccess(String startTime, int spanMins) {
+                                Log.e(TAG, "----yb----获取会话通知周期-onSuccess起始时间startTime:" + startTime + ",间隔分钟数spanMins:" + spanMins);
+                                if (spanMins > 0) {
+                                    Message msg = Message.obtain();
+                                    msg.what = 1;
+                                    msg.obj = startTime;
+                                    msg.arg1 = spanMins;
+                                    mHandler.sendMessage(msg);
+                                } else {
+                                    Message mssg = Message.obtain();
+                                    mssg.what = 2;
+                                    mHandler.sendMessage(mssg);
                                 }
+                            }
 
-                                @Override
-                                public void onError(RongIMClient.ErrorCode errorCode) {
-                                    Log.e(TAG, "----yb----获取会话通知周期-oonError:" + errorCode);
-                                    mNotificationCheckBox.setChecked(false);
-                                    mCloseNotifacation.setVisibility(View.GONE);
-                                }
-                            });
-                        }
-                    });
+                            @Override
+                            public void onError(RongIMClient.ErrorCode errorCode) {
+                                Log.e(TAG, "----yb----获取会话通知周期-oonError:" + errorCode);
+                                mNotificationCheckBox.setChecked(false);
+                                mCloseNotifacation.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                });
             }
         }
     }

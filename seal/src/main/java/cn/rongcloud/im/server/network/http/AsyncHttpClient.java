@@ -92,8 +92,8 @@ import java.util.zip.GZIPInputStream;
  * </pre>
  */
 public class AsyncHttpClient {
-	
-	private static final String tag = AsyncHttpClient.class.getSimpleName();
+
+    private static final String tag = AsyncHttpClient.class.getSimpleName();
     private static final String VERSION = "1.4.4";
 
     private static final int DEFAULT_MAX_CONNECTIONS = 10;
@@ -116,31 +116,31 @@ public class AsyncHttpClient {
     private boolean isUrlEncodingEnabled = true;
 
     private static AsyncHttpClient instance;
-    
-    
+
+
     /**
      * get the AsyncHttpClient instance
      * @return
      */
     public static AsyncHttpClient getInstance() {
-		return getInstance(null);
-	}
-    
+        return getInstance(null);
+    }
+
     /**
      * get the AsyncHttpClient instance
      * @return
      */
     public static AsyncHttpClient getInstance(Context context) {
-		if (instance == null) {
-			synchronized (AsyncHttpClient.class) {
-				if (instance == null) {
-					instance = new AsyncHttpClient();
-				}
-			}
-		}
-		return instance;
-	}
-    
+        if (instance == null) {
+            synchronized (AsyncHttpClient.class) {
+                if (instance == null) {
+                    instance = new AsyncHttpClient();
+                }
+            }
+        }
+        return instance;
+    }
+
     /**
      * Creates a new AsyncHttpClient with default constructor arguments values
      */
@@ -414,8 +414,8 @@ public class AsyncHttpClient {
      */
     public void setProxy(String hostname, int port, String username, String password) {
         httpClient.getCredentialsProvider().setCredentials(
-                new AuthScope(hostname, port),
-                new UsernamePasswordCredentials(username, password));
+            new AuthScope(hostname, port),
+            new UsernamePasswordCredentials(username, password));
         final HttpHost proxy = new HttpHost(hostname, port);
         final HttpParams httpParams = this.httpClient.getParams();
         httpParams.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
@@ -584,7 +584,7 @@ public class AsyncHttpClient {
         HttpUriRequest request = new HttpHead(getUrlWithQueryString(isUrlEncodingEnabled, url, params));
         if (headers != null) request.setHeaders(headers);
         return sendRequest(httpClient, httpContext, request, null, responseHandler,
-                context);
+                           context);
     }
 
 
@@ -656,7 +656,7 @@ public class AsyncHttpClient {
         HttpUriRequest request = new HttpGet(getUrlWithQueryString(isUrlEncodingEnabled, url, params));
         if (headers != null) request.setHeaders(headers);
         return sendRequest(httpClient, httpContext, request, null, responseHandler,
-                context);
+                           context);
     }
 
 
@@ -736,7 +736,7 @@ public class AsyncHttpClient {
         if (params != null) request.setEntity(paramsToEntity(params, responseHandler));
         if (headers != null) request.setHeaders(headers);
         return sendRequest(httpClient, httpContext, request, contentType,
-                responseHandler, context);
+                           responseHandler, context);
     }
 
     /**

@@ -26,7 +26,7 @@ public class GetTokenResponse {
         this.result = result;
     }
 
-    public static class ResultEntity{
+    public static class ResultEntity {
         private String id;
         private String token;
 

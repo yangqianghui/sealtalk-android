@@ -68,7 +68,7 @@ public class BaseAction {
      * @return
      */
     protected String getURL(String url) {
-        return getURL(url, new String[]{});
+        return getURL(url, new String[] {});
     }
     /**
      * 获取完整URL方法

@@ -227,8 +227,8 @@ public class DiscussionDetailActivity extends BaseActivity implements CompoundBu
                             public void onSuccess() {
                                 RongIM.getInstance().removeConversation(Conversation.ConversationType.DISCUSSION, targetId);
                                 Intent i = new Intent();
-                                i.putExtra("disFinish","disFinish");
-                                setResult(112,i);
+                                i.putExtra("disFinish", "disFinish");
+                                setResult(112, i);
                                 finish();
                             }
 
@@ -366,17 +366,17 @@ public class DiscussionDetailActivity extends BaseActivity implements CompoundBu
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case SealConst.DISCUSSION_ADD_MEMBER_REQUEST_CODE:
                     final List<String> addMember = (List<String>) data.getSerializableExtra("addDiscuMember");
                     RongIMClient.getInstance().addMemberToDiscussion(targetId, addMember, new RongIMClient.OperationCallback() {
                         @Override
                         public void onSuccess() {
-                            List<cn.rongcloud.im.db.Friend> list = DBManager.getInstance(mContext).getDaoSession().getFriendDao().loadAll();
-                            for(Friend friend : list) {
-                                for(String userId : addMember) {
-                                    if(userId.equals(friend.getUserId()))
+                            List<Friend> list = DBManager.getInstance(mContext).getDaoSession().getFriendDao().loadAll();
+                            for (Friend friend : list) {
+                                for (String userId : addMember) {
+                                    if (userId.equals(friend.getUserId()))
                                         memberList.add(new UserInfo(userId, friend.getName(), Uri.parse(friend.getPortraitUri())));
                                 }
                             }
@@ -392,7 +392,7 @@ public class DiscussionDetailActivity extends BaseActivity implements CompoundBu
                 case SealConst.DISCUSSION_REMOVE_MEMBER_REQUEST_CODE:
                     List<String> deleMember = (List<String>) data.getSerializableExtra("deleteDiscuMember");
                     List<UserInfo> filtered = new ArrayList<>();
-                    for(String id : deleMember) {
+                    for (String id : deleMember) {
                         int count = memberList.size();
                         for (int i = 0; i < count; i++) {
                             if (memberList.get(i).getUserId().equals(id))
@@ -427,14 +427,14 @@ public class DiscussionDetailActivity extends BaseActivity implements CompoundBu
                     List<GetUserInfosResponse.ResultEntity> infos = response.getResult();
                     memberList.clear();
                     for (GetUserInfosResponse.ResultEntity g : infos) {
-                        memberList.add(new UserInfo(g.getId(),g.getNickname(), Uri.parse(g.getPortraitUri())));
+                        memberList.add(new UserInfo(g.getId(), g.getNickname(), Uri.parse(g.getPortraitUri())));
                     }
                     String loginid = getSharedPreferences("config", MODE_PRIVATE).getString("loginid", "");
                     if (loginid.equals(createId)) {
                         isCreated = true;
                     }
                     if (memberList != null && memberList.size() > 1) {
-                        if(adapter == null) {
+                        if (adapter == null) {
                             adapter = new GridAdapter(mContext, memberList);
                             gridview.setAdapter(adapter);
                         } else {

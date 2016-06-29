@@ -13,11 +13,11 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
     Context mContext;
     List<T> mList;
 
-    public BaseAdapter(){
+    public BaseAdapter() {
         mList = new ArrayList<T>();
     }
 
-    public BaseAdapter(Context context){
+    public BaseAdapter(Context context) {
         mContext = context;
         mList = new ArrayList<T>();
     }
@@ -39,7 +39,7 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
         return position;
     }
 
-    public int findPosition(long id){
+    public int findPosition(long id) {
         int index = getCount();
         int position = -1;
         while (index-- > 0) {
@@ -51,40 +51,40 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
         return position;
     }
 
-    public void addCollection(Collection<T> collection){
+    public void addCollection(Collection<T> collection) {
         mList.addAll(collection);
     }
 
-    public void addCollection(T ... collection){
+    public void addCollection(T ... collection) {
 
-        for(T t : collection){
+        for (T t : collection) {
             mList.add(t);
         }
     }
 
-    public void add(T t){
+    public void add(T t) {
         mList.add(t);
     }
 
-    public void add(T t,int position){
-        mList.add(position,t);
+    public void add(T t, int position) {
+        mList.add(position, t);
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         mList.remove(position);
     }
 
-    public void removeAll(){
+    public void removeAll() {
         mList.clear();
     }
 
-    public void clear(){
+    public void clear() {
         mList.clear();
     }
 
     @Override
     public int getCount() {
-        if(mList == null)
+        if (mList == null)
             return 0;
 
         return mList.size();
@@ -92,10 +92,10 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
 
     @Override
     public T getItem(int position) {
-        if(mList == null)
+        if (mList == null)
             return null;
 
-        if(position>=mList.size())
+        if (position >= mList.size())
             return null;
 
         return mList.get(position);

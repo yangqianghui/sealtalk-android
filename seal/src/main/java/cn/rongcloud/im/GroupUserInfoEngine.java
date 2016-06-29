@@ -74,8 +74,8 @@ public class GroupUserInfoEngine implements OnDataListener {
                 for (GetGroupMemberResponse.ResultEntity g : mGroupMember) {
                     if (g.getUser().getId().equals(userId)) {
                         if (RongIM.getInstance() != null && RongIM.getInstance().getRongIMClient() != null) {
-                            RongIM.getInstance().refreshGroupUserInfoCache(new GroupUserInfo(groupId,userId,g.getDisplayName()));
-                            setGroupUserInfo(new GroupUserInfo(groupId,userId,g.getDisplayName()));
+                            RongIM.getInstance().refreshGroupUserInfoCache(new GroupUserInfo(groupId, userId, g.getDisplayName()));
+                            setGroupUserInfo(new GroupUserInfo(groupId, userId, g.getDisplayName()));
                         }
                     }
                 }

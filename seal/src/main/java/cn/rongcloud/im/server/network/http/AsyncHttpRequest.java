@@ -33,9 +33,9 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
 class AsyncHttpRequest implements Runnable {
-	
-	private final String tag = AsyncHttpRequest.class.getSimpleName();
-	
+
+    private final String tag = AsyncHttpRequest.class.getSimpleName();
+
     private final AbstractHttpClient client;
     private final HttpContext context;
     private final HttpUriRequest request;
@@ -47,16 +47,16 @@ class AsyncHttpRequest implements Runnable {
         this.context = context;
         this.request = request;
         this.responseHandler = responseHandler;
-        
+
         //断点续传处理
-        if(this.responseHandler instanceof BreakpointHttpResponseHandler){
-        	BreakpointHttpResponseHandler breakpointHandler = (BreakpointHttpResponseHandler)this.responseHandler;
-        	File tempFile = breakpointHandler.getTempFile();
-        	if (tempFile.exists()) {
-				long previousFileSize = tempFile.length();
-				Log.e(tag, "previousFileSized: " + previousFileSize);
-				this.request.setHeader("RANGE", "bytes=" + previousFileSize + "-");
-			}
+        if (this.responseHandler instanceof BreakpointHttpResponseHandler) {
+            BreakpointHttpResponseHandler breakpointHandler = (BreakpointHttpResponseHandler)this.responseHandler;
+            File tempFile = breakpointHandler.getTempFile();
+            if (tempFile.exists()) {
+                long previousFileSize = tempFile.length();
+                Log.e(tag, "previousFileSized: " + previousFileSize);
+                this.request.setHeader("RANGE", "bytes=" + previousFileSize + "-");
+            }
         }
     }
 

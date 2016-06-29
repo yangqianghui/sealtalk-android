@@ -22,8 +22,8 @@ public class MySSLSocketFactory extends SSLSocketFactory {
     SSLContext sslContext = SSLContext.getInstance("TLS");
 
     public MySSLSocketFactory(KeyStore truststore)
-            throws NoSuchAlgorithmException, KeyManagementException,
-            KeyStoreException, UnrecoverableKeyException {
+    throws NoSuchAlgorithmException, KeyManagementException,
+        KeyStoreException, UnrecoverableKeyException {
         super(truststore);
 
         TrustManager tm = new X509TrustManager() {
@@ -33,17 +33,17 @@ public class MySSLSocketFactory extends SSLSocketFactory {
 
             @Override
             public void checkClientTrusted(
-                    java.security.cert.X509Certificate[] chain, String authType)
-                    throws java.security.cert.CertificateException {
+                java.security.cert.X509Certificate[] chain, String authType)
+            throws java.security.cert.CertificateException {
             }
 
             @Override
             public void checkServerTrusted(
-                    java.security.cert.X509Certificate[] chain, String authType)
-                    throws java.security.cert.CertificateException {
+                java.security.cert.X509Certificate[] chain, String authType)
+            throws java.security.cert.CertificateException {
             }
         };
-        sslContext.init(null, new TrustManager[]{tm}, null);
+        sslContext.init(null, new TrustManager[] {tm}, null);
     }
 
     @Override

@@ -20,6 +20,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * }</pre>
  */
 @Retention(CLASS)
-@Target({PARAMETER,METHOD,LOCAL_VARIABLE,FIELD})
+@Target({PARAMETER, METHOD, LOCAL_VARIABLE, FIELD})
 public @interface ColorInt {
 }

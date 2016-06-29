@@ -53,7 +53,7 @@ public class FileAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
     }
 
     @SuppressWarnings("deprecation")
-	public void onFailure(Throwable e, File response) {
+    public void onFailure(Throwable e, File response) {
         // By default call lower chain method
         onFailure(e);
     }

@@ -114,7 +114,7 @@ class SimpleMultipartEntity implements HttpEntity {
     }
 
     public void addPart(String key, String streamName, InputStream inputStream, String type)
-            throws IOException {
+    throws IOException {
         if (type == null) {
             type = APPLICATION_OCTET_STREAM;
         }
@@ -150,18 +150,18 @@ class SimpleMultipartEntity implements HttpEntity {
 
     private byte[] createContentDisposition(final String key) {
         return ("Content-Disposition: form-data; name=\"" + key + "\"\r\n")
-                .getBytes();
+               .getBytes();
     }
 
     private byte[] createContentDisposition(final String key, final String fileName) {
         return ("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName + "\"\r\n")
-                .getBytes();
+               .getBytes();
     }
 
     private void updateProgress(int count) {
         bytesWritten += count;
-        if(progressHandler != null){
-        	progressHandler.sendProgressMessage(bytesWritten, totalSize);
+        if (progressHandler != null) {
+            progressHandler.sendProgressMessage(bytesWritten, totalSize);
         }
     }
 
@@ -282,13 +282,13 @@ class SimpleMultipartEntity implements HttpEntity {
     public void consumeContent() throws IOException, UnsupportedOperationException {
         if (isStreaming()) {
             throw new UnsupportedOperationException(
-                    "Streaming entity does not implement #consumeContent()");
+                "Streaming entity does not implement #consumeContent()");
         }
     }
 
     @Override
     public InputStream getContent() throws IOException, UnsupportedOperationException {
         throw new UnsupportedOperationException(
-                "getContent() is not supported. Use writeTo() instead.");
+            "getContent() is not supported. Use writeTo() instead.");
     }
 }

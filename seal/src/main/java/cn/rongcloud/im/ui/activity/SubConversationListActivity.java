@@ -30,7 +30,7 @@ public class SubConversationListActivity extends BaseActionBarActivity {
         //聚合会话参数
         String type = intent.getData().getQueryParameter("type");
 
-        if(type == null )
+        if (type == null )
             return;
 
         if (type.equals("group")) {

@@ -328,15 +328,15 @@ public class AsyncHttpResponseHandler implements ResponseHandlerInterface {
     //
 
     final public void sendProgressMessage(int bytesWritten, int bytesTotal) {
-        sendMessage(obtainMessage(PROGRESS_MESSAGE, new Object[]{bytesWritten, bytesTotal}));
+        sendMessage(obtainMessage(PROGRESS_MESSAGE, new Object[] {bytesWritten, bytesTotal}));
     }
 
     final public void sendSuccessMessage(int statusCode, Header[] headers, byte[] responseBody) {
-        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, headers, responseBody}));
+        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[] {statusCode, headers, responseBody}));
     }
 
     final public void sendFailureMessage(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-        sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{statusCode, headers, responseBody, error}));
+        sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[] {statusCode, headers, responseBody, error}));
     }
 
     final public void sendStartMessage() {

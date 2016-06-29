@@ -1,5 +1,7 @@
 package cn.rongcloud.im.server.response;
 
+import java.io.Serializable;
+
 /**
  * Created by AMing on 16/1/26.
  * Company RongCloud
@@ -39,7 +41,7 @@ public class GetGroupInfoResponse {
         return result;
     }
 
-    public static class ResultEntity {
+    public static class ResultEntity implements Serializable {
         private String id;
         private String name;
         private String portraitUri;

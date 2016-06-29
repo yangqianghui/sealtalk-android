@@ -102,16 +102,16 @@ public class ContactsProvider extends InputProvider.ExtendProvider {
 
             if (RongIM.getInstance().getRongIMClient() != null)
                 RongIM.getInstance().getRongIMClient().sendMessage(getCurrentConversation().getConversationType(), getCurrentConversation().getTargetId(), content, null, null, new RongIMClient.SendMessageCallback() {
-                    @Override
-                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-                        Log.d("ExtendProvider", "onError--" + errorCode);
-                    }
+                @Override
+                public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                    Log.d("ExtendProvider", "onError--" + errorCode);
+                }
 
-                    @Override
-                    public void onSuccess(Integer integer) {
-                        Log.d("ExtendProvider", "onSuccess--" + integer);
-                    }
-                });
+                @Override
+                public void onSuccess(Integer integer) {
+                    Log.d("ExtendProvider", "onSuccess--" + integer);
+                }
+            });
         }
     }
 

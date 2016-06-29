@@ -72,7 +72,7 @@ public class BlackListActivity extends BaseActionBarActivity {
                     if (dataList.size() > 0) {
                         adapter = new MyBlackListAdapter(dataList);
                         blackList.setAdapter(adapter);
-                    }else {
+                    } else {
                         isShowData.setVisibility(View.VISIBLE);
                     }
                 }
@@ -81,11 +81,11 @@ public class BlackListActivity extends BaseActionBarActivity {
         }
     }
 
-    class MyBlackListAdapter extends BaseAdapter{
+    class MyBlackListAdapter extends BaseAdapter {
 
         private List<GetBlackListResponse.ResultEntity> dataList;
 
-        public MyBlackListAdapter(List<GetBlackListResponse.ResultEntity> dataList){
+        public MyBlackListAdapter(List<GetBlackListResponse.ResultEntity> dataList) {
             this.dataList = dataList;
         }
 

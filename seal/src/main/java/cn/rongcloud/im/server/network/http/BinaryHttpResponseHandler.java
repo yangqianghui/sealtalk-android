@@ -50,9 +50,9 @@ import java.util.regex.PatternSyntaxException;
  */
 public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
 
-    private String[] mAllowedContentTypes = new String[]{
-            "image/jpeg",
-            "image/png"
+    private String[] mAllowedContentTypes = new String[] {
+        "image/jpeg",
+        "image/png"
     };
 
     /**
@@ -129,7 +129,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
      */
 
     @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
         onFailure(statusCode, error, null);
     }

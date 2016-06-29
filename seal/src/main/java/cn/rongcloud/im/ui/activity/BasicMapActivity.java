@@ -11,7 +11,7 @@ import com.amap.api.maps2d.MapView;
 /**
  * Created by zhjchen on 8/12/15.
  */
-public abstract class BasicMapActivity extends FragmentActivity implements  Handler.Callback{
+public abstract class BasicMapActivity extends FragmentActivity implements  Handler.Callback {
 
     private MapView mapView;
     private AMap aMap;
@@ -33,7 +33,7 @@ public abstract class BasicMapActivity extends FragmentActivity implements  Hand
 
         initData();
 
-        mHandler=new Handler(this);
+        mHandler = new Handler(this);
     }
 
     public Handler getHandler() {

@@ -9,6 +9,7 @@
     <color name="main_regist">#ffffff</color>
     <color name="button_backgroud">#0195ff</color>
     <color name="de_title_bg">#0195ff</color>
+    <color name="seal_bg">#f0f0f6</color>
 
     <color name="rc_text_color_secondary_inverse">@android:color/white</color>
 
@@ -29,6 +30,7 @@
     <color name="text_black_color">#333333</color>
     <color name="text_tips_color">#666666</color>
     <color name="mine_head_color">#cccccc</color>
+    <color name="text_color">#353535</color>
 
     <!--SWITCH-->
     <color name="ksw_md_ripple_normal">#1E000000</color>

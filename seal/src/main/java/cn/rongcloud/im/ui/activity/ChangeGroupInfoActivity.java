@@ -174,8 +174,8 @@ public class ChangeGroupInfoActivity extends BaseActivity implements View.OnClic
                     if (response.getCode() == 200) {
                         mGroupName.setText(newGroupName);
                         if (TextUtils.isEmpty(mGroup.getPortraitUri())) {
-                            RongIM.getInstance().refreshGroupInfoCache(new Group(mGroup.getQunId(),newGroupName,Uri.parse(RongGenerate.generateDefaultAvatar(newGroupName,mGroup.getQunId()))));
-                        }else {
+                            RongIM.getInstance().refreshGroupInfoCache(new Group(mGroup.getQunId(), newGroupName, Uri.parse(RongGenerate.generateDefaultAvatar(newGroupName, mGroup.getQunId()))));
+                        } else {
                             RongIM.getInstance().refreshGroupInfoCache(new Group(mGroup.getQunId(), newGroupName, Uri.parse(mGroup.getPortraitUri())));
                         }
                         BroadcastManager.getInstance(mContext).sendBroadcast(UPDATEGROUPINFONAME, newGroupName);

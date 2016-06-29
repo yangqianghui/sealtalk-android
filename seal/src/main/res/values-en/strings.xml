@@ -87,7 +87,9 @@
     <string name="remove_group_member">Remove Group Member</string>
     <string name="add_group_member">Add Group Member</string>
     <string name="edit_group_name">Edit Group Name</string>
-    <string name="create_groups">Create Groups</string>
+    <string name="create_group"> Create a Group</string>
+    <string name="created_group"> Created a Group</string>
+    <string name="you">You</string>
     <string name="request_friends">request to add you as a friend</string>
     <string name="edit_phone">Enter the 11 phone number</string>
     <string name="original_password">The original password cannot be empty</string>
@@ -116,7 +118,7 @@
     <string name="quit_groups"> Quit the group</string>
     <string name="dismiss_groups"> Dismiss the group</string>
     <string name="join_group"> join the group</string>
-    <string name="invitation"> invitation </string>
+    <string name="invitation">  invite </string>
     <string name="will"> will </string>
     <string name="remove_group"> remove the group</string>
     <string name="my_groups">My Groups</string>
@@ -149,6 +151,37 @@
     <string name="can_not_add_yourself">can not add yourself</string>
     <string name="new_name">New Name</string>
     <string name="portrait_update_success">portrait update success</string>
+    <string name="de_actionbar_sub_system">"System Message"</string>
+    <string name="de_actionbar_sub_group">"Group"</string>
+    <string name="chat">Chats</string>
+    <string name="contacts">Contacts</string>
+    <string name="discover">Discover</string>
+    <string name="me">Me</string>
+    <string name="mine_about">About SealTalk</string>
+    <string name="mine_service">Feedback</string>
+    <string name="mine_setting">Account Settings</string>
+    <string name="account_setting">Account Setting</string>
+    <string name="exit_login">退出登录</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="privacy">隐私</string>
+    <string name="new_message">接收新消息通知</string>
+    <string name="message_show_details">通知显示消息详情</string>
+
+    <string name="launched_location_sharing">Launched a location sharing</string>
+    <string name="location_sharing_ended">Location sharing ended</string>
+    <string name="location">Location</string>
+    <string name="send_location">Send location</string>
+    <string name="real_time_location_sharing">Real time location sharing</string>
+    <string name="fetching">Fetching</string>
+    <string name="geographical_position">geographical position</string>
+    <string name="you_are_sharing_location">You are sharing location</string>
+    <string name="person_is_sharing_loaction">person is sharing location</string>
+    <string name="persons_are_sharing_loaction">persons are sharing location</string>
+    <string name="location_sharing_exit_promt">Real time location sharing will be canceled if exit,confirm to exit？</string>
+    <string name="prompt">Prompt</string>
+    <string name="launched_a_location_sharing">I lauched a location sharing</string>
+    <string name="sdk_version_update">SDK版本</string>
+    <string name="sealtalk_version_update">SealTalk 当前版本</string>
 
 
 </resources>

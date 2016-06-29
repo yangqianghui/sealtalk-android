@@ -35,21 +35,21 @@ public class FriendDao extends AbstractDao<Friend, String> {
     public FriendDao(DaoConfig config) {
         super(config);
     }
-    
+
     public FriendDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
     }
 
     /** Creates the underlying database table. */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'FRIEND' (" + //
-                "'USER_ID' TEXT PRIMARY KEY NOT NULL ," + // 0: userId
-                "'NAME' TEXT," + // 1: name
-                "'PORTRAIT_URI' TEXT," + // 2: portraitUri
-                "'DISPLAY_NAME' TEXT," + // 3: displayName
-                "'STATUS' TEXT," + // 4: status
-                "'TIMESTAMP' INTEGER);"); // 5: timestamp
+                   "'USER_ID' TEXT PRIMARY KEY NOT NULL ," + // 0: userId
+                   "'NAME' TEXT," + // 1: name
+                   "'PORTRAIT_URI' TEXT," + // 2: portraitUri
+                   "'DISPLAY_NAME' TEXT," + // 3: displayName
+                   "'STATUS' TEXT," + // 4: status
+                   "'TIMESTAMP' INTEGER);"); // 5: timestamp
     }
 
     /** Drops the underlying database table. */
@@ -63,27 +63,27 @@ public class FriendDao extends AbstractDao<Friend, String> {
     protected void bindValues(SQLiteStatement stmt, Friend entity) {
         stmt.clearBindings();
         stmt.bindString(1, entity.getUserId());
- 
+
         String name = entity.getName();
         if (name != null) {
             stmt.bindString(2, name);
         }
- 
+
         String portraitUri = entity.getPortraitUri();
         if (portraitUri != null) {
             stmt.bindString(3, portraitUri);
         }
- 
+
         String displayName = entity.getDisplayName();
         if (displayName != null) {
             stmt.bindString(4, displayName);
         }
- 
+
         String status = entity.getStatus();
         if (status != null) {
             stmt.bindString(5, status);
         }
- 
+
         Long timestamp = entity.getTimestamp();
         if (timestamp != null) {
             stmt.bindLong(6, timestamp);
@@ -94,7 +94,7 @@ public class FriendDao extends AbstractDao<Friend, String> {
     @Override
     public String readKey(Cursor cursor, int offset) {
         return cursor.getString(offset + 0);
-    }    
+    }
 
     /** @inheritdoc */
     @Override
@@ -109,7 +109,7 @@ public class FriendDao extends AbstractDao<Friend, String> {
         );
         return entity;
     }
-     
+
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Friend entity, int offset) {
@@ -119,18 +119,18 @@ public class FriendDao extends AbstractDao<Friend, String> {
         entity.setDisplayName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setStatus(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setTimestamp(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
-     }
-    
+    }
+
     /** @inheritdoc */
     @Override
     protected String updateKeyAfterInsert(Friend entity, long rowId) {
         return entity.getUserId();
     }
-    
+
     /** @inheritdoc */
     @Override
     public String getKey(Friend entity) {
-        if(entity != null) {
+        if (entity != null) {
             return entity.getUserId();
         } else {
             return null;
@@ -138,9 +138,9 @@ public class FriendDao extends AbstractDao<Friend, String> {
     }
 
     /** @inheritdoc */
-    @Override    
+    @Override
     protected boolean isEntityUpdateable() {
         return true;
     }
-    
+
 }

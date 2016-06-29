@@ -1,6 +1,8 @@
 package cn.rongcloud.im.ui.activity;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -24,6 +26,8 @@ import java.io.File;
 
 import cn.rongcloud.im.App;
 import cn.rongcloud.im.R;
+import cn.rongcloud.im.SealConst;
+import cn.rongcloud.im.server.broadcast.BroadcastManager;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.response.ChangePasswordResponse;
 import cn.rongcloud.im.server.response.QiNiuTokenResponse;
@@ -44,9 +48,7 @@ import io.rong.imlib.model.UserInfo;
  */
 public class MyAccountActivity extends BaseActionBarActivity implements View.OnClickListener {
 
-    private static final int UPDATENAME = 7;
     private static final int UPLOADPORTRAIT = 8;
-    private static final int UPDATEPASSWORD = 15;
 
     private RelativeLayout portraitItem, nameItem, passwordItem;
 
@@ -56,12 +58,10 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
 
     private SelectableRoundedImageView mImageView;
 
-    private TextView mName ,mPhone;
-    private String newName;
+    private TextView mName , mPhone;
 
     private PhotoUtils photoUtils;
     private BottomMenuDialog dialog;
-    private String mOldPassword, mNewPassword;
 
     private UploadManager uploadManager;
 
@@ -90,27 +90,32 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
         mPhone = (TextView) findViewById(R.id.tv_my_phone);
         portraitItem = (RelativeLayout) findViewById(R.id.rl_my_portrait);
         nameItem = (RelativeLayout) findViewById(R.id.rl_my_username);
-        passwordItem = (RelativeLayout) findViewById(R.id.rl_my_password);
         mImageView = (SelectableRoundedImageView) findViewById(R.id.img_my_portrait);
         mName = (TextView) findViewById(R.id.tv_my_username);
         portraitItem.setOnClickListener(this);
         nameItem.setOnClickListener(this);
-        passwordItem.setOnClickListener(this);
+//        passwordItem.setOnClickListener(this);
         String cacheName = sp.getString("loginnickname", "");
         String cachePortrait = sp.getString("loginPortrait", "");
-        String cachePhone = sp.getString("loginphone","");
+        String cachePhone = sp.getString("loginphone", "");
         if (!TextUtils.isEmpty(cachePhone)) {
-            mPhone.setText("+86 "+cachePhone);
+            mPhone.setText("+86 " + cachePhone);
         }
         if (!TextUtils.isEmpty(cacheName)) {
             mName.setText(cacheName);
             if (TextUtils.isEmpty(cachePortrait)) {
                 ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(cacheName, sp.getString("loginid", "a")), mImageView, App.getOptions());
-            }else {
+            } else {
                 ImageLoader.getInstance().displayImage(cachePortrait, mImageView, App.getOptions());
             }
         }
         setPortraitChangeListener();
+        BroadcastManager.getInstance(mContext).addAction(SealConst.CHANGEINFO, new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mName.setText(sp.getString("loginnickname", ""));
+            }
+        });
     }
 
     private void setPortraitChangeListener() {
@@ -118,9 +123,9 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
             @Override
             public void onPhotoResult(Uri uri) {
                 if (uri != null && !TextUtils.isEmpty(uri.getPath())) {
-                        selectUri = uri;
-                        LoadDialog.show(mContext);
-                        request(128);
+                    selectUri = uri;
+                    LoadDialog.show(mContext);
+                    request(128);
                 }
             }
 
@@ -143,51 +148,8 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
             case R.id.rl_my_portrait:
                 showPhotoDialog();
                 break;
-
             case R.id.rl_my_username:
-                DialogWithYesOrNoUtils.getInstance().showEditDialog(mContext, getString(R.string.new_name), getString(R.string.confirm), new DialogWithYesOrNoUtils.DialogCallBack() {
-                    @Override
-                    public void exectEvent() {
-
-                    }
-
-                    @Override
-                    public void exectEditEvent(String editText) {
-                        if (!TextUtils.isEmpty(editText)) {
-                            newName = editText;
-                            LoadDialog.show(mContext);
-                            request(UPDATENAME, true);
-                        } else {
-                            NToast.shortToast(mContext, getString(R.string.name_is_null));
-                        }
-                    }
-
-                    @Override
-                    public void updatePassword(String oldPassword, String newPassword) {
-
-                    }
-                });
-                break;
-            case R.id.rl_my_password:
-                DialogWithYesOrNoUtils.getInstance().showUpdatePasswordDialog(mContext, new DialogWithYesOrNoUtils.DialogCallBack() {
-                    @Override
-                    public void exectEvent() {
-
-                    }
-
-                    @Override
-                    public void exectEditEvent(String editText) {
-
-                    }
-
-                    @Override
-                    public void updatePassword(String oldPassword, String newPassword) {
-                        mOldPassword = oldPassword;
-                        mNewPassword = newPassword;
-                        LoadDialog.show(mContext);
-                        request(UPDATEPASSWORD, true);
-                    }
-                });
+                startActivity(new Intent(this, UpdateNameActivity.class));
                 break;
         }
     }
@@ -196,12 +158,8 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
     @Override
     public Object doInBackground(int requestCode, String id) throws HttpException {
         switch (requestCode) {
-            case UPDATENAME:
-                return action.setName(newName);
             case UPLOADPORTRAIT:
                 return action.setPortrait(imageUrl);
-            case UPDATEPASSWORD:
-                return action.changePassword(mOldPassword, mNewPassword);
             case 128:
                 return action.getQiNiuToken();
         }
@@ -212,22 +170,6 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
     public void onSuccess(int requestCode, Object result) {
         if (result != null) {
             switch (requestCode) {
-                case UPDATENAME:
-                    SetNameResponse sRes = (SetNameResponse) result;
-                    if (sRes.getCode() == 200) {
-                        editor.putString("loginnickname", newName);
-                        editor.commit();
-                        mName.setText(newName);
-
-                        if (RongIM.getInstance() != null) {
-                            RongIM.getInstance().refreshUserInfoCache(new UserInfo(sp.getString("loginid", ""), newName, Uri.parse(sp.getString("loginPortrait", ""))));
-                            RongIM.getInstance().setCurrentUserInfo(new UserInfo(sp.getString("loginid", ""), newName, Uri.parse(sp.getString("loginPortrait", ""))));
-                        }
-
-                        LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, "昵称更改成功");
-                    }
-                    break;
                 case UPLOADPORTRAIT:
                     SetPortraitResponse spRes = (SetPortraitResponse) result;
                     if (spRes.getCode() == 200) {
@@ -238,23 +180,8 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
                             RongIM.getInstance().refreshUserInfoCache(new UserInfo(sp.getString("loginid", ""), sp.getString("loginnickname", ""), Uri.parse(imageUrl)));
                             RongIM.getInstance().setCurrentUserInfo(new UserInfo(sp.getString("loginid", ""), sp.getString("loginnickname", ""), Uri.parse(imageUrl)));
                         }
-
+                        BroadcastManager.getInstance(mContext).sendBroadcast(SealConst.CHANGEINFO);
                         NToast.shortToast(mContext, getString(R.string.portrait_update_success));
-                        LoadDialog.dismiss(mContext);
-                    }
-                    break;
-                case UPDATEPASSWORD:
-                    ChangePasswordResponse cpRes = (ChangePasswordResponse) result;
-                    if (cpRes.getCode() == 200) {
-                        NToast.shortToast(mContext, getString(R.string.update_success));
-                        editor.putString("loginpassword", mNewPassword);
-                        editor.commit();
-                        LoadDialog.dismiss(mContext);
-                    } else if (cpRes.getCode() == 1000) {
-                        NToast.shortToast(mContext, "初始密码有误:" + cpRes.getCode());
-                        LoadDialog.dismiss(mContext);
-                    } else {
-                        NToast.shortToast(mContext, "修改密码失败:" + cpRes.getCode());
                         LoadDialog.dismiss(mContext);
                     }
                     break;
@@ -272,17 +199,9 @@ public class MyAccountActivity extends BaseActionBarActivity implements View.OnC
     @Override
     public void onFailure(int requestCode, int state, Object result) {
         switch (requestCode) {
-            case UPDATENAME:
-                LoadDialog.dismiss(mContext);
-
-                NToast.shortToast(mContext, "更名请求失败");
-                break;
             case UPLOADPORTRAIT:
                 NToast.shortToast(mContext, "设置头像请求失败");
                 LoadDialog.dismiss(mContext);
-                break;
-            case UPDATEPASSWORD:
-                NToast.shortToast(mContext, "修改密码请求失败");
                 break;
         }
     }
