@@ -1,2 +1,7 @@
 # sealtalk-android
-Android App of SealTalk powered by RongCloud.  基于融云开发的桌面版即时通讯（IM）应用程序 - 嗨豹。
+[中文版](https://github.com/sealtalk/sealtalk-android/blob/master/README.zh.md)
+Android App of SealTalk powered by RongCloud.  
+
+# ScreenShots
+---
+
