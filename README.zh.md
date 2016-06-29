@@ -7,4 +7,5 @@ Android 应用 SealTalk 由 融云 RongCloud 出品
 ![image](https://github.com/sealtalk/sealtalk-android/blob/master/screenshots/image2.png)<br/>
 ![image](https://github.com/sealtalk/sealtalk-android/blob/master/screenshots/image3.png)<br/>
 
-#### 比你想象的更强大, 敬请期待更多精彩 [融云官网](http://rongcloud.cn/downloads)
+#### 比你想象的更强大, 敬请期待更多精彩! <br/>
+[融云官网](http://rongcloud.cn/downloads)
