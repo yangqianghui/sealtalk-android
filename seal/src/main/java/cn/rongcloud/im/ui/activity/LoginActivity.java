@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -402,7 +401,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         //请求签名然后初始化红包Token
         String userID = RedPacketUtil.getInstance().getUserID();
-        Log.e("dxf", "userid-" + userID);
         //App开发者需要去自己服务器请求签名参数,换成自己的URl
         //@param partner      商户代码 (联系云账户后端获取)
         // @param userId       商户用户id

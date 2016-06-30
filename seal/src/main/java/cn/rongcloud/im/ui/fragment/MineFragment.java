@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.easemob.redpacketui.RedPacketUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import cn.rongcloud.im.App;
@@ -49,7 +50,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     private TextView mName;
 
-    private LinearLayout mUserProfile, mMineStting, mMineService, mMineAbout;
+    private LinearLayout mUserProfile, mMineStting, mMineService, mMineAbout, mMineChange;
 
     @Nullable
     @Override
@@ -86,10 +87,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mMineStting = (LinearLayout) mView.findViewById(R.id.mine_setting);
         mMineService = (LinearLayout) mView.findViewById(R.id.mine_service);
         mMineAbout = (LinearLayout) mView.findViewById(R.id.mine_about);
+        mMineChange = (LinearLayout) mView.findViewById(R.id.mine_change);
         mUserProfile.setOnClickListener(this);
         mMineStting.setOnClickListener(this);
         mMineService.setOnClickListener(this);
         mMineAbout.setOnClickListener(this);
+        mMineChange.setOnClickListener(this);
 
     }
 
@@ -108,6 +111,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.mine_about:
                 startActivity(new Intent(getActivity(), AboutRongCloudActivity.class));
+                break;
+            case R.id.mine_change://我的零钱
+                RedPacketUtil.getInstance().toChangeActivity(getActivity());
                 break;
         }
     }

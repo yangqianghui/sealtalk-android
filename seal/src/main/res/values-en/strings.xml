@@ -9,6 +9,7 @@
     <string name="get_token_api_fail">get token api fail</string>
     <string name="sync_group_api_fail">sync group api fail</string>
     <string name="login_success">login success</string>
+    <string name="login_fail">login fail</string>
     <string name="phone_or_psw_error">phone number or password mistake</string>
     <string name="phone_number_is_null">Mobile phone number cannot be empty</string>
     <string name="Illegal_phone_number">Illegal phone number</string>
@@ -160,6 +161,7 @@
     <string name="mine_about">About SealTalk</string>
     <string name="mine_service">Feedback</string>
     <string name="mine_setting">Account Settings</string>
+    <string name="mine_change">Account MyChange</string>
     <string name="account_setting">Account Setting</string>
     <string name="exit_login">退出登录</string>
     <string name="clear_cache">清除缓存</string>
