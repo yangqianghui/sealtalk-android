@@ -1,1 +1,1 @@
-include ':seal', ':IMKit_v2_6_4_with_voip'
+include ':seal', ':IMKit_v2_6_4_with_voip', ':redpacketlibrary'

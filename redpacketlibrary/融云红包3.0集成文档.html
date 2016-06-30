@@ -1,0 +1,1088 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>融云红包集成文档</title>
+
+</head>
+<body>
+<h1>融云红包集成文档</h1>
+
+<h2>1. redpacketlibrary简介</h2>
+
+<p><strong>redpacketlibrary</strong>，在融云<strong>sdk2.5.2</strong>的基础上提供了收发红包和零钱页的功能。</p>
+
+<h2>2. redpacketlibrary目录说明</h2>
+
+<ul>
+<li>libs ：</li>
+<li>1、redpacket3.0.jar是集成红包功能所依赖的jar包。</li>
+<li>2、alipaySdk-20160516z支付宝支付</li>
+<li>3、glide-3.6.1图片加载库</li>
+<li>4、volley-1.0.19请求框架</li>
+<li>res ：包含了红包SDK和聊天页面中的资源文件。（红包SDK相关以rp开头,融云红包消息相关以yhz开头）</li>
+<li>callback ：此接口只有群/讨论组红包用到（除1之外）</li>
+<li>1、GetSignInfoCallback 获取签名接口回调**</li>
+<li>2、GetGroupInfoCallback 获取群/讨论组里面的人数（app开发者需要自己处理）的接口回调。</li>
+<li>3、ToRedPacketActivity 打开发红包界面接口回调</li>
+<li>4、GetUserInfoCallback 根据用户id获取用户信息接口回调</li>
+<li>5、SetUserInfoCallback 设置用户信息接口回调</li>
+<li>message ：</li>
+<li>1、RongRedPacketMessage 自定义红包消息。</li>
+<li>2、RongNotificationMessage 自定义通知消息，用于领取了红包之后，回执消息发给红包者</li>
+<li>3、RongEmptyMessage 自定义空消息，<strong>用于群/讨论组领取了红包之后，1、接受者先向本地插入一条“你领取了XX的红包”，然后发送一条空消息（不在聊天界面展示），发送红包者收到消息之后，向本地插入一条“XX领取了你的红包”，2、如果接受者和发送者是一个人就直接向本地插入一条“你领取了自己的红包”</strong></li>
+<li>provider ：</li>
+<li>1、RongRedPacketProvider 扩展栏单聊红包提供者</li>
+<li>2、RongRedPacketMessageProvider 红包消息UI展示提供者</li>
+<li>3、RongNotificationMessageProvider 回执消息UI展示提供者</li>
+<li>4、RongGroupRedPacketProvider 扩展栏群聊/讨论组红包提供者</li>
+<li>RedPacketUtil.java 封装了和融云红包先关的工具类。</li>
+<li><strong>注意: redpacketlibrary依赖了IMKIT，可以查看redpacketlibrary的build.gradle</strong>。</li>
+</ul>
+
+
+<h2>3. 集成步骤</h2>
+
+<h3>3.1 添加对红包工程的依赖</h3>
+
+<ul>
+<li>RongDemo的build.gradle中</li>
+</ul>
+
+
+<pre><code>    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile files('src/main/libs/ TencentLocationSDK_v4.4.6_r206631_151119_1441.jar')
+    compile files('src/main/libs/TencentMapSDK_Raster_v1.1.2.16281.jar')
+    compile project(':redpacketlibrary')
+</code></pre>
+
+<ul>
+<li>RongDemo的setting.gradle中</li>
+</ul>
+
+
+<pre><code>include ':IMKit',':app',':redpacketlibrary'
+</code></pre>
+
+<h3>3.2 RongDemo清单文件中注册红包相关组件</h3>
+
+<pre><code>
+    &lt;uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="21"
+        tools:overrideLibrary="com.easemob.redpacketui" /&gt;
+
+    &lt;!--红包相关界面 start--&gt;
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPRedPacketActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateVisible" /&gt;
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" /&gt;
+
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPRecordActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" /&gt;
+
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPWebViewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" /&gt;
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPChangeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" /&gt;
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPBankCardActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" /&gt;
+        &lt;activity
+            android:name="com.easemob.redpacketui.ui.activity.RPGroupMemberActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" /&gt;
+        &lt;activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" /&gt;
+    &lt;!--红包相关界面 end--&gt;
+</code></pre>
+
+<h3>3.3 初始化红包上下文和注册融云自定义消息类型和模板</h3>
+
+<ul>
+<li>App中初始化红包上下文和注册红包消息、回执消息类以及消息展示模板。</li>
+</ul>
+
+
+<pre><code>   import com.easemob.redpacketsdk.RedPacket;
+   import com.easemob.redpacketui.RPContext; 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        /**
+         * 注意：
+         *
+         * IMKit SDK调用第一步 初始化
+         *
+         * context上下文
+         *
+         * 只有两个进程需要初始化，主进程和 push 进程
+         */
+    if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext())) ||
+              "io.rong.push".equals(getCurProcessName(getApplicationContext()))) {
+
+            RongIM.init(this);
+
+           /**
+            * 融云SDK事件监听处理
+            *
+            * 注册相关代码，只需要在主进程里做。
+            */
+           if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
+
+               RongCloudEvent.init(this);
+               DemoContext.init(this);
+
+               Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
+
+               try {
+                 //注册红包消息、回执消息类以及消息展示模板
+                 RPContext.getInstance().registerMsgTypeAndTemplate(this);
+
+                 RongIM.registerMessageType(AgreedFriendRequestMessage.class);
+                 RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
+                 RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
+                 //@ 消息模板展示
+                 RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //初始化红包上下文
+        RedPacket.getInstance().initContext(this);
+
+    }
+</code></pre>
+
+<ul>
+<li>RongCloudEvent实现OnReceiveMessageListener。
+<strong>App开发者可以在Application中实现</strong></li>
+</ul>
+
+
+<pre><code>
+    /**
+     * RongIM.init(this) 后直接可注册的Listener。
+     */
+    private void initDefaultListener() {
+
+        RongIM.getInstance().getRongIMClient().setOnReceiveMessageListener(this);//设置消息接收监听器。
+
+    }
+
+    /**
+     * 接收消息的监听器：OnReceiveMessageListener 的回调方法，接收到消息后执行。
+     *
+     * @param message 接收到的消息的实体信息。
+     * @param left    剩余未拉取消息数目。
+     */
+    @Override
+    public boolean onReceived(Message message, int left) {
+
+        MessageContent messageContent = message.getContent();
+       if (messageContent instanceof RongEmptyMessage) {
+            Log.e(TAG, "--onReceived--空消息");
+            //接收到空消息（不展示UI的消息）向本地插入一条“XX领取了你的红包”
+            RPContext.getInstance().insertMessage(message);
+        } else {
+            Log.d(TAG, "onReceived-其他消息，自己来判断处理");
+        }
+        return false;
+
+    }
+</code></pre>
+
+<h3>3.4 初始化红包Token和用户信息</h3>
+
+<p>*LoginActivity获取我的群组信息成功后请求签名（商户号和密钥请联系云账户获取、签名需要在自己服务器获取）并初始化红包token</p>
+
+<pre><code>    import com.easemob.redpacketsdk.RPCallback;
+    import com.easemob.redpacketsdk.RedPacket;
+
+    /**
+     * 获得自己所加入得群组成功以后，调用 syncGroup 方法，同步自己所加入得群组
+     *
+     * @param obj
+     */
+     private void getMyGroupApiSuccess(Object obj) {
+        if (obj instanceof Groups) {
+           ...
+              //请求签名然后初始化红包Token
+              String userID = DemoContext.getInstance().getSharedPreferences()
+                            .getString(Constants.APP_USER_ID, Constants.DEFAULT);
+                    //App开发者需要去自己服务器请求签名参数,换成自己的URl
+                    //@param partner      商户代码 (联系云账户后端获取)
+                    // @param userId       商户用户id
+                    // @param timestamp    签名使用的时间戳
+                    // @param sign         签名
+                    // 方法中所涉及到的参数均由AppServer提供，AppServer所采用的签名方法由云账户提供。
+                    String url = "http://rpv2.easemob.com/api/sign?duid=" + userID;
+                    RedPacketUtil.getInstance().requestSign(LoginActivity.this, url, new GetSignInfoCallback() {
+                        @Override
+                        public void signInfoSuccess() {
+                            mHandler.obtainMessage(HANDLER_LOGIN_SUCCESS).sendToTarget();
+                        }
+
+                        @Override
+                        public void signInfoError(String errorMsg) {
+                            mHandler.obtainMessage(HANDLER_LOGIN_FAILURE).sendToTarget();
+
+                        }
+                    });
+           ...
+        }
+    } 
+</code></pre>
+
+<ul>
+<li>LoginActivity登录时初始化用户信息。</li>
+</ul>
+
+
+<pre><code>    import com.easemob.redpacketui.RPContext;
+
+    /**
+     * 以下是demo 的逻辑，与sdk 没有关系。
+     * 1，登录成功，获得 cookie 和 token
+     *
+     * @param obj
+     */
+    private void loginApiSuccess(Object obj) {
+        if (obj instanceof User) {
+            final User user = (User) obj;
+            if (user.getCode() == 200) {
+                if (DemoContext.getInstance() != null &amp;&amp; user.getResult() != null) {
+                    //获得token，通过token 去做 connect 操作
+                    httpGetTokenSuccess(user.getResult().getToken());
+
+                    SharedPreferences.Editor edit = DemoContext.getInstance().getSharedPreferences().edit();
+                    edit.putString(Constants.APP_USER_NAME, user.getResult().getUsername());
+                    edit.putString(Constants.APP_USER_PORTRAIT, user.getResult().getPortrait());
+                    edit.putString(Constants.APP_TOKEN, user.getResult().getToken());
+                    edit.putString(INTENT_PASSWORD, mPassWordEt.getText().toString());
+                    edit.putString(INTENT_IMAIL, mUserNameEt.getText().toString());
+                    edit.putBoolean("DEMO_ISFIRST", false);
+                    edit.apply();
+
+                    //初始化红包用户信息
+                    RPContext.getInstance().initUserInfo(user.getResult().getId(), user.getResult().getUsername(),
+                                                         user.getResult().getPortrait());
+
+                    Log.i(TAG, "----login success---");
+                }
+            } else if (user.getCode() == 103) {
+
+                if (mDialog != null)
+                    mDialog.dismiss();
+
+                WinToast.toast(LoginActivity.this, R.string.app_pass_error);
+            } else if (user.getCode() == 104) {
+
+                if (mDialog != null)
+                    mDialog.dismiss();
+
+                WinToast.toast(LoginActivity.this, R.string.app_user_error);
+            } else if (user.getCode() == 111) {
+                if (mDialog != null)
+                    mDialog.dismiss();
+                WinToast.toast(LoginActivity.this, R.string.app_user_cookie);
+            }
+        }
+    }
+</code></pre>
+
+<ul>
+<li>LoginActivity快速登录时初始化用户信息。</li>
+</ul>
+
+
+<pre><code>    import com.easemob.redpacketui.RPContext;
+
+     protected void initData() {
+
+       ...
+
+    if (!token.equals(Constants.DEFAULT) &amp;&amp; !cookie.equals(Constants.DEFAULT)) {
+
+       if (mDialog != null &amp;&amp; !mDialog.isShowing()) {
+                    mDialog.show();
+             }
+
+     //初始化红包用户信息
+     String userID = PreferenceManager.getDefaultSharedPreferences(this).getString(
+     Constants.APP_USER_ID, "default");
+     String userName = PreferenceManager.getDefaultSharedPreferences(this).getString(
+     Constants.APP_USER_NAME,"default");
+     String userAvatar = PreferenceManager.getDefaultSharedPreferences(this).getString(
+     Constants.APP_USER_PORTRAIT, "none");
+
+     RPContext.getInstance().initUserInfo(userID, userName, userAvatar);
+
+     httpGetTokenSuccess(token);
+
+        }
+    }
+</code></pre>
+
+<p><strong>APP在修改用户消息的时候需要RPContext.getInstance().initUserInfo(userID, userName, userAvatar);保证信息实时统一</strong></p>
+
+<h3>3.5 RongCloudEvent中、在扩展栏中增加红包按钮</h3>
+
+<ul>
+<li>需要导入的包</li>
+</ul>
+
+
+<pre><code>    import com.easemob.redpacketui.provider.RongGroupRedPacketProvider;
+    import com.easemob.redpacketui.provider.RongRedPacketProvider;
+</code></pre>
+
+<ul>
+<li>添加单聊红包入口</li>
+</ul>
+
+
+<pre><code>
+    InputProvider.ExtendProvider[] privateProvider = {
+                new ImageInputProvider(RongContext.getInstance()),//图片
+                new CameraInputProvider(RongContext.getInstance()),//相机
+                new RealTimeLocationInputProvider(RongContext.getInstance()),//地理位置
+                new VoIPInputProvider(RongContext.getInstance()),// 语音通话
+                new RongRedPacketProvider(RongContext.getInstance())//单聊红包
+        };
+    RongIM.resetInputExtensionProvider(Conversation.ConversationType.PRIVATE,  privateProvider); 
+</code></pre>
+
+<ul>
+<li>添加群聊红包入口</li>
+</ul>
+
+
+<pre><code>
+    InputProvider.ExtendProvider[] groupProvider = {
+           new ImageInputProvider(RongContext.getInstance()),//图片
+           new CameraInputProvider(RongContext.getInstance()),//相机
+           new RealTimeLocationInputProvider(RongContext.getInstance()),//地理位置
+           new ContactsProvider(RongContext.getInstance()),//通讯录
+           createGroupProvider(),//群红包
+        }; 
+
+     private RongGroupRedPacketProvider createGroupProvider() {
+        //(只是针对融云demo做的缓存逻辑,App开发者及供参考)
+        //App开发者需要根据群ID获取群成员人数,然后mCallback.toRedPacketActivity(number),打开发送红包界面
+        RongGroupRedPacketProvider groupRedPacketProvider = new RongGroupRedPacketProvider(
+                RongContext.getInstance(), new GetGroupInfoCallback() {
+            @Override
+            public void getGroupPersonNumber(String groupID, ToRedPacketActivity mCallback) {
+                //同步群信息
+                syncGroupInfo(groupID);
+                if (DemoContext.getInstance().getGroupNumberById(groupID) != null) {
+                    //这里的缓存群组信息的逻辑仅供参考
+                    int number = Integer.parseInt(DemoContext.getInstance().getGroupNumberById(groupID));
+                    mCallback.toRedPacketActivity(number);
+                } else {
+                    mCallback.toRedPacketActivity(0);
+                }
+            }
+        });
+        return groupRedPacketProvider;
+    }
+
+    private void syncGroupInfo(final String groupID) {
+
+        DemoContext.getInstance().getDemoApi().getGroupByGroupId(groupID, new ApiCallback&lt;GroupInfo&gt;() {
+            @Override
+            public void onComplete(AbstractHttpRequest&lt;GroupInfo&gt; abstractHttpRequest, GroupInfo groupInfo) {
+                if (groupInfo.getCode() == 200 &amp;&amp; groupInfo.getResult() != null) {
+                    Log.e(TAG, groupInfo.getResult().getNumber());
+                    int number = Integer.parseInt(groupInfo.getResult().getNumber());
+                    Log.e(TAG, "-group-number-" + number);
+                    //缓存群人数
+                    DemoContext.getInstance().putGroupNumber(groupID, String.valueOf(number));
+                    //缓存群成员信息
+                    DemoContext.getInstance().putGroupMember(groupID, groupInfo.getResult().getUsers());
+                } else {
+                    WinToast.toast(mContext, String.valueOf(groupInfo.getCode()));
+                }
+            }
+
+            @Override
+            public void onFailure(AbstractHttpRequest abstractHttpRequest, BaseException e) {
+                Log.e(TAG, e.toString());
+            }
+        });
+    }
+
+    private void sortingData(List&lt;io.rong.app.model.UserInfo&gt; mList) {
+        String userID = DemoContext.getInstance().getSharedPreferences().
+                getString(Constants.APP_USER_ID, Constants.DEFAULT);
+        list.clear();
+        for (int i = 0; i &lt; mList.size(); i++) {
+            if (userID.equals(mList.get(i).getId())) {
+                continue;
+            }
+            RPUserBean mRPUserBean = new RPUserBean();
+            mRPUserBean.userId = mList.get(i).getId();
+            mRPUserBean.userNickname = mList.get(i).getUsername();
+            mRPUserBean.userAvatar = mList.get(i).getPortrait();
+            list.add(mRPUserBean);
+        }
+    }
+
+    RongIM.resetInputExtensionProvider(Conversation.ConversationType.GROUP, groupProvider);
+</code></pre>
+
+<h3>3.6 在RongCloudEvent实现setGetUserInfoCallback和setGroupMemberListener</h3>
+
+<ul>
+<li>实现用户信息setGetUserInfoCallback提供者</li>
+</ul>
+
+
+<pre><code>
+    //App开发者需要根据用户ID获取用户信息,然后mCallback.setUserInfo
+        // (userInfos.getUsername(),userInfos.getPortrait());
+        RedPacketUtil.getInstance().setGetUserInfoCallback(new GetUserInfoCallback() {
+            @Override
+            public void getUserInfo(String userID, final SetUserInfoCallback mCallback) {
+                //(只是针对融云demo做的缓存逻辑,App开发者仅供参考)
+                //查找用户库是否存在该用户,存在使该改用户信息,不存在请求服务器然后插入数据库
+                UserInfos userInfos = DemoContext.getInstance().getUserInfosById(userID);
+                if (userInfos != null) {
+                    Log.e(TAG, "-user-cache-" + userInfos.getUsername());
+                    mCallback.setUserInfo(userInfos.getUsername(), userInfos.getPortrait());
+                } else {
+                    Log.e(TAG, "-user-no-cache-");
+                    requestUserInfo(userID, mCallback);
+                }
+
+            }
+        }); 
+
+       /**
+        * 根据用户id请求用户信息
+        * @param userID
+        * @param mCallback
+        */        
+     private void requestUserInfo(String userID, final SetUserInfoCallback mCallback) {
+     DemoContext.getInstance().getDemoApi().getUserInfoByUserId(userID, new ApiCallback&lt;User&gt;() {
+          @Override
+         public void onComplete(AbstractHttpRequest&lt;User&gt; abstractHttpRequest, final User user) {
+                if (user != null &amp;&amp; user.getResult() != null) {
+                    Log.e(TAG, "-request-user-" + user.getResult().getUsername());
+                    UserInfos userInfos = new UserInfos();
+                    userInfos.setUserid(user.getResult().getId());
+                    userInfos.setPortrait(user.getResult().getPortrait());
+                    userInfos.setStatus(String.valueOf(user.getResult().getStatus()));
+                    userInfos.setUsername(user.getResult().getUsername());
+                    userInfos.setId(null);
+                    DemoContext.getInstance().insertOrReplaceUserInfos(userInfos);
+                    handUserInfoCallBack(mCallback, "", user);
+                } else {
+                    handUserInfoCallBack(mCallback, "用户信息为空", null);
+                }
+
+            }
+
+            @Override
+            public void onFailure(final AbstractHttpRequest&lt;User&gt; abstractHttpRequest, final BaseException e) {
+                handUserInfoCallBack(mCallback, e.toString(), null);
+
+            }
+        });
+    }
+
+    //APP开发者的请求框架success是在UI线程里面,直接忽略 mHandler.post()
+    public void handUserInfoCallBack(final SetUserInfoCallback callback, final String msg, final User user) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (TextUtils.isEmpty(msg)) {
+                    callback.setUserInfo(user.getResult().getUsername(), user.getResult().getPortrait());
+                } else {
+                    callback.UserInfoError(msg);
+                }
+            }
+        });
+
+    }  
+</code></pre>
+
+<ul>
+<li>实现群信息setGroupMemberListener提供者</li>
+</ul>
+
+
+<pre><code>
+    //根据群id获取群成员信息,然后 groupMemberCallback.setGroupMember(list);
+        RPGroupMemberUtil.getInstance().setGroupMemberListener(new NotifyGroupMemberCallback() {
+            @Override
+            public void getGroupMember(final String groupID, final GroupMemberCallback mCallback) {
+                //(只是针对融云demo做的缓存逻辑,App开发者仅供参考)
+                //有缓存读缓存信息,没有缓存请求服务器然后加入缓存
+                List&lt;io.rong.app.model.UserInfo&gt; mList = DemoContext.getInstance().getGroupMemberById(groupID);
+                if (mList != null) {
+                    Log.e(TAG, "-group-cache-" + mList);
+                    sortingData(mList);
+                    mCallback.setGroupMember(list);
+                } else {
+                    Log.e(TAG, "-no-group-cache-");
+                    requestGroupMember(groupID, mCallback);
+                }
+            }
+        }); 
+
+     /**
+     * 根据群id请求群信息
+     * @param groupID
+     * @param mCallback
+     */
+    private void requestGroupMember(final String groupID, final GroupMemberCallback mCallback) {
+        DemoContext.getInstance().getDemoApi().getGroupByGroupId(groupID, new ApiCallback&lt;GroupInfo&gt;() {
+            @Override
+            public void onComplete(AbstractHttpRequest&lt;GroupInfo&gt; abstractHttpRequest, GroupInfo groupInfo) {
+                if (groupInfo.getCode() == 200 &amp;&amp; groupInfo.getResult() != null) {
+                    Log.e(TAG, "-request-group-" + groupInfo.getResult().getUsers().toString());
+                    sortingData(groupInfo.getResult().getUsers());
+                    DemoContext.getInstance().putGroupNumber(groupID, String.valueOf(list.size()));
+                    handGroupMemberCallBack(mCallback, "");
+
+                } else {
+                    handGroupMemberCallBack(mCallback, "数据为空");
+
+                }
+            }
+
+            @Override
+            public void onFailure(AbstractHttpRequest abstractHttpRequest, final BaseException e) {
+                handGroupMemberCallBack(mCallback, e.toString());
+            }
+        });
+    }
+
+    //APP开发者的请求框架success是在UI线程里面,直接忽略 mHandler.post()
+    public void handGroupMemberCallBack(final GroupMemberCallback callback, final String msg) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (TextUtils.isEmpty(msg)) {
+                    callback.setGroupMember(list);
+                } else {
+                    callback.groupMemberError("code", msg);
+                }
+            }
+        });
+
+    }
+</code></pre>
+
+<p><strong>3.6 App开发者可以在Application中实现</strong></p>
+
+<h3>3.7 添加零钱页的入口</h3>
+
+<ul>
+<li>在需要添加零钱的页面调用下面的方法*</li>
+</ul>
+
+
+<pre><code>    import com.easemob.redpacketui.RPContext;
+
+    RPContext.getInstance().toChangeActivity(this);
+</code></pre>
+
+<p><strong>以上集成完毕、以下关于收发红包的注解</strong></p>
+
+<h2>4. 关于群、讨论组、单聊红包收发的释义</h2>
+
+<h3>4.1 关于红包的发送</h3>
+
+<ul>
+<li>RongRedPacketProvider中进入单聊红包界面</li>
+</ul>
+
+
+<pre><code>    import com.easemob.redpacketsdk.bean.RedPacketInfo;
+    import com.easemob.redpacketsdk.constant.RPConstant;
+    import com.easemob.redpacketui.R;
+    import com.easemob.redpacketui.RPContext;
+    import com.easemob.redpacketui.message.RongRedPacketMessage;
+    import com.easemob.redpacketui.ui.activity.RPRedPacketActivity;
+
+    //点击扩展栏红包按钮进入发送单聊红包界面
+    @Override
+    public void onPluginClick(View view) {
+        final Intent intent = new Intent(mContext, RPRedPacketActivity.class);
+        final RedPacketInfo redPacketInfo = new RedPacketInfo();
+        redPacketInfo.fromAvatarUrl = RPContext.getInstance().getUserAvatar();//发送者头像
+        redPacketInfo.fromNickName = RPContext.getInstance().getUserName();//发送者名字
+        redPacketInfo.toUserId = getCurrentConversation().getTargetId(); //接受者id
+        redPacketInfo.chatType = RPConstant.CHATTYPE_SINGLE;//单聊
+
+        intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
+        startActivityForResult(intent, RPContext.REQUEST_CODE_SEND_MONEY);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+      //接受返回的红包信息,并发送红包消息
+      if (resultCode == Activity.RESULT_OK &amp;&amp; data != null &amp;&amp; requestCode == RPContext.REQUEST_CODE_SEND_MONEY) {
+            String greeting = data.getStringExtra(RPConstant.EXTRA_MONEY_GREETING);//祝福语
+            String moneyID = data.getStringExtra(RPConstant.EXTRA_CHECK_MONEY_ID);//红包ID
+            String userId = RPContext.getInstance().getUserID();//发送者ID
+            String userName = RPContext.getInstance().getUserName();//发送者名字
+           RongRedPacketMessage message = RongRedPacketMessage.obtain(userId, userName,
+                    greeting, moneyID, "1", "融云红包", "", "");    
+            //发送红包消息到聊天界面
+            mUploadHandler.post(new MyRunnable(message));
+        }
+    }
+
+      class MyRunnable implements Runnable {
+
+        RongRedPacketMessage mMessage;
+
+        public MyRunnable(RongRedPacketMessage message) {
+            mMessage = message;
+        }
+
+        @Override
+        public void run() {
+          if (RongIM.getInstance() != null &amp;&amp; RongIM.getInstance().getRongIMClient() != null) {
+
+            RongIM.getInstance().getRongIMClient().sendMessage(getCurrentConversation().getConversationType(),
+            getCurrentConversation().getTargetId(), mMessage, null, null, new RongIMClient.SendMessageCallback() {
+                   @Override
+                   public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                       Log.e("RedPacketProvider", "-----onError--" + errorCode);
+                   }
+
+                   @Override
+                   public void onSuccess(Integer integer) {
+                       Log.e("RedPacketProvider", "-----onSuccess--" + integer);
+                   }
+               },null);
+           }
+
+       }
+    }  
+</code></pre>
+
+<ul>
+<li>RongGroupRedPacketProvider中进入群红包（讨论组）界面</li>
+</ul>
+
+
+<pre><code>
+    //点击扩展栏红包按钮进入发送群（讨论组）红包界面 
+    @Override
+    public void onPluginClick(View view) {
+
+        redPacketInfo = new RedPacketInfo();
+        redPacketInfo.fromAvatarUrl = RPContext.getInstance().getUserAvatar(); //发送者头像url
+        redPacketInfo.fromNickName = RPContext.getInstance().getUserName();//发送者昵称 设置了昵称就传昵称 否则传id
+        redPacketInfo.toGroupId = getCurrentConversation().getTargetId();//群ID
+        redPacketInfo.chatType = RPConstant.CHATTYPE_GROUP;//群聊、讨论组类型
+        if (callback != null) {
+            callback.getGroupPersonNumber(redPacketInfo.toGroupId,this);
+        } else {
+            Toast.makeText(mContext, "回调函数不能为空", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    @Override
+    public void toRedPacketActivity(int number) {
+        Intent intent = new Intent(mContext, RPRedPacketActivity.class);
+        redPacketInfo.groupMemberCount = number;
+        intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
+        intent.putExtra(RPConstant.EXTRA_AUTH_INFO, RedPacketUtil.getInstance().getAuthData());
+        startActivityForResult(intent, RPContext.REQUEST_CODE_SEND_MONEY);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        //接受返回的红包信息,并发送红包消息
+        if (data != null &amp;&amp; requestCode == RedPacketUtil.REQUEST_CODE_SEND_MONEY) {
+            String greeting = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_GREETING);//祝福语
+            String moneyID = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_ID);//红包ID
+            String userId = RedPacketUtil.getInstance().getUserID();//发送者ID
+            String userName = RedPacketUtil.getInstance().getUserName();//发送者名字
+            String redPacketType = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_TYPE);//群红包类型
+            String specialReceiveId = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//专属红包接受者ID
+            RongRedPacketMessage message = RongRedPacketMessage.obtain(userId, userName, 
+                    greeting, moneyID, "1", "融云红包", redPacketType, specialReceiveId);
+            //发送红包消息到聊天界面
+            mUploadHandler.post(new MyRunnable(message));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    class MyRunnable implements Runnable {
+
+        RongRedPacketMessage mMessage;
+
+        public MyRunnable(RongRedPacketMessage message) {
+            mMessage = message;
+        }
+
+        @Override
+        public void run() {
+            if (RongIM.getInstance() != null &amp;&amp; RongIM.getInstance().getRongIMClient() != null) {            
+
+       RongIM.getInstance().getRongIMClient().sendMessage(getCurrentConversation().getConversationType(),
+       getCurrentConversation().getTargetId() , mMessage, null, null, new RongIMClient.SendMessageCallback() {
+                    @Override
+                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                        Log.e("PacketProvider", "-----onError--" + errorCode);
+                    }
+
+                    @Override
+                    public void onSuccess(Integer integer) {
+                        Log.e("PacketProvider", "-----onSuccess--" + integer);
+                    }
+                },null);
+            }
+
+        }
+    }    
+</code></pre>
+
+<h3>4.2 RongRedPacketMessageProvider中打开红包消息和回执消息处理</h3>
+
+<ul>
+<li>接受红包消息打开红包</li>
+</ul>
+
+
+<pre><code>
+    @Override
+    public void onItemClick(View view, int position, final RongRedPacketMessage content, final UIMessage message) {
+        mContent = content;
+        mMessage = message;
+        progressDialog = new ProgressDialog(mContext);
+        //进度条风格开发者可以根据需求改变
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        //以下是打开红包所需要的参数
+        redPacketInfo = new RedPacketInfo();
+        redPacketInfo.moneyID = content.getMoneyID();//获取红包id
+        redPacketInfo.toAvatarUrl = RedPacketUtil.getInstance().getUserAvatar();//获取打开红包者的名字
+        redPacketInfo.toNickName = RedPacketUtil.getInstance().getUserName();//获取打开红包者的头像
+        //判断发送方还是接收方
+        if (message.getMessageDirection() == UIMessage.MessageDirection.SEND) {
+            redPacketInfo.moneyMsgDirect = RPConstant.MESSAGE_DIRECT_SEND;//发送者
+        } else {
+            redPacketInfo.moneyMsgDirect = RPConstant.MESSAGE_DIRECT_RECEIVE;//接受方
+        }
+        //获取聊天类型
+        if (message.getConversationType() == Conversation.ConversationType.PRIVATE) {//单聊
+            redPacketInfo.chatType = RPConstant.CHATTYPE_SINGLE;
+
+        } else {//群聊
+            redPacketInfo.chatType = RPConstant.CHATTYPE_GROUP;
+        }
+        String redPacketType = content.getRedPacketType();
+        //专属红包需要根据用户id获取用户信息
+        if (!TextUtils.isEmpty(redPacketType) &amp;&amp; redPacketType.
+                equals(RPConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
+            String specialReceiveId = content.getSpecialReceivedID();
+            progressDialog.show();
+            RedPacketUtil.getInstance().getGetUserInfoCallback().getUserInfo(specialReceiveId, this);
+        } else {
+            openRedPacket(false);
+        }
+    }  
+
+    public void openRedPacket(final boolean isSpecial) {
+        //打开红包
+        RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo,
+                RedPacketUtil.getInstance().getAuthData(), (FragmentActivity) mContext, 
+                new RPOpenPacketUtil.RPOpenPacketCallBack() {
+            @Override
+            public void onSuccess(String s, String s1) {
+                //打开红包消息成功,然后发送回执消息例如"你领取了XX的红包"
+                sendAckMsg(mContent, mMessage, RedPacketUtil.getInstance().getUserName());
+            }
+
+            @Override
+            public void showLoading() {
+                if (!isSpecial) {
+                    progressDialog.show();
+                }
+
+            }
+
+            @Override
+            public void hideLoading() {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(String errorCode, String errorMsg) {
+                //错误处理
+                Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void setUserInfo(String userName, String userAvatar) {
+        redPacketInfo.toUserId = RedPacketUtil.getInstance().getUserID();
+        redPacketInfo.specialNickname = userName;
+        redPacketInfo.specialAvatarUrl = userAvatar;
+        openRedPacket(true);
+    }  
+</code></pre>
+
+<ul>
+<li>接受红包消息之后回执消息的处理</li>
+</ul>
+
+
+<pre><code>
+     public void sendAckMsg(RongRedPacketMessage content, UIMessage message, String receiveName) {
+        String receiveID = RPContext.getInstance().getUserID();
+        RongNotificationMessage rongNotificationMessage = RongNotificationMessage.obtain(content.getSendUserID(), 
+                content.getSendUserName(), receiveID, receiveName, "1");//回执消息
+        final RongEmptyMessage rongEmptyMessage = RongEmptyMessage.obtain(content.getSendUserID(),
+                content.getSendUserName(), receiveID, receiveName, "1");//空消息
+        if (message.getConversationType() == Conversation.ConversationType.PRIVATE) {//单聊
+            RongIM.getInstance().getRongIMClient().sendMessage(message.getConversationType(), 
+            content.getSendUserID(), rongNotificationMessage, null, null, new RongIMClient.SendMessageCallback() {
+                @Override
+                public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                    Log.e("yzh", "-单聊发送回执消息失败-");
+
+                }
+
+                @Override
+                public void onSuccess(Integer integer) {
+
+                    Log.e("yzh", "-单聊发送回执消息成功-");
+                }
+            }, null);
+        } else {//群聊讨论组
+            if (content.getSendUserID().equals(receiveID)) {//自己领取了自己的红包
+                RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
+                        message.getTargetId(), receiveID, rongNotificationMessage, null);
+            } else {
+                RongIM.getInstance().getRongIMClient().sendMessage(message.getConversationType(),
+                message.getTargetId(), rongEmptyMessage, null, null, new RongIMClient.SendMessageCallback() {
+                    @Override
+                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                        Log.e("yzh", "-发送空消息通知类失败-");
+
+                    }
+
+                    @Override
+                    public void onSuccess(Integer integer) {
+
+                        Log.e("yzh", "-发送空消息通知类成功-");
+                    }
+                }, null);
+                RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
+                        message.getTargetId(), receiveID, rongNotificationMessage, null);
+            }
+        }
+    }
+</code></pre>
+
+<ul>
+<li>红包消息删除处理</li>
+</ul>
+
+
+<pre><code>
+    @Override
+    public void onItemLongClick(View view, int position, RongRedPacketMessage content, final UIMessage message) {
+
+        String[] items;
+        items = new String[]{view.getContext().getResources().getString(R.string.yzh_dialog_item_delete)};
+        ArraysDialogFragment.newInstance("", items).setArraysDialogItemListener(
+                new ArraysDialogFragment.OnArraysDialogItemListener() {
+            @Override
+            public void OnArraysDialogItemClick(DialogInterface dialog, int which) {
+                if (which == 0)
+                RongIM.getInstance().getRongIMClient().deleteMessages(new int[]{message.getMessageId()}, null);
+
+            }
+        }).show(((FragmentActivity) view.getContext()).getSupportFragmentManager());
+    }
+</code></pre>
+</body>
+</html>
