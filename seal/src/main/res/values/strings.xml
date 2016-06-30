@@ -26,6 +26,7 @@
 
     <!--register activity -->
     <string name="login_success">"登录成功"</string>
+    <string name="login_fail">"登录失败"</string>
 
     <!--设置-->
     <string name="new_message_notice">新消息提醒</string>

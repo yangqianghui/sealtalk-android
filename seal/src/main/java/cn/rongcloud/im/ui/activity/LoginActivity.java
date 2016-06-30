@@ -9,12 +9,16 @@ import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.easemob.redpacketui.RedPacketUtil;
+import com.easemob.redpacketui.callback.GetSignInfoCallback;
 
 import java.util.List;
 
@@ -313,6 +317,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (TextUtils.isEmpty(guRes.getResult().getPortraitUri())) {
                             guRes.getResult().setPortraitUri(RongGenerate.generateDefaultAvatar(guRes.getResult().getNickname(), guRes.getResult().getId()));
                         }
+                        //初始化用户信息
+                        RedPacketUtil.getInstance().initUserInfo(guRes.getResult().getId(), guRes.getResult().getNickname(), guRes.getResult().getPortraitUri());
+
                         RongIM.getInstance().setCurrentUserInfo(new UserInfo(guRes.getResult().getId(), guRes.getResult().getNickname(), Uri.parse(guRes.getResult().getPortraitUri())));
                         RongIM.getInstance().setMessageAttachedUserInfo(true);
 
@@ -320,10 +327,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (groupList.size() == 0 || groupList == null) {
                             request(SYNCGROUP);
                         } else {
-                            LoadDialog.dismiss(mContext);
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            NToast.shortToast(mContext, R.string.login_success);
-                            finish();
+                            //请求签名
+                            initSign();
                         }
                     }
                     break;
@@ -360,10 +365,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             }
 
                         }
-                        LoadDialog.dismiss(mContext);
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        NToast.shortToast(mContext, R.string.login_success);
-                        finish();
+                        //请求签名
+                        initSign();
                     }
                     break;
             }
@@ -394,6 +397,35 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 NToast.shortToast(mContext, R.string.sync_group_api_fail);
                 break;
         }
+    }
+    private void initSign() {
+
+        //请求签名然后初始化红包Token
+        String userID = RedPacketUtil.getInstance().getUserID();
+        Log.e("dxf", "userid-" + userID);
+        //App开发者需要去自己服务器请求签名参数,换成自己的URl
+        //@param partner      商户代码 (联系云账户后端获取)
+        // @param userId       商户用户id
+        // @param timestamp    签名使用的时间戳
+        // @param sign         签名
+        // 方法中所涉及到的参数均由AppServer提供，AppServer所采用的签名方法由云账户提供。
+        String url = "http://rpv2.easemob.com/api/sign?duid=" + userID;
+        RedPacketUtil.getInstance().requestSign(LoginActivity.this, url, new GetSignInfoCallback() {
+            @Override
+            public void signInfoSuccess() {
+                LoadDialog.dismiss(mContext);
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                NToast.shortToast(mContext, R.string.login_success);
+                finish();
+            }
+
+            @Override
+            public void signInfoError(String errorMsg) {
+                NToast.shortToast(mContext, R.string.login_fail);
+
+            }
+        });
+
     }
 
 
