@@ -397,6 +397,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
         }
     }
+
     private void initSign() {
 
         //请求签名然后初始化红包Token
@@ -419,6 +420,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void signInfoError(String errorMsg) {
+                LoadDialog.dismiss(mContext);
                 NToast.shortToast(mContext, R.string.login_fail);
 
             }

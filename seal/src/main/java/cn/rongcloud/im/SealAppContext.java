@@ -9,6 +9,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.easemob.redpacketui.RedPacketUtil;
+import com.easemob.redpacketui.message.RongEmptyMessage;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -277,6 +280,9 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
         } else if (messageContent instanceof ImageMessage) {
             ImageMessage imageMessage = (ImageMessage) messageContent;
             Log.e("imageMessage", imageMessage.getRemoteUri().toString());
+        }if (messageContent instanceof RongEmptyMessage) {
+            //接收到空消息（不展示UI的消息）向本地插入一条“XX领取了你的红包”
+            RedPacketUtil.getInstance().insertMessage(message);
         }
         return false;
     }
