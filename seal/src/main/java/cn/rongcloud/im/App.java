@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
+import com.easemob.redpacketsdk.RedPacket;
+import com.easemob.redpacketui.RedPacketUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -63,6 +65,8 @@ public class App extends Application {
             Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
 
             try {
+                //注册红包消息、回执消息类以及消息展示模板
+                RedPacketUtil.getInstance().registerMsgTypeAndTemplate(this);
                 RongIM.registerMessageType(GroupNotificationMessage.class);
                 RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
                 RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
@@ -95,6 +99,9 @@ public class App extends Application {
 
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
+        //初始化红包上下文
+        RedPacket.getInstance().initContext(this);
+        RedPacket.getInstance().setDebugMode(true);
     }
 
     public static String getCurProcessName(Context context) {

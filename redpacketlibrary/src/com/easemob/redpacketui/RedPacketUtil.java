@@ -155,7 +155,6 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         redPacketInfo.fromAvatarUrl = userAvatar;
         intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
         intent.putExtra(RPConstant.EXTRA_AUTH_INFO, getAuthData());
-        Log.e("dxf", "--auth--" + getAuthData());
         mContext.startActivity(intent);
     }
 

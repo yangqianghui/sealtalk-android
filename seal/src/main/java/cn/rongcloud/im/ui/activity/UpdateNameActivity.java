@@ -41,7 +41,7 @@ public class UpdateNameActivity extends BaseActivity {
         setContentView(R.layout.activity_update_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
-        getActionBar().setTitle(R.string.nickname);
+        getSupportActionBar().setTitle(R.string.nickname);
         mNameEditText = (ClearWriteEditText) findViewById(R.id.update_name);
         sp = getSharedPreferences("config", MODE_PRIVATE);
         editor = sp.edit();
