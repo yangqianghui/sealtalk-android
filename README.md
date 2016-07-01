@@ -4,8 +4,8 @@ Android App of SealTalk powered by RongCloud.
 
 ## Features
 - Support multi-device [Android iOS Web PC(Windows Mac)](http://web.sealtalk.im/) online simultaneously, so is your app;
-- [Audio and vedio](http://www.rongcloud.cn/docs/android_callkit.html) calling;
-- Location sharing;
+- [Audio and video](http://www.rongcloud.cn/docs/android_callkit.html) calling;
+- Real-time location sharing;
 - Arbitrary custom [message](http://www.rongcloud.cn/docs/android.html#消息自定义) definition and custom [functional](http://www.rongcloud.cn/docs/android.html#4、会话扩展功能自定义) template；
 - Complete friend relationship system code demo；
 - Complete group function code demo；
@@ -29,7 +29,7 @@ Read Android [Android Dev Doc](http://www.rongcloud.cn/docs/android.html), Learn
 
 ## Support
  - [Knowledge Base](http://support.rongcloud.cn/)
- - [Dev Repair Order](https://developer.rongcloud.cn/signin?returnUrl=%2Fticket), Need Login
+ - [Dev Repair Order](https://developer.rongcloud.cn/signin?returnUrl=%2Fticket), Need to log in
  - [Android Video Tutorial](http://www.rongcloud.cn/docs/android_video_tutorials.html)
 
 ### Stronger than what you can imagine, Upgrades on the way.
