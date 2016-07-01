@@ -22,13 +22,13 @@ Android 应用 SealTalk 由 融云 RongCloud 出品
 
 ## 使用
 #### Step 1:
-      [下载融云 SDK](http://rongcloud.cn/downloads) Android IMKit SDK包
+[下载融云 SDK](http://rongcloud.cn/downloads) Android IMKit SDK包
 #### Step 2:
-      将 IMKit SDK 包当做 Model 导入 Android Studio , 再从 app 工程对其进行引用(暂不支持 Maven)
+将 IMKit SDK 包当做 Model 导入 Android Studio , 再从 app 工程对其进行引用(暂不支持 Maven)
 #### Step 3:
-      阅读 Android [Android 开发文档](http://www.rongcloud.cn/docs/android.html),熟悉 IM 相关概念 和 接口以及初步集成
+阅读 Android [Android 开发文档](http://www.rongcloud.cn/docs/android.html),熟悉 IM 相关概念 和 接口以及初步集成
 #### Step 4:
-      [下载融云 Demo](https://github.com/sealtalk/sealtalk-android) , 在初步集成和依赖好 IMKit 包后, 阅读 demo 源码 Get 你需要的功能模块
+[下载融云 Demo](https://github.com/sealtalk/sealtalk-android) , 在初步集成和依赖好 IMKit 包后, 阅读 demo 源码 Get 你需要的功能模块
 
 ## 支持
  - [知识库](http://support.rongcloud.cn/)
