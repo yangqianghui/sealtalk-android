@@ -10,7 +10,11 @@ import android.util.Log;
 import android.view.View;
 
 import com.easemob.redpacketui.RedPacketUtil;
+import com.easemob.redpacketui.callback.GetGroupInfoCallback;
+import com.easemob.redpacketui.callback.ToRedPacketActivity;
 import com.easemob.redpacketui.message.RongEmptyMessage;
+import com.easemob.redpacketui.provider.RongGroupRedPacketProvider;
+import com.easemob.redpacketui.provider.RongRedPacketProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -157,7 +161,8 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
 
         InputProvider.ExtendProvider[] singleProvider = {
             new ImageInputProvider(RongContext.getInstance()),
-            new RealTimeLocationInputProvider(RongContext.getInstance()) //带位置共享的地理位置
+            new RealTimeLocationInputProvider(RongContext.getInstance()), //带位置共享的地理位
+            new RongRedPacketProvider(RongContext.getInstance())//单聊红包
         };
 
         InputProvider.ExtendProvider[] muiltiProvider = {
@@ -170,6 +175,31 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
         RongIM.resetInputExtensionProvider(Conversation.ConversationType.CUSTOMER_SERVICE, muiltiProvider);
         RongIM.resetInputExtensionProvider(Conversation.ConversationType.GROUP, muiltiProvider);
     }
+
+    private RongGroupRedPacketProvider createGroupProvider() {
+        //Discussion discussion=RongContext.getInstance().getUserInfoFromCache()
+        //(只是针对融云demo做的缓存逻辑,App开发者及供参考)
+        //App开发者需要根据群ID获取群成员人数,然后mCallback.toRedPacketActivity(number),打开发送红包界面
+        RongGroupRedPacketProvider groupRedPacketProvider = new RongGroupRedPacketProvider(
+        RongContext.getInstance(), new GetGroupInfoCallback() {
+            @Override
+            public void getGroupPersonNumber(String groupID, ToRedPacketActivity mCallback) {
+                //同步群信息
+                //syncGroupInfo(groupID);
+                //Log.e("dxf", "-group-" + group.get);
+//                if (DemoContext.getInstance().getGroupNumberById(groupID) != null) {
+//                    //这里的缓存群组信息的逻辑仅供参考
+//                    int number = Integer.parseInt(DemoContext.getInstance().getGroupNumberById(groupID));
+//                    mCallback.toRedPacketActivity(number);
+//                } else {
+//                    mCallback.toRedPacketActivity(0);
+//                }
+                mCallback.toRedPacketActivity(0);
+            }
+        });
+        return groupRedPacketProvider;
+    }
+
 
     /**
      * 需要 rongcloud connect 成功后设置的 listener
@@ -280,7 +310,8 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
         } else if (messageContent instanceof ImageMessage) {
             ImageMessage imageMessage = (ImageMessage) messageContent;
             Log.e("imageMessage", imageMessage.getRemoteUri().toString());
-        }if (messageContent instanceof RongEmptyMessage) {
+        }
+        if (messageContent instanceof RongEmptyMessage) {
             //接收到空消息（不展示UI的消息）向本地插入一条“XX领取了你的红包”
             RedPacketUtil.getInstance().insertMessage(message);
         }
