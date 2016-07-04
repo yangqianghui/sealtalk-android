@@ -280,34 +280,34 @@
 
         <!--红包相关界面 start-->
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPRedPacketActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPDetailActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPRecordActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPRecordActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPWebViewActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPWebViewActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPChangeActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPBankCardActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPBankCardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.easemob.redpacketui.ui.activity.RPGroupMemberActivity"
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPGroupMemberActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
