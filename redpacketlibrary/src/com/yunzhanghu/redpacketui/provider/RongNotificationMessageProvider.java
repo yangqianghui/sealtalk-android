@@ -1,4 +1,4 @@
-package com.easemob.redpacketui.provider;
+package com.yunzhanghu.redpacketui.provider;
 
 import android.content.Context;
 import android.text.Spannable;
@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.easemob.redpacketui.R;
-import com.easemob.redpacketui.RedPacketUtil;
-import com.easemob.redpacketui.message.RongNotificationMessage;
+import com.yunzhanghu.redpacketui.R;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+import com.yunzhanghu.redpacketui.message.RongNotificationMessage;
 
 import io.rong.imkit.model.ProviderTag;
 import io.rong.imkit.model.UIMessage;

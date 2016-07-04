@@ -1,4 +1,4 @@
-package com.easemob.redpacketui.callback;
+package com.yunzhanghu.redpacketui.callback;
 
 /**
  * Created by yunyu on 16/6/28.

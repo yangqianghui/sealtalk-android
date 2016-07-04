@@ -1,4 +1,4 @@
-package com.easemob.redpacketui.provider;
+package com.yunzhanghu.redpacketui.provider;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,15 +14,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.redpacketsdk.bean.RedPacketInfo;
-import com.easemob.redpacketsdk.constant.RPConstant;
-import com.easemob.redpacketui.R;
-import com.easemob.redpacketui.RedPacketUtil;
-import com.easemob.redpacketui.callback.SetUserInfoCallback;
-import com.easemob.redpacketui.message.RongEmptyMessage;
-import com.easemob.redpacketui.message.RongNotificationMessage;
-import com.easemob.redpacketui.message.RongRedPacketMessage;
-import com.easemob.redpacketui.utils.RPOpenPacketUtil;
+import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketui.R;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+import com.yunzhanghu.redpacketui.callback.SetUserInfoCallback;
+import com.yunzhanghu.redpacketui.message.RongEmptyMessage;
+import com.yunzhanghu.redpacketui.message.RongNotificationMessage;
+import com.yunzhanghu.redpacketui.message.RongRedPacketMessage;
+import com.yunzhanghu.redpacketui.utils.RPOpenPacketUtil;
 
 import io.rong.imkit.RongIM;
 import io.rong.imkit.model.ProviderTag;

@@ -1,9 +1,9 @@
-package com.easemob.redpacketui.message;
+package com.yunzhanghu.redpacketui.message;
 
 import android.os.Parcel;
 import android.util.Log;
 
-import com.easemob.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;

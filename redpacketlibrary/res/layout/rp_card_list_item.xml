@@ -6,7 +6,7 @@
               android:orientation="vertical"
     >
 
-    <com.easemob.redpacketui.cardview.CardView
+    <com.yunzhanghu.redpacketui.cardview.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 android:textSize="@dimen/font90px"
                 />
         </RelativeLayout>
-    </com.easemob.redpacketui.cardview.CardView>
+    </com.yunzhanghu.redpacketui.cardview.CardView>
 
     <LinearLayout
         android:id="@+id/layout_remove_card"

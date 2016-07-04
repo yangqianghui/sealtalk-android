@@ -1,4 +1,4 @@
-package com.easemob.redpacketui;
+package com.yunzhanghu.redpacketui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,17 +12,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.easemob.redpacketsdk.bean.AuthData;
-import com.easemob.redpacketsdk.bean.RedPacketInfo;
-import com.easemob.redpacketsdk.constant.RPConstant;
-import com.easemob.redpacketui.callback.GetSignInfoCallback;
-import com.easemob.redpacketui.callback.GetUserInfoCallback;
-import com.easemob.redpacketui.message.RongEmptyMessage;
-import com.easemob.redpacketui.message.RongNotificationMessage;
-import com.easemob.redpacketui.message.RongRedPacketMessage;
-import com.easemob.redpacketui.provider.RongNotificationMessageProvider;
-import com.easemob.redpacketui.provider.RongRedPacketMessageProvider;
-import com.easemob.redpacketui.ui.activity.RPChangeActivity;
+import com.yunzhanghu.redpacketsdk.bean.AuthData;
+import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketui.callback.GetSignInfoCallback;
+import com.yunzhanghu.redpacketui.callback.GetUserInfoCallback;
+import com.yunzhanghu.redpacketui.message.RongEmptyMessage;
+import com.yunzhanghu.redpacketui.message.RongNotificationMessage;
+import com.yunzhanghu.redpacketui.message.RongRedPacketMessage;
+import com.yunzhanghu.redpacketui.provider.RongNotificationMessageProvider;
+import com.yunzhanghu.redpacketui.provider.RongRedPacketMessageProvider;
+import com.yunzhanghu.redpacketui.ui.activity.RPChangeActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -139,7 +139,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         }
         RongNotificationMessage rongNotificationMessage = RongNotificationMessage.obtain(content.getSendUserID(), content.getSendUserName(), content.getReceiveUserID(), content.getReceiveUserName(), content.getIsOpenMoney());
         if (content.getSendUserID().equals(userID)) {//如果当前用户是发送红包者,插入一条"XX领取了你的红包"
-            RongIM.getInstance().insertMessage(message.getConversationType(), message.getTargetId(), content.getReceiveUserID(), rongNotificationMessage, null);
+            RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(), message.getTargetId(), content.getReceiveUserID(), rongNotificationMessage, null);
         }
     }
 

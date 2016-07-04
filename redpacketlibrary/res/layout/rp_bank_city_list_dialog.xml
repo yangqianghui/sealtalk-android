@@ -6,7 +6,7 @@
                 android:background="@color/money_bg_color"
     >
 
-    <com.easemob.redpacketui.widget.RPTitleBar
+    <com.yunzhanghu.redpacketui.widget.RPTitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:visibility="gone"
         />
 
-    <com.easemob.redpacketui.recyclerview.widget.RecyclerView
+    <com.yunzhanghu.redpacketui.recyclerview.widget.RecyclerView
         android:id="@+id/bank_city_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

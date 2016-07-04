@@ -16,8 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.redpacketui.RedPacketUtil;
-import com.easemob.redpacketui.callback.GetSignInfoCallback;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+import com.yunzhanghu.redpacketui.callback.GetSignInfoCallback;
 
 import java.util.List;
 

@@ -9,12 +9,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.easemob.redpacketui.RedPacketUtil;
-import com.easemob.redpacketui.callback.GetGroupInfoCallback;
-import com.easemob.redpacketui.callback.ToRedPacketActivity;
-import com.easemob.redpacketui.message.RongEmptyMessage;
-import com.easemob.redpacketui.provider.RongGroupRedPacketProvider;
-import com.easemob.redpacketui.provider.RongRedPacketProvider;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+import com.yunzhanghu.redpacketui.callback.GetGroupInfoCallback;
+import com.yunzhanghu.redpacketui.callback.ToRedPacketActivity;
+import com.yunzhanghu.redpacketui.message.RongEmptyMessage;
+import com.yunzhanghu.redpacketui.provider.RongGroupRedPacketProvider;
+import com.yunzhanghu.redpacketui.provider.RongRedPacketProvider;
 
 import java.util.HashMap;
 import java.util.Map;

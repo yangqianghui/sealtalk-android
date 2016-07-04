@@ -1,4 +1,4 @@
-package com.easemob.redpacketui.provider;
+package com.yunzhanghu.redpacketui.provider;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,14 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.easemob.redpacketsdk.bean.RedPacketInfo;
-import com.easemob.redpacketsdk.constant.RPConstant;
-import com.easemob.redpacketui.R;
-import com.easemob.redpacketui.RedPacketUtil;
-import com.easemob.redpacketui.callback.GetGroupInfoCallback;
-import com.easemob.redpacketui.callback.ToRedPacketActivity;
-import com.easemob.redpacketui.message.RongRedPacketMessage;
-import com.easemob.redpacketui.ui.activity.RPRedPacketActivity;
+import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketui.R;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+import com.yunzhanghu.redpacketui.callback.GetGroupInfoCallback;
+import com.yunzhanghu.redpacketui.callback.ToRedPacketActivity;
+import com.yunzhanghu.redpacketui.message.RongRedPacketMessage;
+import com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity;
 
 import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;

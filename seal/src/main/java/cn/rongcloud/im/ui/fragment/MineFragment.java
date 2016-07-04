@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.easemob.redpacketui.RedPacketUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
 
 import cn.rongcloud.im.App;
 import cn.rongcloud.im.R;

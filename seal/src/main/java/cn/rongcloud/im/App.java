@@ -4,13 +4,13 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
-import com.easemob.redpacketsdk.RedPacket;
-import com.easemob.redpacketui.RedPacketUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.yunzhanghu.redpacketsdk.RedPacket;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
 
 import cn.rongcloud.im.message.provider.ContactNotificationMessageProvider;
 import cn.rongcloud.im.message.provider.GroupNotificationMessageProvider;

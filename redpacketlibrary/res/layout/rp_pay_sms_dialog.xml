@@ -49,7 +49,7 @@
             android:textSize="@dimen/font42px" />
     </RelativeLayout>
 
-    <com.easemob.redpacketui.gridpasswordview.GridPasswordView
+    <com.yunzhanghu.redpacketui.gridpasswordview.GridPasswordView
         android:id="@+id/et_sms_code"
         style="@style/GridPasswordStyle"
         android:layout_marginBottom="@dimen/size63px"

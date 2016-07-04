@@ -25,7 +25,7 @@
 
     <View style="@style/DividerStyle"/>
 
-    <com.easemob.redpacketui.recyclerview.widget.RecyclerView
+    <com.yunzhanghu.redpacketui.recyclerview.widget.RecyclerView
         android:id="@+id/pay_type_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

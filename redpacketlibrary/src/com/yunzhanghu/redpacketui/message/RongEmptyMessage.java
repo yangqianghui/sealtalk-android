@@ -1,9 +1,9 @@
-package com.easemob.redpacketui.message;
+package com.yunzhanghu.redpacketui.message;
 
 import android.os.Parcel;
 import android.util.Log;
 
-import com.easemob.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +14,9 @@ import io.rong.common.ParcelUtils;
 import io.rong.imlib.MessageTag;
 import io.rong.imlib.model.UserInfo;
 import io.rong.message.NotificationMessage;
+
+
+
 
 /**
  * 自定义红包透传消息类
