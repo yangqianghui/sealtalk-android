@@ -37,6 +37,7 @@ import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.ClearWriteEditText;
 import cn.rongcloud.im.server.widget.LoadDialog;
+import cn.rongcloud.im.utils.SharedPreferencesContext;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
@@ -340,6 +341,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
                                     new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
                                 );
+                                NLog.e("sync_group", "-id-" + g.getGroup().getId() + "-num-" + g.getGroup().getMemberCount());
+                                SharedPreferencesContext.getInstance().getSharedPreferences().edit().putInt(g.getGroup().getId(), g.getGroup().getMemberCount()).commit();
                             }
                         }
                         request(SYNCFRIEND);
