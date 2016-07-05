@@ -270,7 +270,8 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
         });
 
     }
-    //App开发者需要根据群(讨论组)ID获取群(讨论组)成员人数,然后mCallback.toRedPacketActivity(number),打开发送红包界面
+    //App开发者需要根据群(讨论组)ID获取群(讨论组)成员人数,
+    //然后mCallback.toRedPacketActivity(number),打开发送红包界面
     private RongGroupRedPacketProvider createGroupProvider() {
         //(只是针对融云demo做的缓存逻辑,App开发者及供参考)
         RongGroupRedPacketProvider groupRedPacketProvider = new RongGroupRedPacketProvider(

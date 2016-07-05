@@ -31,7 +31,7 @@ import io.rong.imkit.RongIM;
 import io.rong.imlib.model.Message;
 
 /**
- * Created by yunyu on 16/5/29.
+ * Created by desert on 16/5/29.
  */
 public class RedPacketUtil implements Response.Listener<JSONObject>, Response.ErrorListener {
 
