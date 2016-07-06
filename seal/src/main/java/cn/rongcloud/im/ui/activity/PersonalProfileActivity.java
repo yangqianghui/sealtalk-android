@@ -125,7 +125,11 @@ public class PersonalProfileActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void exectEditEvent(String editText) {
                         if (TextUtils.isEmpty(editText)) {
-                            addMessage = "我是" + mGroup.getName() + "群的" + getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
+                            if (mGroup != null && !TextUtils.isEmpty(mGroup.getName())) {
+                                addMessage = "我是" + mGroup.getName() + "群的" + getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
+                            }else {
+                                addMessage = "我是" + getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
+                            }
                         } else {
                             addMessage = editText;
                         }
