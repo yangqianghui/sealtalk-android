@@ -222,7 +222,7 @@
         <activity
             android:name=".ui.activity.ConversationActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|adjustResize">
 
             <intent-filter>
