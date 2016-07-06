@@ -62,7 +62,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
 
     private static SealAppContext mRongCloudInstance;
 
-    private RongIM.LocationProvider.LocationCallback mLastLocationCallback;
+    private LocationCallback mLastLocationCallback;
 
     private Stack<Map<String, Activity>> mActivityStack;
 
@@ -301,7 +301,6 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
 
     @Override
     public void onChanged(ConnectionStatus connectionStatus) {
-        Log.e("onChanged", "onChanged");
         if (connectionStatus.getMessage().equals(ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT)) {
 
         }
@@ -431,11 +430,11 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
     }
 
 
-    public RongIM.LocationProvider.LocationCallback getLastLocationCallback() {
+    public LocationCallback getLastLocationCallback() {
         return mLastLocationCallback;
     }
 
-    public void setLastLocationCallback(RongIM.LocationProvider.LocationCallback lastLocationCallback) {
+    public void setLastLocationCallback(LocationCallback lastLocationCallback) {
         this.mLastLocationCallback = lastLocationCallback;
     }
 }

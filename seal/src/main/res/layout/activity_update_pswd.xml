@@ -11,7 +11,7 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:gravity="center_vertical"
-        android:text="原密码"
+        android:text="@string/current_password"
         android:textColor="#999"
         android:textSize="16sp" />
 
@@ -34,7 +34,7 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:gravity="center_vertical"
-        android:text="新密码"
+        android:text="@string/new_password"
         android:textColor="#999"
         android:textSize="16sp" />
 
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/btn_list_item_bg"
-        android:hint="6-16位字符区分大小写"
+        android:hint="@string/password_hint"
         android:lines="1"
         android:maxLength="16"
         android:paddingLeft="14dp"
@@ -58,7 +58,7 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:gravity="center_vertical"
-        android:text="确认密码"
+        android:text="@string/confirm_password"
         android:textColor="#999"
         android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/btn_list_item_bg"
-        android:hint="6-16位字符区分大小写"
+        android:hint="@string/password_hint"
         android:lines="1"
         android:maxLength="16"
         android:paddingLeft="14dp"

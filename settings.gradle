@@ -1,1 +1,1 @@
-include ':seal', ':IMKit_v2_6_4_with_voip'
+include ':seal', ':Rong_Cloud_Android_IMKit_SDK_v2_6_5_stable_with_CallKit'

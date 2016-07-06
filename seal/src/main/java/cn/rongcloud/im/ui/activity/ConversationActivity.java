@@ -27,11 +27,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import cn.rongcloud.im.GroupMemberEngine;
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.SealAppContext;
 import cn.rongcloud.im.model.RongEvent;
@@ -42,6 +44,9 @@ import cn.rongcloud.im.ui.widget.LoadingDialog;
 import cn.rongcloud.im.ui.widget.WinToast;
 import cn.rongcloud.im.utils.Constants;
 import io.rong.eventbus.EventBus;
+//CallKit start 1
+import io.rong.imkit.RongCallKit;
+//CallKit end 1
 import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;
 import io.rong.imkit.fragment.ConversationFragment;
@@ -225,6 +230,21 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
         });
 
         SealAppContext.getInstance().pushActivity(mConversationType, mTargetId, this);
+
+        //CallKit start 2
+        RongCallKit.setGroupMemberProvider(new RongCallKit.GroupMembersProvider() {
+            @Override
+            public ArrayList<String> getMemberList(String groupId, final RongCallKit.OnGroupMembersResult result) {
+                (new GroupMemberEngine(ConversationActivity.this)).startEngine(groupId, new GroupMemberEngine.IGroupMembersCallback() {
+                    @Override
+                    public void onResult(ArrayList<String> members) {
+                        result.onGotMemberList(members);
+                    }
+                });
+                return null;
+            }
+        });
+        //CallKit end 2
     }
 
     @Override
@@ -233,6 +253,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
 
         if (intent == null || intent.getData() == null)
             return;
+        enterFragment(Conversation.ConversationType.valueOf(intent.getData().getLastPathSegment().toUpperCase(Locale.getDefault())), intent.getData().getQueryParameter("targetId"));
         setActionBarTitle(mConversationType, mTargetId);
     }
 
@@ -888,6 +909,9 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             EventBus.getDefault().unregister(this);
 
         SealAppContext.getInstance().popActivity(mConversationType, mTargetId);
+        //CallKit start 3
+        RongCallKit.setGroupMemberProvider(null);
+        //CallKit end 3
         super.onDestroy();
     }
 

@@ -553,12 +553,12 @@ public class SealAction extends BaseAction {
     /**
      * 根据群id获取群组成员
      *
-     * @param qunId
+     * @param groupId
      * @return
      * @throws HttpException
      */
-    public GetGroupMemberResponse getGroupMember(String qunId) throws HttpException {
-        String url = getURL("group/" + qunId + "/members");
+    public GetGroupMemberResponse getGroupMember(String groupId) throws HttpException {
+        String url = getURL("group/" + groupId + "/members");
         String result = httpManager.get(mContext, url);
         GetGroupMemberResponse response = null;
         if (!TextUtils.isEmpty(result)) {

@@ -3,12 +3,15 @@ package cn.rongcloud.im.ui.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,13 +26,13 @@ import cn.rongcloud.im.R;
 import cn.rongcloud.im.SealConst;
 import cn.rongcloud.im.server.broadcast.BroadcastManager;
 import cn.rongcloud.im.server.utils.NToast;
+import cn.rongcloud.im.server.widget.LoadDialog;
 import cn.rongcloud.im.ui.adapter.ConversationListAdapterEx;
 import cn.rongcloud.im.ui.fragment.ContactsFragment;
 import cn.rongcloud.im.ui.fragment.DiscoverFragment;
 import cn.rongcloud.im.ui.fragment.MineFragment;
 import cn.rongcloud.im.ui.widget.DragPointView;
 import cn.rongcloud.im.ui.widget.MorePopWindow;
-import cn.rongcloud.im.utils.SharedPreferencesContext;
 import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;
 import io.rong.imkit.fragment.ConversationListFragment;
@@ -176,28 +179,28 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mImageContact.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_contacts));
         mImageFind.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_found));
         mImageMe.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_me));
-        mTextChats.setTextColor(Color.GRAY);
-        mTextContact.setTextColor(Color.GRAY);
-        mTextFind.setTextColor(Color.GRAY);
-        mTextMe.setTextColor(Color.GRAY);
+        mTextChats.setTextColor(Color.parseColor("#abadbb"));
+        mTextContact.setTextColor(Color.parseColor("#abadbb"));
+        mTextFind.setTextColor(Color.parseColor("#abadbb"));
+        mTextMe.setTextColor(Color.parseColor("#abadbb"));
     }
 
     private void changeSelectedTabState(int position) {
         switch (position) {
             case 0:
-                mTextChats.setTextColor(Color.parseColor("#3498DB"));
+                mTextChats.setTextColor(Color.parseColor("#0099ff"));
                 mImageChats.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_chat_hover));
                 break;
             case 1:
-                mTextContact.setTextColor(Color.parseColor("#3498DB"));
+                mTextContact.setTextColor(Color.parseColor("#0099ff"));
                 mImageContact.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_contacts_hover));
                 break;
             case 2:
-                mTextFind.setTextColor(Color.parseColor("#3498DB"));
+                mTextFind.setTextColor(Color.parseColor("#0099ff"));
                 mImageFind.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_found_hover));
                 break;
             case 3:
-                mTextMe.setTextColor(Color.parseColor("#3498DB"));
+                mTextMe.setTextColor(Color.parseColor("#0099ff"));
                 mImageMe.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_me_hover));
                 break;
         }
@@ -248,13 +251,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             }
         }, 500);
 
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(ACTION_DMEO_RECEIVE_MESSAGE);
-//        if (mBroadcastReciver == null) {
-//            mBroadcastReciver = new ReceiveMessageBroadcastReciver();
-//        }
-//        this.registerReceiver(mBroadcastReciver, intentFilter);
-
         getConversationPush();// 获取 push 的 id 和 target
 
         getPushMessage();
@@ -262,8 +258,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         BroadcastManager.getInstance(mContext).addAction(SealConst.EXIT, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                SharedPreferences.Editor editor =  getSharedPreferences("config", MODE_PRIVATE).edit();
+                editor.putBoolean("exit", true);
+                editor.apply();
 
-                RongIM.getInstance().disconnect(true);
+                RongIM.getInstance().logout();
                 MainActivity.this.finish();
                 try {
                     Thread.sleep(500);
@@ -312,30 +311,34 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      * 得到不落地 push 消息
      */
     private void getPushMessage() {
-
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null && intent.getData().getScheme().equals("rong")) {
-            String content = intent.getData().getQueryParameter("pushContent");
-            String data = intent.getData().getQueryParameter("pushData");
-            String id = intent.getData().getQueryParameter("pushId");
-
-            if (SharedPreferencesContext.getInstance() != null) {
-                String token = SharedPreferencesContext.getInstance().getSharedPreferences().getString("DEMO_TOKEN", "default");
-                if (token.equals("default")) {
+            String path = intent.getData().getPath();
+            if (path.contains("push_message")) {
+                SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+                String  cacheToken = sharedPreferences.getString("loginToken", "");
+                if (TextUtils.isEmpty(cacheToken)) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else {
-                    RongIMClient.ConnectionStatusListener.ConnectionStatus status = RongIM.getInstance().getCurrentConnectionStatus();
-                    if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED.equals(status)) {
-                        return;
-                    } else if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTING.equals(status)) {
-                        return;
-                    } else {
-                        Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
-                        intent1.putExtra("PUSH_MESSAGE", true);
-                        startActivity(intent1);
-                        finish();
-                    }
+                    if (!RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)) {
+                        LoadDialog.show(mContext);
+                        RongIM.connect(cacheToken, new RongIMClient.ConnectCallback() {
+                            @Override
+                            public void onTokenIncorrect() {
 
+                            }
+
+                            @Override
+                            public void onSuccess(String s) {
+                                LoadDialog.dismiss(mContext);
+                            }
+
+                            @Override
+                            public void onError(RongIMClient.ErrorCode e) {
+
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -366,46 +369,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            moveTaskToBack(false);
-//            return true;
-//        }
-////        if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-////
-////
-////
-////            final AlertDialog.Builder alterDialog = new AlertDialog.Builder(this);
-////            alterDialog.setMessage(R.string.exit_app);
-////            alterDialog.setCancelable(true);
-////
-////            alterDialog.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-////                @Override
-////                public void onClick(DialogInterface dialog, int which) {
-////                        RongIM.getInstance().disconnect(true);
-////
-////                    try {
-////                        Thread.sleep(500);
-////                        Process.killProcess(Process.myPid());
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-////
-////                }
-////            });
-////            alterDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-////                @Override
-////                public void onClick(DialogInterface dialog, int which) {
-////                    dialog.cancel();
-////                }
-////            });
-////            alterDialog.show();
-////        }
-////
-////        return false;
-//    }
-
 
     private void hintKbTwo() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -424,13 +387,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onDragOut() {
+        mUnreadNumView.setVisibility(View.GONE);
+        NToast.shortToast(mContext, getString(R.string.clear_success));
         List<Conversation> conversations = RongIM.getInstance().getConversationList();
         if (conversations != null && conversations.size() > 0) {
             for (Conversation c : conversations) {
-                RongIM.getInstance().clearMessagesUnreadStatus(c.getConversationType(), c.getTargetId());
+                RongIM.getInstance().clearMessagesUnreadStatus(c.getConversationType(), c.getTargetId(), null);
             }
-            mUnreadNumView.setVisibility(View.GONE);
-            NToast.shortToast(mContext, getString(R.string.clear_success));
         }
     }
 }

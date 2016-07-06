@@ -143,7 +143,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            android:text="1.0.2"
+            android:text="1.0.3"
             android:textColor="#999"
             android:textSize="14sp" />
 
@@ -178,7 +178,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            android:text="2.6.4 Stable"
+            android:text="2.6.5 Stable"
             android:textColor="#999"
             android:textSize="14sp" />
 
@@ -198,7 +198,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="14dp"
         android:gravity="bottom"
-        android:text="Powered RongCloud"
+        android:text="Powered by RongCloud"
         android:textColor="#999"
         android:textSize="14sp" />
 

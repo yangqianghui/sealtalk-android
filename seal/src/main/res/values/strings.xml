@@ -11,9 +11,10 @@
     <string name="main_group">广场</string>
     <string name="main_chatroom">通讯录</string>
     <string name="main_customer">意见反馈</string>
-    <string name="add_chat">发起聊天</string>
+    <string name="private_chat">发起聊天</string>
+    <string name="group_chat">发起群聊</string>
+    <string name="add_contacts">添加好友</string>
     <string name="add_select_group">创建群组</string>
-    <string name="add_contacts">通讯录</string>
     <string name="set_personal_information">我的账号</string>
     <string name="set_news_reminded">新消息提醒</string>
     <string name="set_privacy">隐私</string>
@@ -34,9 +35,10 @@
     <string name="new_message_vibration">震动</string>
     <string name="new_message_prompt_voice">新消息提示音</string>
     <string name="new_message_follow_system">跟随系统</string>
-    <string name="add_validation">加我好友时需要验证</string>
+    <string name="friend_confirmation">加我好友时需要验证</string>
     <string name="the_blacklist">黑名单</string>
     <string name="join_the_blacklist">加入黑名单</string>
+    <string name="blacklist_empty">黑名单为空</string>
     <string name="portrait">头像</string>
     <string name="my_username">昵称</string>
     <string name="update_log">更新日志</string>
@@ -144,7 +146,7 @@
     <string name="new_password">新密码</string>
     <string name="confirm_new_password">确认新密码</string>
     <string name="group_info">群组信息</string>
-    <string name="group_member_size">群成员数</string>
+    <string name="group_member_size">全部群成员</string>
     <string name="group_name">群组昵称</string>
     <string name="confirm_quit_group">确认退出群组?</string>
     <string name="confirm_dismiss_group">确认解散群组?</string>
@@ -153,17 +155,19 @@
     <string name="messsage_notice">消息免打扰</string>
     <string name="clean_message">清空聊天信息</string>
     <string name="send_message">发起聊天</string>
-    <string name="quit_group">退出群组</string>
-    <string name="dismiss_group">解散群组</string>
+    <string name="quit_group">删除并退出</string>
+    <string name="dismiss_group">解散并退出</string>
     <string name="user_details">用户详情</string>
     <string name="black_state">黑名单状态</string>
-    <string name="change_group_name"> 更改了群名称</string>
-    <string name="quit_groups"> 退出了群组</string>
-    <string name="dismiss_groups"> 解散了群组</string>
-    <string name="join_group"> 加入了群组</string>
-    <string name="invitation"> 邀请 </string>
-    <string name="will">将</string>
-    <string name="remove_group">移出了群组</string>
+    <string name="divided_string">、</string>
+    <string name="change_group_name">修改群名称为</string>
+    <string name="quit_groups">退出了群组</string>
+    <string name="dismiss_groups">解散了群组</string>
+    <string name="join_group">加入了群组</string>
+    <string name="to_join_group">加入了群组</string>
+    <string name="invitation">邀请</string>
+    <string name="remove_group_before_str">将</string>
+    <string name="remove_group_after_str">移出了群组</string>
     <string name="my_groups">我的群组</string>
     <string name="code_is_null">验证码为空</string>
     <string name="name_is_null">昵称不能为空</string>
@@ -222,5 +226,11 @@
     <string name="launched_a_location_sharing">我发起了位置共享</string>
     <string name="sdk_version_update">SDK版本</string>
     <string name="sealtalk_version_update">SealTalk版本</string>
-
+    <string name="all_group_member">全部群成员</string>
+    <string name="group_announcement">群公告</string>
+    <string name="group_code">群二维码</string>
+    <string name="total_member">全部群成员</string>
+    <string name="select_contact">选择联系人</string>
+    <string name="current_password">原密码</string>
+    <string name="password_hint">6-16个字符,区分大小写</string>
 </resources>

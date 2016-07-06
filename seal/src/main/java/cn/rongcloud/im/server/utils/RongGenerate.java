@@ -89,6 +89,9 @@ public class RongGenerate {
     }
 
     private static String getColorRGB(String userId) {
+        if (TextUtils.isEmpty(userId)) {
+            throw new RuntimeException("Generate Color userId not is null!");
+        }
         int i = getAscii(userId.charAt(0)) % 5;
         String[] portraitColors = {"#e97ffb", "#00b8d4", "#82b2ff", "#f3db73", "#f0857c"};
         return portraitColors[i];

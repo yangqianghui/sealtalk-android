@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">SealTalk</string>
-    <string name="add_contacts">Contacts</string>
+    <string name="add_contacts">Add Contacts</string>
+    <string name="group_chat">Group Chat</string>
+    <string name="private_chat">Private Chat</string>
     <string name="network_not_available">network is not available</string>
     <string name="login_api_fail">login api fail</string>
     <string name="sync_userinfo_api_fail">sync userinfo api fail</string>
@@ -30,7 +32,7 @@
     <string name="code">Code</string>
     <string name="send_code">send code</string>
     <string name="register">register</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="confirm">Confirm</string>
     <string name="forget_password">Forget Password</string>
     <string name="cancel">Cancel</string>
@@ -74,6 +76,7 @@
     <string name="new_message_prompt_voice">New Message Prompt</string>
     <string name="new_message_follow_system">System Default</string>
     <string name="the_blacklist">Black List</string>
+    <string name="blacklist_empty">Blacklist is empty</string>
     <string name="portrait">Portrait</string>
     <string name="my_username">Nick Name</string>
     <string name="mobile_phone">Mobile Phone</string>
@@ -88,7 +91,7 @@
     <string name="add_group_member">Add Group Member</string>
     <string name="edit_group_name">Edit Group Name</string>
     <string name="create_group"> Create a Group</string>
-    <string name="created_group"> Created a Group</string>
+    <string name="created_group">&#160;created group</string>
     <string name="you">You</string>
     <string name="request_friends">request to add you as a friend</string>
     <string name="edit_phone">Enter the 11 phone number</string>
@@ -114,13 +117,15 @@
     <string name="dismiss_group">Dismiss Group</string>
     <string name="user_details">User Details</string>
     <string name="black_state">BlackList Status</string>
-    <string name="change_group_name"> Change the group name</string>
-    <string name="quit_groups"> Quit the group</string>
-    <string name="dismiss_groups"> Dismiss the group</string>
-    <string name="join_group"> join the group</string>
-    <string name="invitation">  invite </string>
-    <string name="will"> will </string>
-    <string name="remove_group"> remove the group</string>
+    <string name="divided_string">,</string>
+    <string name="change_group_name">&#160;changed the group name to&#160;</string>
+    <string name="quit_groups">&#160;quitted the group</string>
+    <string name="dismiss_groups">&#160;dismissed the group</string>
+    <string name="join_group">&#160;joined the group</string>
+    <string name="to_join_group">&#160;to join the group</string>
+    <string name="invitation">&#160;invited&#160;</string>
+    <string name="remove_group_before_str">&#160;removed&#160;</string>
+    <string name="remove_group_after_str">&#160;from the group chat</string>
     <string name="my_groups">My Groups</string>
     <string name="code_is_null">Verification code is empty</string>
     <string name="name_is_null">Nickname cannot be empty</string>
@@ -161,11 +166,13 @@
     <string name="mine_service">Feedback</string>
     <string name="mine_setting">Account Settings</string>
     <string name="account_setting">Account Setting</string>
-    <string name="exit_login">退出登录</string>
-    <string name="clear_cache">清除缓存</string>
-    <string name="privacy">隐私</string>
-    <string name="new_message">接收新消息通知</string>
-    <string name="message_show_details">通知显示消息详情</string>
+    <string name="exit_login">Log Out</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="privacy">Private</string>
+    <string name="friend_confirmation">Friend Confirmation</string>
+    <string name="new_message">New Message Alert</string>
+    <string name="message_show_details">Show Message Details</string>
+
 
     <string name="launched_location_sharing">Launched a location sharing</string>
     <string name="location_sharing_ended">Location sharing ended</string>
@@ -182,6 +189,13 @@
     <string name="launched_a_location_sharing">I lauched a location sharing</string>
     <string name="sdk_version_update">SDK版本</string>
     <string name="sealtalk_version_update">SealTalk 当前版本</string>
+    <string name="all_group_member">全部群成员</string>
+    <string name="group_announcement">群公告</string>
+    <string name="group_code">群二维码</string>
+    <string name="total_member">全部群成员</string>
+    <string name="select_contact">Select Contact</string>
+    <string name="current_password">Current Password</string>
+    <string name="password_hint">6-16 characters,case sensitive</string>
 
 
 </resources>

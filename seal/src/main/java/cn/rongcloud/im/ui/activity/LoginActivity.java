@@ -25,6 +25,7 @@ import cn.rongcloud.im.db.Groups;
 import cn.rongcloud.im.server.network.async.AsyncTaskManager;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.response.GetGroupResponse;
+import cn.rongcloud.im.server.response.GetTokenResponse;
 import cn.rongcloud.im.server.response.GetUserInfoByIdResponse;
 import cn.rongcloud.im.server.response.LoginResponse;
 import cn.rongcloud.im.server.response.UserRelationshipResponse;
@@ -49,8 +50,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private static final int SYNCUSERINFO = 9;
     private static final int SYNCGROUP = 17;
     private static final int AUTOLOGIN = 19;
-
-    private static final int SYNCFRIEND = 14;
     private ImageView mImgBackgroud;
 
     private ClearWriteEditText mPhoneEdit, mPasswordEdit;
@@ -63,9 +62,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private SharedPreferences sp;
 
-    SharedPreferences.Editor e;
+    private SharedPreferences.Editor editor;
 
-    private String autoPhone, autoPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +72,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         sp = getSharedPreferences("config", MODE_PRIVATE);
-        e = sp.edit();
+        editor = sp.edit();
 
         initView();
 
@@ -129,6 +127,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             mPhoneEdit.setText(oldPhone);
             mPasswordEdit.setText(oldPassword);
         }
+
+
+        if (!sp.getBoolean("exit", false) && !TextUtils.isEmpty(oldPhone) && !TextUtils.isEmpty(oldPassword)) {
+            editor.putBoolean("exit", false);
+            editor.apply();
+            phoneString = oldPhone;
+            passwordString = oldPassword;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LoadDialog.show(mContext);
+                    request(AUTOLOGIN);
+                }
+            }, 100);
+        }
     }
 
     @Override
@@ -161,6 +174,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     return;
                 }
                 LoadDialog.show(mContext);
+                editor.putBoolean("exit", false);
+                editor.apply();
                 request(LOGIN);
                 break;
             case R.id.de_login_register:
@@ -188,11 +203,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(id) && !TextUtils.isEmpty(nickname)) {
                 mPhoneEdit.setText(phone);
                 mPasswordEdit.setText(password);
-                e.putString("loginphone", phone);
-                e.putString("loginpassword", password);
-                e.putString("loginid", id);
-                e.putString("loginnickname", nickname);
-                e.commit();
+                editor.putString("loginphone", phone);
+                editor.putString("loginpassword", password);
+                editor.putString("loginid", id);
+                editor.putString("loginnickname", nickname);
+                editor.apply();
             }
 
         }
@@ -206,7 +221,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case LOGIN:
                 return action.login("86", phoneString, passwordString);
             case AUTOLOGIN:
-                return action.login("86", autoPhone, autoPassword);
+                return action.login("86", phoneString, passwordString);
             case GETTOKEN:
                 return action.getToken();
             case SYNCUSERINFO:
@@ -228,23 +243,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     if (lrres.getCode() == 200) {
                         loginToken = lrres.getResult().getToken();
                         if (!TextUtils.isEmpty(loginToken)) {
-                            e.putString("loginToken", loginToken);
-                            e.putString("loginphone", phoneString);
-                            e.putString("loginpassword", passwordString);
-                            e.apply();
+                            editor.putString("loginToken", loginToken);
+                            editor.putString("loginphone", phoneString);
+                            editor.putString("loginpassword", passwordString);
+                            editor.apply();
 
-                            RongIM.connect(loginToken, new RongIMClient.ConnectCallback() {
+                            RongIM.connect(loginToken , new RongIMClient.ConnectCallback() {
                                 @Override
                                 public void onTokenIncorrect() {
                                     NLog.e("connect", "onTokenIncorrect");
+                                    reGetToken();
                                 }
 
                                 @Override
                                 public void onSuccess(String s) {
                                     connectResultId = s;
                                     NLog.e("connect", "onSuccess userid:" + s);
-                                    e.putString("loginid", s);
-                                    e.commit();
+                                    editor.putString("loginid", s);
+                                    editor.apply();
 
                                     request(SYNCUSERINFO, true);
                                 }
@@ -268,14 +284,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     if (autolrres.getCode() == 200) {
                         loginToken = autolrres.getResult().getToken();
                         if (!TextUtils.isEmpty(loginToken)) {
-                            e.putString("loginToken", loginToken);
-                            e.putString("loginphone", phoneString);
-                            e.putString("loginpassword", passwordString);
-                            e.commit();
+                            editor.putString("loginToken", loginToken);
+                            editor.putString("loginphone", phoneString);
+                            editor.putString("loginpassword", passwordString);
+                            editor.apply();
 
                             RongIM.connect(loginToken, new RongIMClient.ConnectCallback() {
                                 @Override
                                 public void onTokenIncorrect() {
+                                    reGetToken();
                                     NLog.e("connect", "onTokenIncorrect");
                                 }
 
@@ -283,8 +300,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 public void onSuccess(String s) {
                                     connectResultId = s;
                                     NLog.e("connect", "onSuccess userid:" + s);
-                                    e.putString("loginid", s);
-                                    e.commit();
+                                    editor.putString("loginid", s);
+                                    editor.apply();
 
                                     request(SYNCUSERINFO, true);
                                 }
@@ -306,9 +323,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 case SYNCUSERINFO:
                     GetUserInfoByIdResponse guRes = (GetUserInfoByIdResponse) result;
                     if (guRes.getCode() == 200) {
-                        e.putString("loginnickname", guRes.getResult().getNickname());
-                        e.putString("loginPortrait", guRes.getResult().getPortraitUri());
-                        e.commit();
+                        editor.putString("loginnickname", guRes.getResult().getNickname());
+                        editor.putString("loginPortrait", guRes.getResult().getPortraitUri());
+                        editor.apply();
 
                         if (TextUtils.isEmpty(guRes.getResult().getPortraitUri())) {
                             guRes.getResult().setPortraitUri(RongGenerate.generateDefaultAvatar(guRes.getResult().getNickname(), guRes.getResult().getId()));
@@ -366,8 +383,42 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         finish();
                     }
                     break;
+                case GETTOKEN:
+                    GetTokenResponse response = (GetTokenResponse) result;
+                    if (response.getCode() == 200) {
+                        String token = response.getResult().getToken();
+                        if (!TextUtils.isEmpty(token)) {
+                            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+                                @Override
+                                public void onTokenIncorrect() {
+
+                                }
+
+                                @Override
+                                public void onSuccess(String s) {
+                                    connectResultId = s;
+                                    NLog.e("connect", "onSuccess userid:" + s);
+                                    editor.putString("loginid", s);
+                                    editor.apply();
+
+                                    request(SYNCUSERINFO, true);
+                                }
+
+                                @Override
+                                public void onError(RongIMClient.ErrorCode e) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    break;
             }
         }
+    }
+
+    private void reGetToken() {
+        request(GETTOKEN);
     }
 
     @Override
@@ -396,5 +447,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
+    private static final int SYNCFRIEND = 14;
 
 }

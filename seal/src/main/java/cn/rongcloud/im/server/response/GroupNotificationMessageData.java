@@ -29,6 +29,7 @@ public class GroupNotificationMessageData {
     public static class DataEntity {
         private long timestamp;
         private String operatorNickname;
+        private String targetGroupName;
         private List<String> targetUserDisplayNames;
         private List<String> targetUserIds;
 
@@ -48,12 +49,20 @@ public class GroupNotificationMessageData {
             this.targetUserIds = targetUserIds;
         }
 
+        public void setTargetGroupName(String targetGroupName) {
+            this.targetGroupName = targetGroupName;
+        }
+
         public long getTimestamp() {
             return timestamp;
         }
 
         public String getOperatorNickname() {
             return operatorNickname;
+        }
+
+        public String getTargetGroupName() {
+            return targetGroupName;
         }
 
         public List<String> getTargetUserDisplayNames() {

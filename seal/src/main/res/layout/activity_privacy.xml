@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
-            android:text="@string/add_validation"
+            android:text="@string/friend_confirmation"
             android:textColor="@color/text_color"
             android:textSize="16sp" />
 

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
-import com.umeng.analytics.MobclickAgent;
 
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.server.SealAction;
@@ -39,12 +38,12 @@ public abstract class BaseActivity extends ActionBarActivity implements OnDataLi
 
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+//        MobclickAgent.onResume(this);
     }
 
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+//        MobclickAgent.onPause(this);
     }
 
 

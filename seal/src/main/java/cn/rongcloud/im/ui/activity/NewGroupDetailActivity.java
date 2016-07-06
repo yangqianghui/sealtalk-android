@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -80,8 +81,10 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
 
     private LinearLayout mGroupInfo, mGroupDisplayName, groupClean;
 
-    private Button mQuitBtn, mDismissBtn, mStartGroupChat;
+    private Button mQuitBtn, mDismissBtn;
     private String groupDisplayNmae;
+
+    private RelativeLayout totalGroupMember;
 
     private SwitchButton messageTop, messageNotif;
     private GetGroupInfoResponse.ResultEntity mGroup;
@@ -106,11 +109,11 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
         showIcon = (ImageView) findViewById(R.id.show_icon);
         mGroupDisplayName = (LinearLayout) findViewById(R.id.group_displayname);
         mGroupDisplayNameText = (TextView) findViewById(R.id.group_displayname_text);
-        mStartGroupChat = (Button) findViewById(R.id.start_group_chat);
         mQuitBtn = (Button) findViewById(R.id.group_quit);
         mDismissBtn = (Button) findViewById(R.id.group_dismiss);
+        totalGroupMember = (RelativeLayout) findViewById(R.id.group_member_size_item);
+        totalGroupMember.setOnClickListener(this);
         mGroupDisplayName.setOnClickListener(this);
-        mStartGroupChat.setOnClickListener(this);
         mQuitBtn.setOnClickListener(this);
         mDismissBtn.setOnClickListener(this);
         groupClean.setOnClickListener(this);
@@ -188,6 +191,7 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                         }
 
                         if (isCreated) {
+                            mQuitBtn.setVisibility(View.GONE);
                             mDismissBtn.setVisibility(View.VISIBLE);
                             showIcon.setVisibility(View.VISIBLE);
                             mGroupInfo.setOnClickListener(new View.OnClickListener() {
@@ -350,15 +354,6 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.start_group_chat:
-                if (RongIM.getInstance() != null) {
-                    if (SealAppContext.getInstance().containsInQue(Conversation.ConversationType.GROUP, mGroup.getId())) {
-                        finish();
-                    } else {
-                        RongIM.getInstance().startGroupChat(mContext, mGroup.getId(), mGroup.getName());
-                    }
-                }
-                break;
             case R.id.group_displayname:
                 DialogWithYesOrNoUtils.getInstance().showEditDialog(mContext, getString(R.string.group_name), getString(R.string.confirm), new DialogWithYesOrNoUtils.DialogCallBack() {
                     @Override
@@ -453,6 +448,9 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                     }
                 });
                 break;
+            case R.id.group_member_size_item:
+//                startActivity(new Intent(mContext, TotalGroupMemberActivity.class));
+                break;
         }
     }
 
@@ -493,7 +491,12 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
 
 
         public GridAdapter(Context context, List<GetGroupMemberResponse.ResultEntity> list) {
-            this.list = list;
+            if (list.size() >= 20) {
+                this.list = list.subList(0, 19);
+            } else {
+                this.list = list;
+            }
+
             this.context = context;
         }
 
