@@ -9,7 +9,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 23
         versionCode 2016061311
-        versionName "2.6.5"
+        versionName "2.6.5 stable"
     }
 
     signingConfigs {

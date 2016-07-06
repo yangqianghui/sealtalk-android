@@ -75,7 +75,7 @@ public class GroupNotificationMessageProvider extends IContainerItemProvider.Mes
                     if (!groupNotificationMessage.getOperatorUserId().equals(RongIM.getInstance().getCurrentUserId()) ) {
                         viewHolder.contentTextView.setText(operatorNickname + context.getString(R.string.remove_group_before_str) + memberName + context.getString(R.string.remove_group_after_str));
                     } else {
-                        viewHolder.contentTextView.setText(context.getString(R.string.you) + context.getString(R.string.remove_group_before_str) + memberName + context.getString(R.string.remove_group_before_str));
+                        viewHolder.contentTextView.setText(context.getString(R.string.you) + context.getString(R.string.remove_group_before_str) + memberName + context.getString(R.string.remove_group_after_str));
                     }
                 } else if (groupNotificationMessage.getOperation().equals("Create")) {
                     CreateGroupData createGroupData = null;
