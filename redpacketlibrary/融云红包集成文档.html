@@ -160,7 +160,7 @@ sup {
 
 <h2>1. redpacketlibrary简介</h2>
 
-<p><strong>redpacketlibrary</strong>，在融云<strong>sdk2.6.4</strong>的基础上提供了收发红包和零钱页的功能。</p>
+<p><strong>redpacketlibrary</strong>，在融云<strong>sdk2.6.5state</strong>的基础上提供了收发红包和零钱页的功能。</p>
 
 <h2>2. redpacketlibrary目录说明</h2>
 
@@ -217,7 +217,7 @@ sup {
 </ul>
 
 
-<pre><code>include ':seal', ':IMKit_v2_6_4_with_voip', ':redpacketlibrary'
+<pre><code>include ':seal', ':Rong_Cloud_Android_IMKit_SDK_v2_6_5_stable_with_CallKit',  ':redpacketlibrary'
 </code></pre>
 
 <h3>3.2 SealTalkDemo清单文件中注册红包相关组件</h3>
@@ -281,7 +281,6 @@ sup {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         /**
          * 注意：
          *
@@ -291,29 +290,25 @@ sup {
          *
          * 只有两个进程需要初始化，主进程和 push 进程
          */
-    if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext())) ||
-              "io.rong.push".equals(getCurProcessName(getApplicationContext()))) {
+        //RongIM.setServerInfo("nav.cn.ronghub.com", "img.cn.ronghub.com");
+        RongIM.init(this);
 
-       ...
-       RongIM.init(this);
-       if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
-            SealAppContext.init(this);
-            SharedPreferencesContext.init(this);
-            Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
+        SealAppContext.init(this);
+        SharedPreferencesContext.init(this);
+        Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
 
-            try {
-                //注册红包消息、回执消息类以及消息展示模板
-                RedPacketUtil.getInstance().registerMsgTypeAndTemplate(this);
-                RongIM.registerMessageType(GroupNotificationMessage.class);
-                RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
-                RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
-                RongIM.registerMessageTemplate(new GroupNotificationMessageProvider());
-                //@ 消息模板展示
-                RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        ...
+        try {
+            //注册红包消息、回执消息类以及消息展示模板
+            RedPacketUtil.getInstance().registerMsgTypeAndTemplate(this);
+            RongIM.registerMessageType(GroupNotificationMessage.class);
+            RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
+            RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
+            RongIM.registerMessageTemplate(new GroupNotificationMessageProvider());
+            //@ 消息模板展示
+            RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }        ...
         //初始化红包上下文
         RedPacket.getInstance().initContext(this);
 
