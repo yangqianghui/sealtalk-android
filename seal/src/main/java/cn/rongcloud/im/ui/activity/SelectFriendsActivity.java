@@ -151,7 +151,7 @@ public class SelectFriendsActivity extends BaseActivity {
         } else if (deleDisList != null) {
             getSupportActionBar().setTitle("移除讨论组成员");
         } else {
-            getSupportActionBar().setTitle(R.string.start_chat);
+            getSupportActionBar().setTitle(R.string.select_contact);
             isStartPrivateChat = true;
         }
 

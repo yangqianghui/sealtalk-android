@@ -1,8 +1,6 @@
 package cn.rongcloud.im;
 
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -37,15 +35,13 @@ public class App extends Application {
 
         super.onCreate();
 
-        if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
 
-            RongPushClient.registerHWPush(this);
-            RongPushClient.registerMiPush(this, "2882303761517473625", "5451747338625");
-            try {
-                RongPushClient.registerGCM(this);
-            } catch (RongException e) {
-                e.printStackTrace();
-            }
+        RongPushClient.registerHWPush(this);
+        RongPushClient.registerMiPush(this, "2882303761517473625", "5451747338625");
+        try {
+            RongPushClient.registerGCM(this);
+        } catch (RongException e) {
+            e.printStackTrace();
         }
         /**
          * 注意：
@@ -59,23 +55,21 @@ public class App extends Application {
         //RongIM.setServerInfo("nav.cn.ronghub.com", "img.cn.ronghub.com");
         RongIM.init(this);
 
-        if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
-            SealAppContext.init(this);
-            SharedPreferencesContext.init(this);
-            Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
+        SealAppContext.init(this);
+        SharedPreferencesContext.init(this);
+        Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
 
-            try {
-                //注册红包消息、回执消息类以及消息展示模板
-                RedPacketUtil.getInstance().registerMsgTypeAndTemplate(this);
-                RongIM.registerMessageType(GroupNotificationMessage.class);
-                RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
-                RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
-                RongIM.registerMessageTemplate(new GroupNotificationMessageProvider());
-                //@ 消息模板展示
-                RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            //注册红包消息、回执消息类以及消息展示模板
+            RedPacketUtil.getInstance().registerMsgTypeAndTemplate(this);
+            RongIM.registerMessageType(GroupNotificationMessage.class);
+            RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
+            RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
+            RongIM.registerMessageTemplate(new GroupNotificationMessageProvider());
+            //@ 消息模板展示
+            RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         options = new DisplayImageOptions.Builder()
@@ -103,20 +97,6 @@ public class App extends Application {
         RedPacket.getInstance().initContext(this);
         RedPacket.getInstance().setDebugMode(true);
     }
-
-    public static String getCurProcessName(Context context) {
-        int pid = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) context
-                                          .getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager
-                .getRunningAppProcesses()) {
-            if (appProcess.pid == pid) {
-                return appProcess.processName;
-            }
-        }
-        return null;
-    }
-
 
     public static DisplayImageOptions getOptions() {
         return options;

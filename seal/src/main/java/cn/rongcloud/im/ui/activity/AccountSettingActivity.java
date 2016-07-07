@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.io.File;
+
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.SealConst;
 import cn.rongcloud.im.server.broadcast.BroadcastManager;
@@ -59,7 +61,10 @@ public class AccountSettingActivity extends BaseActivity implements View.OnClick
                 DialogWithYesOrNoUtils.getInstance().showDialog(mContext, "是否清除缓存?", new DialogWithYesOrNoUtils.DialogCallBack() {
                     @Override
                     public void exectEvent() {
-                        //TODO do something
+                        String path = "/sdcard/" + getPackageName();
+                        File file = new File(path);
+                        if (file != null)
+                            deleteFile(file);
                         NToast.shortToast(mContext, "清除成功");
                     }
 
@@ -94,4 +99,25 @@ public class AccountSettingActivity extends BaseActivity implements View.OnClick
                 break;
         }
     }
+
+
+
+    public void deleteFile(File file) {
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+        if (file.isDirectory()) {
+            File[] childFile = file.listFiles();
+            if (childFile == null || childFile.length == 0) {
+                file.delete();
+                return;
+            }
+            for (File f : childFile) {
+                deleteFile(f);
+            }
+            file.delete();
+        }
+    }
+
 }

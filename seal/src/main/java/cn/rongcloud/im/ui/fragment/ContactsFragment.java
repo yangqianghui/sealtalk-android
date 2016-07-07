@@ -27,6 +27,7 @@ import java.util.List;
 import cn.rongcloud.im.App;
 import cn.rongcloud.im.R;
 import cn.rongcloud.im.SealAppContext;
+import cn.rongcloud.im.SealConst;
 import cn.rongcloud.im.db.DBManager;
 import cn.rongcloud.im.server.broadcast.BroadcastManager;
 import cn.rongcloud.im.server.pinyin.CharacterParser;
@@ -96,6 +97,10 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
 
     private LayoutInflater infalter;
 
+    private SelectableRoundedImageView img;
+
+    private TextView name;
+
     private TextView mNoFriends;
     private TextView unread;
 
@@ -134,8 +139,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         RelativeLayout re_group = (RelativeLayout) headView.findViewById(R.id.re_chatroom);
         RelativeLayout re_public = (RelativeLayout) headView.findViewById(R.id.publicservice);
         RelativeLayout seal_me = (RelativeLayout) headView.findViewById(R.id.contact_me_item);
-        SelectableRoundedImageView img = (SelectableRoundedImageView) headView.findViewById(R.id.contact_me_img);
-        TextView name = (TextView) headView.findViewById(R.id.contact_me_name);
+        img = (SelectableRoundedImageView) headView.findViewById(R.id.contact_me_img);
+        name = (TextView) headView.findViewById(R.id.contact_me_name);
         SharedPreferences sp = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
         id = sp.getString("loginid", "");
         cacheName = sp.getString("loginnickname", "");
@@ -359,6 +364,18 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+        BroadcastManager.getInstance(getActivity()).addAction(SealConst.CHANGEINFO, new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sp = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
+                id = sp.getString("loginid", "");
+                cacheName = sp.getString("loginnickname", "");
+                String header = sp.getString("loginPortrait", "");
+                name.setText(cacheName);
+                ImageLoader.getInstance().displayImage(TextUtils.isEmpty(header) ? RongGenerate.generateDefaultAvatar(cacheName, id) : header, img, App.getOptions());
+            }
+        });
+
     }
 
 
@@ -367,6 +384,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         super.onDestroy();
         BroadcastManager.getInstance(getActivity()).destroy(SealAppContext.UPDATEFRIEND);
         BroadcastManager.getInstance(getActivity()).destroy(SealAppContext.UPDATEREDDOT);
+        BroadcastManager.getInstance(getActivity()).destroy(SealConst.CHANGEINFO);
     }
 
     private void updateUI() {

@@ -8,11 +8,9 @@
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -54,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="14dp"
                     android:background="@drawable/rp_arrow"
                     android:visibility="invisible" />
 
@@ -81,6 +79,7 @@
                 android:background="#dfdfdd" />
 
             <RelativeLayout
+                android:id="@+id/group_member_size_item"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/btn_list_item_bg"
@@ -92,37 +91,109 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="14dp"
-                    android:text="群成员数"
+                    android:text="@string/all_group_member"
                     android:textColor="@color/text_color"
                     android:textSize="16sp" />
 
 
             </RelativeLayout>
 
-            <LinearLayout
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.25dp"
+                android:layout_marginLeft="14dp"
+                android:visibility="gone"
+                android:layout_marginRight="14dp"
                 android:layout_marginTop="20dp"
+                android:background="#dfdfdd" />
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/group_announcement"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="@drawable/btn_list_item_bg"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/group_announcement"
+                    android:textSize="16dp" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.25dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:background="#dfdfdd" />
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/group_code"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/btn_list_item_bg"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/group_code"
+                    android:textSize="16dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="14dp"
+                    android:src="@drawable/a_5" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
                 android:background="#ffffff"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="新消息通知"
+                    android:text="@string/messsage_notice"
                     android:textSize="16dp" />
 
                 <cn.rongcloud.im.ui.widget.switchbutton.SwitchButton
                     android:id="@+id/sw_group_notfaction"
                     style="@style/SwitchButtonStyle"
                     android:layout_width="wrap_content"
-                    android:padding="8dp"
                     android:layout_height="wrap_content"
+                    android:padding="8dp"
                     app:kswAnimationDuration="300"
                     app:kswBackDrawable="@drawable/ios_back_drawable"
                     app:kswBackMeasureRatio="1.4"
@@ -150,8 +221,8 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
@@ -186,13 +257,14 @@
                 android:id="@+id/group_clean"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="#ffffff"
+                android:background="@drawable/btn_list_item_bg"
+                android:clickable="true"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
@@ -269,25 +341,14 @@
                     android:background="@drawable/rp_arrow" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/start_group_chat"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/rs_select_btn_green"
-                android:text="@string/send_message"
-                android:textColor="#FFF"
-                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/group_quit"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/rs_select_btn_red"
                 android:text="@string/quit_group"
                 android:textColor="#FFF"
@@ -296,11 +357,11 @@
             <Button
                 android:id="@+id/group_dismiss"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/rs_select_btn_gray"
+                android:layout_height="48dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rs_select_btn_red"
                 android:text="@string/dismiss_group"
                 android:textColor="#FFF"
                 android:textSize="16sp"

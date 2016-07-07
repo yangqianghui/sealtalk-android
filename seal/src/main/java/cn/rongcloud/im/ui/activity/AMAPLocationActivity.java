@@ -187,8 +187,10 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.myLocation:
-                CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
-                aMap.animateCamera(update);
+                if (myLocation != null) {
+                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+                    aMap.animateCamera(update);
+                }
                 break;
             default:
                 break;
@@ -416,7 +418,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
 
     private Uri getMapUrl(double x, double y) {
         String url = "http://restapi.amap.com/v3/staticmap?location=" + y + "," + x +
-                     "&zoom=17&scale=2&size=400*230&markers=mid,,A:" + y + ","
+                     "&zoom=16&scale=2&size=408*240&markers=mid,,A:" + y + ","
                      + x + "&key=" + "ee95e52bf08006f63fd29bcfbcf21df0";
         NLog.e("getMapUrl", url);
         return Uri.parse(url);
@@ -434,10 +436,32 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
     }
 
     @Override
+    @TargetApi(23)
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send_location:
                 if (mMsg != null) {
+
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        int checkPermission = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
+                            } else {
+                                new AlertDialog.Builder(this)
+                                .setMessage("您需要在设置里打开存储权限。")
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
+                                    }
+                                })
+                                .setNegativeButton("取消", null)
+                                .create().show();
+                            }
+                            return false;
+                        }
+                    }
                     SealAppContext.getInstance().getLastLocationCallback().onSuccess(mMsg);
                     SealAppContext.getInstance().setLastLocationCallback(null);
                     finish();

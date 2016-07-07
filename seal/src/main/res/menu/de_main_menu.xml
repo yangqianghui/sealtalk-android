@@ -12,7 +12,7 @@
             <item
                 android:id="@+id/add_item1"
                 android:icon="@drawable/de_btn_main_chat"
-                android:title="@string/add_chat" />
+                android:title="@string/private_chat" />
             <item
                 android:id="@+id/add_item2"
                 android:icon="@drawable/de_btn_main_groups"

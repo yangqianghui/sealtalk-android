@@ -148,10 +148,10 @@
 
         <cn.rongcloud.im.server.widget.SelectableRoundedImageView
             android:id="@+id/contact_me_img"
-            android:scaleType="centerCrop"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_alignParentLeft="true"
+            android:scaleType="centerCrop"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             app:sriv_left_bottom_corner_radius="3dip"
