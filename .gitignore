@@ -30,3 +30,6 @@ proguard/
 
 # Android Studio captures folder
 captures/
+.idea
+sealtalk-android.iml
+/seal/seal.iml
