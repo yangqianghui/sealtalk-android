@@ -68,15 +68,15 @@ public class RongNotificationMessageProvider extends IContainerItemProvider.Mess
             return "";
         }
         if (content.getSendUserID().equals(content.getReceiveUserID())) {//自己领取了自己的红包
-            mContent = mContext.getString(R.string.yzh_notification_me_to_me_receive_redpacket);
+            mContent = mContext.getString(R.string.yzh_receive_self_red_packet);
         } else {
 
             if (content.getReceiveUserID().equals(RedPacketUtil.getInstance().getUserID())) {//接受红包者
                 //你领取了XX红包
-                mContent = String.format(mContext.getString(R.string.yzh_notification_me_receive_redpacket), content.getSendUserName());
+                mContent = String.format(mContext.getString(R.string.yzh_you_receive_red_packet), content.getSendUserName());
             } else {//红包发送者
                 //XX领取了你的红包
-                mContent = String.format(mContext.getString(R.string.yzh_notification_other_receive_redpacket), content.getReceiveUserName());
+                mContent = String.format(mContext.getString(R.string.yzh_other_receive_you_red_packet), content.getReceiveUserName());
             }
         }
         return mContent;

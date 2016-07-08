@@ -36,8 +36,6 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
 
     private static final String TAG = RongGroupRedPacketProvider.class.getSimpleName();
 
-    private Context mContext;
-
     private GetGroupInfoCallback callback;
 
     private RedPacketInfo redPacketInfo;
@@ -50,7 +48,6 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
     public RongGroupRedPacketProvider(RongContext context, GetGroupInfoCallback callback) {
         super(context);
         this.callback = callback;
-        this.mContext = context;
         mWorkThread = new HandlerThread("YZHRedPacket");
         mWorkThread.start();
         mUploadHandler = new Handler(mWorkThread.getLooper());
@@ -64,7 +61,7 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
      */
     @Override
     public Drawable obtainPluginDrawable(Context context) {
-        return ContextCompat.getDrawable(mContext, R.drawable.yzh_chat_money_provider);
+        return ContextCompat.getDrawable(context, R.drawable.yzh_chat_money_provider);
     }
 
     /**
@@ -100,7 +97,7 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
         if (callback != null) {
             callback.getGroupPersonNumber(redPacketInfo.toGroupId, this);
         } else {
-            Toast.makeText(mContext, "回调函数不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "回调函数不能为空", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -118,8 +115,9 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
             String userName = RedPacketUtil.getInstance().getUserName();//发送者名字
             String redPacketType = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_TYPE);//群红包类型
             String specialReceiveId = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//专属红包接受者ID
+            String sponsor = getContext().getString(R.string.sponsor_red_packet);//XX红包
             RongRedPacketMessage message = RongRedPacketMessage.obtain(userId, userName,
-                                           greeting, moneyID, "1", "融云红包", redPacketType, specialReceiveId);
+                                           greeting, moneyID, "1", sponsor, redPacketType, specialReceiveId);
             //发送红包消息到聊天界面
             mUploadHandler.post(new MyRunnable(message));
         }
@@ -134,7 +132,7 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
      */
     @Override
     public void toRedPacketActivity(int number) {
-        Intent intent = new Intent(mContext, RPRedPacketActivity.class);
+        Intent intent = new Intent(getContext(), RPRedPacketActivity.class);
         redPacketInfo.groupMemberCount = number;
         intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
         intent.putExtra(RPConstant.EXTRA_AUTH_INFO, RedPacketUtil.getInstance().getAuthData());

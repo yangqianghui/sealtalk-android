@@ -73,7 +73,7 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
         holder.special = (TextView) view.findViewById(R.id.tv_packet_type);
         holder.view = view.findViewById(R.id.bubble);
         view.setTag(holder);
-        this.mContext = context;
+        this.mContext=context;
         return view;
     }
 
@@ -94,7 +94,7 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
         if (!TextUtils.isEmpty(content.getRedPacketType())//专属红包
                 && content.getRedPacketType().equals(RPConstant.GROUP_RED_PACKET_TYPE_EXCLUSIVE)) {
             holder.special.setVisibility(View.VISIBLE);
-            holder.special.setText("专属红包");
+            holder.special.setText(mContext.getString(R.string.special_red_packet));
         } else {
             holder.special.setVisibility(View.GONE);
         }
@@ -156,16 +156,16 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
     public void onItemLongClick(View view, int position, RongRedPacketMessage content, final UIMessage message) {
 
         String[] items;
-        items = new String[] {view.getContext().getResources().getString(R.string.yzh_dialog_item_delete)};
+        items = new String[]{view.getContext().getResources().getString(R.string.yzh_dialog_item_delete)};
         ArraysDialogFragment.newInstance("", items).setArraysDialogItemListener(
-        new ArraysDialogFragment.OnArraysDialogItemListener() {
-            @Override
-            public void OnArraysDialogItemClick(DialogInterface dialog, int which) {
-                if (which == 0)
-                    RongIM.getInstance().getRongIMClient().deleteMessages(new int[] {message.getMessageId()}, null);
+                new ArraysDialogFragment.OnArraysDialogItemListener() {
+                    @Override
+                    public void OnArraysDialogItemClick(DialogInterface dialog, int which) {
+                        if (which == 0)
+                            RongIM.getInstance().getRongIMClient().deleteMessages(new int[]{message.getMessageId()}, null);
 
-            }
-        }).show(((FragmentActivity) view.getContext()).getSupportFragmentManager());
+                    }
+                }).show(((FragmentActivity) view.getContext()).getSupportFragmentManager());
     }
 
     public void sendAckMsg(RongRedPacketMessage content, UIMessage message, String receiveName) {
@@ -177,19 +177,19 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
         //单聊回执消息,直接发送回执消息即可
         if (message.getConversationType() == Conversation.ConversationType.PRIVATE) {//单聊
             RongIM.getInstance().getRongIMClient().sendMessage(message.getConversationType(),
-            content.getSendUserID(), rongNotificationMessage, null, null, new RongIMClient.SendMessageCallback() {
-                @Override
-                public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-                    Log.e(TAG, "-单聊发送回执消息失败-");
+                    content.getSendUserID(), rongNotificationMessage, null, null, new RongIMClient.SendMessageCallback() {
+                        @Override
+                        public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                            Log.e(TAG, "-单聊发送回执消息失败-");
 
-                }
+                        }
 
-                @Override
-                public void onSuccess(Integer integer) {
+                        @Override
+                        public void onSuccess(Integer integer) {
 
-                    Log.e(TAG, "-单聊发送回执消息成功-");
-                }
-            }, null);
+                            Log.e(TAG, "-单聊发送回执消息成功-");
+                        }
+                    }, null);
         } else {//群聊讨论组回执消息
             if (content.getSendUserID().equals(receiveID)) {//自己领取了自己的红包
                 RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
@@ -199,19 +199,19 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
                 // 发送红包者收到消息之后，向本地插入一条“XX领取了你的红包”，
                 // 2、如果接受者和发送者是一个人就直接向本地插入一条“你领取了自己的红包”
                 RongIM.getInstance().getRongIMClient().sendMessage(message.getConversationType(),
-                message.getTargetId(), rongEmptyMessage, null, null, new RongIMClient.SendMessageCallback() {
-                    @Override
-                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-                        Log.e(TAG, "-发送空消息通知类失败-");
+                        message.getTargetId(), rongEmptyMessage, null, null, new RongIMClient.SendMessageCallback() {
+                            @Override
+                            public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                                Log.e(TAG, "-发送空消息通知类失败-");
 
-                    }
+                            }
 
-                    @Override
-                    public void onSuccess(Integer integer) {
+                            @Override
+                            public void onSuccess(Integer integer) {
 
-                        Log.e(TAG, "-发送空消息通知类成功-");
-                    }
-                }, null);
+                                Log.e(TAG, "-发送空消息通知类成功-");
+                            }
+                        }, null);
                 RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
                         message.getTargetId(), receiveID, rongNotificationMessage, null);
             }
@@ -223,32 +223,32 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
         //打开红包
         RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo,
                 RedPacketUtil.getInstance().getAuthData(), (FragmentActivity) mContext,
-        new RPOpenPacketUtil.RPOpenPacketCallBack() {
-            @Override
-            public void onSuccess(String s, String s1) {
-                //打开红包消息成功,然后发送回执消息例如"你领取了XX的红包"
-                sendAckMsg(mContent, mMessage, RedPacketUtil.getInstance().getUserName());
-            }
+                new RPOpenPacketUtil.RPOpenPacketCallBack() {
+                    @Override
+                    public void onSuccess(String s, String s1) {
+                        //打开红包消息成功,然后发送回执消息例如"你领取了XX的红包"
+                        sendAckMsg(mContent, mMessage, RedPacketUtil.getInstance().getUserName());
+                    }
 
-            @Override
-            public void showLoading() {
-                if (!isSpecial) {
-                    progressDialog.show();
-                }
+                    @Override
+                    public void showLoading() {
+                        if (!isSpecial) {
+                            progressDialog.show();
+                        }
 
-            }
+                    }
 
-            @Override
-            public void hideLoading() {
-                progressDialog.dismiss();
-            }
+                    @Override
+                    public void hideLoading() {
+                        progressDialog.dismiss();
+                    }
 
-            @Override
-            public void onError(String errorCode, String errorMsg) {
-                //错误处理
-                Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onError(String errorCode, String errorMsg) {
+                        //错误处理
+                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

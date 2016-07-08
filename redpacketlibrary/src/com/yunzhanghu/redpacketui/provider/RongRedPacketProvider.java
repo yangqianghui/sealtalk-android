@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -31,15 +32,12 @@ public class RongRedPacketProvider extends InputProvider.ExtendProvider {
 
     private static final String TAG = "RedPacketLibrary";
 
-    private Context mContext;
-
     HandlerThread mWorkThread;
 
     Handler mUploadHandler;
 
     public RongRedPacketProvider(RongContext context) {
         super(context);
-        this.mContext = context;
         mWorkThread = new HandlerThread("YZHRedPacket");
         mWorkThread.start();
         mUploadHandler = new Handler(mWorkThread.getLooper());
@@ -53,7 +51,7 @@ public class RongRedPacketProvider extends InputProvider.ExtendProvider {
      */
     @Override
     public Drawable obtainPluginDrawable(Context context) {
-        return context.getResources().getDrawable(R.drawable.yzh_chat_money_provider);
+        return ContextCompat.getDrawable(context,R.drawable.yzh_chat_money_provider);
     }
 
     /**
@@ -74,7 +72,7 @@ public class RongRedPacketProvider extends InputProvider.ExtendProvider {
      */
     @Override
     public void onPluginClick(View view) {
-        final Intent intent = new Intent(mContext, RPRedPacketActivity.class);
+        final Intent intent = new Intent(getContext(), RPRedPacketActivity.class);
         final RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromAvatarUrl = RedPacketUtil.getInstance().getUserAvatar();//发送者头像
         redPacketInfo.fromNickName = RedPacketUtil.getInstance().getUserName();//发送者名字
@@ -94,8 +92,9 @@ public class RongRedPacketProvider extends InputProvider.ExtendProvider {
             String moneyID = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_ID);//红包ID
             String userId = RedPacketUtil.getInstance().getUserID();//发送者ID
             String userName = RedPacketUtil.getInstance().getUserName();//发送者名字
+            String sponsor = getContext().getString(R.string.sponsor_red_packet);//XX红包
             RongRedPacketMessage message = RongRedPacketMessage.obtain(userId, userName,
-                                           greeting, moneyID, "1", "融云红包", "", "");
+                    greeting, moneyID, "1", sponsor, "", "");
             Log.e(TAG, "--发送红包返回参数--" + "-moneyID-" + moneyID + "-greeting-" + greeting);
             //发送红包消息到聊天界面
             mUploadHandler.post(new MyRunnable(message));
@@ -115,17 +114,17 @@ public class RongRedPacketProvider extends InputProvider.ExtendProvider {
             if (RongIM.getInstance() != null && RongIM.getInstance().getRongIMClient() != null) {
 
                 RongIM.getInstance().getRongIMClient().sendMessage(getCurrentConversation().getConversationType(),
-                getCurrentConversation().getTargetId(), mMessage, null, null, new RongIMClient.SendMessageCallback() {
-                    @Override
-                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-                        Log.e(TAG, "--onError--" + errorCode);
-                    }
+                        getCurrentConversation().getTargetId(), mMessage, null, null, new RongIMClient.SendMessageCallback() {
+                            @Override
+                            public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                                Log.e(TAG, "--onError--" + errorCode);
+                            }
 
-                    @Override
-                    public void onSuccess(Integer integer) {
-                        Log.e(TAG, "--onSuccess--" + integer);
-                    }
-                }, null);
+                            @Override
+                            public void onSuccess(Integer integer) {
+                                Log.e(TAG, "--onSuccess--" + integer);
+                            }
+                        }, null);
             }
 
         }

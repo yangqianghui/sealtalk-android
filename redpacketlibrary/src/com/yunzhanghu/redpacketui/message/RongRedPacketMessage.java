@@ -41,9 +41,9 @@ public class RongRedPacketMessage extends MessageContent {
 
     private String moneyID;//红包ID
 
-    private String isMoneyMsg;//是否属红包消息
+    private String isMoneyMsg;//是否属红包消息(和ios保持统一需要的字段)
 
-    private String sponsorName;//是否属红包消息
+    private String sponsorName;//什么红包(例如融云红包)
 
     private String redPacketType;//群红包类型专属红包/平均红包/随机红包
 

@@ -41,7 +41,7 @@ public class RongNotificationMessage extends NotificationMessage {
 
     private String receiveUserName;//接受红包者名字
 
-    private String isOpenMoney;//是否打开红包
+    private String isOpenMoney;//是否打开红包(和ios保持统一需要的字段)
 
 
     public RongNotificationMessage() {
