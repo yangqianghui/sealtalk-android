@@ -12,8 +12,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.yunzhanghu.redpacketsdk.bean.AuthData;
 import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
+import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.callback.GetSignInfoCallback;
 import com.yunzhanghu.redpacketui.callback.GetUserInfoCallback;
@@ -49,7 +49,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
 
     private String chatType;
 
-    private AuthData mAuthData;
+    private TokenData mTokenData;
 
     private GetSignInfoCallback mGetSignInfoCallback;
 
@@ -81,16 +81,16 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
      * @param authTimestamp
      * @param authSign
      */
-    public void initAuthData(String authPartner, String authUserId, String authTimestamp, String authSign) {
-        mAuthData = new AuthData();
-        mAuthData.authPartner = authPartner;
-        mAuthData.authUserId = authUserId;
-        mAuthData.authTimestamp = authTimestamp;
-        mAuthData.authSign = authSign;
+    public void initTokenData(String authPartner, String authUserId, String authTimestamp, String authSign) {
+        mTokenData = new TokenData();
+        mTokenData.authPartner = authPartner;
+        mTokenData.appUserId = authUserId;
+        mTokenData.authTimestamp = authTimestamp;
+        mTokenData.authSign = authSign;
     }
 
-    public AuthData getAuthData() {
-        return mAuthData;
+    public TokenData getTokenData() {
+        return mTokenData;
     }
 
     /**
@@ -153,8 +153,8 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         RedPacketInfo redPacketInfo = new RedPacketInfo();
         redPacketInfo.fromNickName = userName;
         redPacketInfo.fromAvatarUrl = userAvatar;
-        intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_AUTH_INFO, getAuthData());
+        intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA,getTokenData());
         mContext.startActivity(intent);
     }
 
@@ -221,7 +221,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 String timestamp = jsonObject.getString("timestamp");
                 String sign = jsonObject.getString("sign");
                 //初始化红包Token
-                initAuthData(partner, userId, timestamp, sign);
+                initTokenData(partner, userId, timestamp, sign);
                 mGetSignInfoCallback.signInfoSuccess();
             } catch (JSONException e) {
                 e.printStackTrace();

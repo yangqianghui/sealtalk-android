@@ -222,7 +222,7 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
     public void openRedPacket(final boolean isSpecial) {
         //打开红包
         RPOpenPacketUtil.getInstance().openRedPacket(redPacketInfo,
-                RedPacketUtil.getInstance().getAuthData(), (FragmentActivity) mContext,
+                RedPacketUtil.getInstance().getTokenData(), (FragmentActivity) mContext,
                 new RPOpenPacketUtil.RPOpenPacketCallBack() {
                     @Override
                     public void onSuccess(String s, String s1) {

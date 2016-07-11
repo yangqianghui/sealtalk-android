@@ -134,8 +134,8 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
     public void toRedPacketActivity(int number) {
         Intent intent = new Intent(getContext(), RPRedPacketActivity.class);
         redPacketInfo.groupMemberCount = number;
-        intent.putExtra(RPConstant.EXTRA_MONEY_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_AUTH_INFO, RedPacketUtil.getInstance().getAuthData());
+        intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, RedPacketUtil.getInstance().getTokenData());
         startActivityForResult(intent, RedPacketUtil.REQUEST_CODE_SEND_MONEY);
     }
 
