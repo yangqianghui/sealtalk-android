@@ -234,7 +234,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
                         mGroupMemberCallback = groupMemberCallback;
                         AsyncTaskManager.getInstance(mContext).request(REQUEST_GROUP_MEMBER, SealAppContext.this);
                     }
-                } else {//讨论组
+                } else if (RedPacketUtil.getInstance().getChatType().equals(RedPacketUtil.CHAT_DISCUSSION)){//讨论组
                     ArrayList<GetUserInfosResponse.ResultEntity> list = (ArrayList<GetUserInfosResponse.ResultEntity>) mRedPacketCache.getAsObject(groupId);
                     if (list != null) {
                         NLog.e("discussion_member", "-cache-");
