@@ -36,13 +36,17 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
 
     private static final String TAG = RongGroupRedPacketProvider.class.getSimpleName();
 
+    private String mGreeting;//祝福语
+
+    private String mSponsor;//厂商名字(XX红包)
+
     private GetGroupInfoCallback callback;
 
     private RedPacketInfo redPacketInfo;
 
-    HandlerThread mWorkThread;
+    private HandlerThread mWorkThread;
 
-    Handler mUploadHandler;
+    private Handler mUploadHandler;
 
 
     public RongGroupRedPacketProvider(RongContext context, GetGroupInfoCallback callback) {
@@ -109,15 +113,16 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
             return;
         //接受返回的红包信息,并发送红包消息
         if (data != null && requestCode == RedPacketUtil.REQUEST_CODE_SEND_MONEY) {
-            String greeting = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_GREETING);//祝福语
+            mSponsor = getContext().getString(R.string.sponsor_red_packet);//XX红包
+            mGreeting = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_GREETING);//祝福语
             String moneyID = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_ID);//红包ID
             String userId = RedPacketUtil.getInstance().getUserID();//发送者ID
             String userName = RedPacketUtil.getInstance().getUserName();//发送者名字
             String redPacketType = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_TYPE);//群红包类型
             String specialReceiveId = data.getStringExtra(RPConstant.EXTRA_RED_PACKET_RECEIVER_ID);//专属红包接受者ID
-            String sponsor = getContext().getString(R.string.sponsor_red_packet);//XX红包
+
             RongRedPacketMessage message = RongRedPacketMessage.obtain(userId, userName,
-                                           greeting, moneyID, "1", sponsor, redPacketType, specialReceiveId);
+                    mGreeting, moneyID, "1", mSponsor, redPacketType, specialReceiveId);
             //发送红包消息到聊天界面
             mUploadHandler.post(new MyRunnable(message));
         }
@@ -152,17 +157,19 @@ public class RongGroupRedPacketProvider extends InputProvider.ExtendProvider imp
         public void run() {
             if (RongIM.getInstance() != null && RongIM.getInstance().getRongIMClient() != null) {
 
-                RongIM.getInstance().getRongIMClient().sendMessage(getCurrentConversation().getConversationType(), getCurrentConversation().getTargetId(), mMessage, null, null, new RongIMClient.SendMessageCallback() {
-                    @Override
-                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-                        Log.e(TAG, "-----onError--" + errorCode);
-                    }
+                String mPushContent = "[" + mSponsor + "]" + mGreeting;
+                RongIM.getInstance().getRongIMClient().sendMessage(getCurrentConversation().getConversationType(),
+                        getCurrentConversation().getTargetId(), mMessage, mPushContent, "", new RongIMClient.SendMessageCallback() {
+                            @Override
+                            public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                                Log.e(TAG, "-----onError--" + errorCode);
+                            }
 
-                    @Override
-                    public void onSuccess(Integer integer) {
-                        Log.e(TAG, "-----onSuccess--" + integer);
-                    }
-                }, null);
+                            @Override
+                            public void onSuccess(Integer integer) {
+                                Log.e(TAG, "-----onSuccess--" + integer);
+                            }
+                        }, null);
             }
 
         }
