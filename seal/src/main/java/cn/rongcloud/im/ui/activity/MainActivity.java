@@ -70,10 +70,34 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-        initViews();
-        initMianViewPager();
-        changeTextViewColor();
-        changeSelectedTabState(0);
+        if (RongIM.getInstance() != null && RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED)) {
+            SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
+            String token = sp.getString("loginToken", "");
+            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+                @Override
+                public void onTokenIncorrect() {
+
+                }
+
+                @Override
+                public void onSuccess(String s) {
+                    initViews();
+                    initMianViewPager();
+                    changeTextViewColor();
+                    changeSelectedTabState(0);
+                }
+
+                @Override
+                public void onError(RongIMClient.ErrorCode e) {
+
+                }
+            });
+        } else {
+            initViews();
+            initMianViewPager();
+            changeTextViewColor();
+            changeSelectedTabState(0);
+        }
     }
 
     private void initViews() {
@@ -258,7 +282,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         BroadcastManager.getInstance(mContext).addAction(SealConst.EXIT, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                SharedPreferences.Editor editor =  getSharedPreferences("config", MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getSharedPreferences("config", MODE_PRIVATE).edit();
                 editor.putBoolean("exit", true);
                 editor.apply();
 

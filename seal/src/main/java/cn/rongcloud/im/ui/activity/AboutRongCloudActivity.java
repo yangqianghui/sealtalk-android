@@ -16,6 +16,7 @@ import cn.rongcloud.im.R;
 public class AboutRongCloudActivity extends BaseActionBarActivity {
 
     private TextView mSDKVersion;
+    private String sealtalkVersion = "1.0.4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,8 @@ public class AboutRongCloudActivity extends BaseActionBarActivity {
         RelativeLayout mFunctionIntroduce = (RelativeLayout) findViewById(R.id.rl_function_introduce);
         RelativeLayout mRongCloudWeb = (RelativeLayout) findViewById(R.id.rl_rongcloud_web);
         mSDKVersion = (TextView) findViewById(R.id.sdk_version_text);
-
+        TextView version = (TextView)findViewById(R.id.sealtalk_version);
+        version.setText(sealtalkVersion);
         mUpdateLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

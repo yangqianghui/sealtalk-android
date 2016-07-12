@@ -35,6 +35,7 @@ import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.ClearWriteEditText;
 import cn.rongcloud.im.server.widget.LoadDialog;
+import io.rong.common.RLog;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
@@ -75,7 +76,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         editor = sp.edit();
 
         initView();
-
+        RLog.startLog2File(this.getApplicationContext());
     }
 
     private void initView() {

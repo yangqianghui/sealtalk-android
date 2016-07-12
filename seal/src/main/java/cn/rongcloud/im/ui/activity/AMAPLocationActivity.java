@@ -136,6 +136,8 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
                 aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
                                .position(new LatLng(mMsg.getLat(), mMsg.getLng())).title(mMsg.getPoi())
                                .snippet(mMsg.getLat() + "," + mMsg.getLng()).draggable(false));
+                aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                                .target(new LatLng(mMsg.getLat(), mMsg.getLng())).zoom(16).bearing(0).tilt(30).build()));
             }
             return;
         }
