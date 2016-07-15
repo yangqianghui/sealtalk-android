@@ -127,7 +127,7 @@ public class PersonalProfileActivity extends BaseActivity implements View.OnClic
                         if (TextUtils.isEmpty(editText)) {
                             if (mGroup != null && !TextUtils.isEmpty(mGroup.getName())) {
                                 addMessage = "我是" + mGroup.getName() + "群的" + getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
-                            }else {
+                            } else {
                                 addMessage = "我是" + getSharedPreferences("config", MODE_PRIVATE).getString("loginnickname", "");
                             }
                         } else {

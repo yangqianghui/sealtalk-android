@@ -9,7 +9,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 23
         versionCode 2016061311
-        versionName "2.6.5 stable"
+        versionName "2.6.6 stable"
         multiDexEnabled true
     }
 
@@ -54,6 +54,7 @@ android {
     }
 }
 
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.1.0'
@@ -64,7 +65,7 @@ dependencies {
     // org.apache.http.legacy.jar 为适配 Android tagetId 22 以上 jar
     compile files('libs/org.apache.http.legacy.jar')
     compile project(':redpacketlibrary')
-    //compile project(':Rong_Cloud_Android_IMKit_SDK_v2_6_5_stable_with_CallKit')
+    //compile project(':Rong_Cloud_Android_IMKit_SDK_v2_6_6_stable_with_CallKit')
 
 }
 apply plugin: 'com.google.gms.google-services'

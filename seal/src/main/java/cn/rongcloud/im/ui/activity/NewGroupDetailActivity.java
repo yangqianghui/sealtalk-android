@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cn.rongcloud.im.App;
@@ -173,7 +175,7 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                 case GETGROUPMEMBER:
                     GetGroupMemberResponse res = (GetGroupMemberResponse) result;
                     if (res.getCode() == 200) {
-                        mGroupMember = res.getResult();
+                        mGroupMember = setCreatedToTop(res.getResult());
                         if (mGroupMember != null && mGroupMember.size() > 0) {
                             mTextViewMemberSize.setText(getString(R.string.group_member_size) + "(" + mGroupMember.size() + ")");
                             adapter = new GridAdapter(mContext, mGroupMember);
@@ -212,10 +214,29 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                     QuitGroupResponse response = (QuitGroupResponse) result;
                     if (response.getCode() == 200) {
                         BroadcastManager.getInstance(mContext).sendBroadcast(SealAppContext.NETUPDATEGROUP);
-                        if (RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId) != null) {
-                            RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId);
-                            RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId);
-                        }
+
+                        RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Conversation>() {
+                            @Override
+                            public void onSuccess(Conversation conversation) {
+                                RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Boolean>() {
+                                    @Override
+                                    public void onSuccess(Boolean aBoolean) {
+                                        RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId, null);
+                                    }
+
+                                    @Override
+                                    public void onError(RongIMClient.ErrorCode e) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(RongIMClient.ErrorCode e) {
+
+                            }
+                        });
+                        setResult(501, new Intent());
                         NToast.shortToast(mContext, getString(R.string.quit_success));
                         LoadDialog.dismiss(mContext);
                         finish();
@@ -226,10 +247,28 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                     DismissGroupResponse response1 = (DismissGroupResponse) result;
                     if (response1.getCode() == 200) {
                         BroadcastManager.getInstance(mContext).sendBroadcast(SealAppContext.NETUPDATEGROUP);
-                        if (RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId) != null) {
-                            RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId);
-                            RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId);
-                        }
+                        RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Conversation>() {
+                            @Override
+                            public void onSuccess(Conversation conversation) {
+                                RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Boolean>() {
+                                    @Override
+                                    public void onSuccess(Boolean aBoolean) {
+                                        RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId, null);
+                                    }
+
+                                    @Override
+                                    public void onError(RongIMClient.ErrorCode e) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(RongIMClient.ErrorCode e) {
+
+                            }
+                        });
+                        setResult(501, new Intent());
                         NToast.shortToast(mContext, getString(R.string.dismiss_success));
                         LoadDialog.dismiss(mContext);
                         finish();
@@ -635,5 +674,22 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
         super.onDestroy();
         BroadcastManager.getInstance(mContext).destroy(ChangeGroupInfoActivity.UPDATEGROUPINFONAME);
         BroadcastManager.getInstance(mContext).destroy(ChangeGroupInfoActivity.UPDATEGROUPINFOIMG);
+    }
+
+    private List<GetGroupMemberResponse.ResultEntity> setCreatedToTop(List<GetGroupMemberResponse.ResultEntity> groupMember) {
+        List<GetGroupMemberResponse.ResultEntity> newList = new ArrayList<>();
+        GetGroupMemberResponse.ResultEntity created = null;
+        for (GetGroupMemberResponse.ResultEntity gr : groupMember) {
+            if (gr.getRole() == 0) {
+                created = gr;
+            } else {
+                newList.add(gr);
+            }
+        }
+        if (created != null) {
+            newList.add(created);
+        }
+        Collections.reverse(newList);
+        return newList;
     }
 }

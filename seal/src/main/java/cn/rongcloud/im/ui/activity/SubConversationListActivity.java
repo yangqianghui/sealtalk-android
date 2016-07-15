@@ -27,6 +27,9 @@ public class SubConversationListActivity extends BaseActionBarActivity {
         transaction.commit();
 
         Intent intent = getIntent();
+        if (intent.getData() == null) {
+            return;
+        }
         //聚合会话参数
         String type = intent.getData().getQueryParameter("type");
 

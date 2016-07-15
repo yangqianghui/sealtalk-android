@@ -16,9 +16,9 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Date;
 
+import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.utils.SharedPreferencesContext;
 import cn.rongcloud.im.R;
-import cn.rongcloud.im.ui.widget.WinToast;
 import cn.rongcloud.im.utils.DateUtils;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -368,7 +368,7 @@ public class DisturbActivity extends BaseActionBarActivity implements View.OnCli
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        WinToast.toast(DisturbActivity.this, "设置消息免打扰成功");
+                                        NToast.shortToast(mContext, "设置消息免打扰成功");
                                     }
                                 });
                             }
@@ -379,7 +379,7 @@ public class DisturbActivity extends BaseActionBarActivity implements View.OnCli
                             }
                         });
                     } else {
-                        WinToast.toast(DisturbActivity.this, "间隔时间必须>0");
+                        NToast.shortToast(mContext, "间隔时间必须>0");
                     }
                 }
             });
