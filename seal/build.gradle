@@ -10,7 +10,6 @@ android {
         targetSdkVersion 23
         versionCode 2016061311
         versionName "2.6.6 stable"
-        multiDexEnabled true
     }
 
     signingConfigs {
@@ -47,10 +46,6 @@ android {
         checkReleaseBuilds false
 
         abortOnError false
-    }
-    dexOptions {
-        javaMaxHeapSize "4g"
-        preDexLibraries = false
     }
 }
 
