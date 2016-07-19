@@ -35,9 +35,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:background="@color/button_backgroud"
+            android:background="@drawable/de_add_friend_selector"
             android:text="@string/Search"
-            android:textColor="@color/rc_text_color_secondary_inverse" />
+            android:textColor="#0099ff" />
 
     </LinearLayout>
 

@@ -343,7 +343,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
                 if (mDialog != null && !mDialog.isShowing()) {
                     mDialog.show();
                 }
-                new Handler().postDelayed(new Runnable() {
+                new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         enterActivity();
@@ -593,7 +593,11 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.de_conversation_menu, menu);
+        if (mConversationType.equals(Conversation.ConversationType.GROUP)) {
+            inflater.inflate(R.menu.group_conversation_menu, menu);
+        } else {
+            inflater.inflate(R.menu.private_conversation_menu, menu);
+        }
 
         if (mConversationType == null)
             return true;

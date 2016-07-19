@@ -67,7 +67,7 @@ public class AMAPLocationActivity extends ActionBarActivity implements View.OnCl
     private AMap aMap;
     private LocationManagerProxy mLocationManagerProxy;
     private Handler handler = new Handler();
-    private OnLocationChangedListener listener;
+    private LocationSource.OnLocationChangedListener listener;
     private LatLng myLocation = null;
     private Marker centerMarker;
     private boolean isMovingMarker = false;

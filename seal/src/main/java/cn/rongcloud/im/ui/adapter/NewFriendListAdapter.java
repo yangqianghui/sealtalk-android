@@ -1,6 +1,7 @@
 package cn.rongcloud.im.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;

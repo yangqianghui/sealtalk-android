@@ -71,27 +71,18 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         if (RongIM.getInstance() != null && RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED)) {
-            SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
-            String token = sp.getString("loginToken", "");
-            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+            new android.os.Handler().postDelayed(new Runnable() {
                 @Override
-                public void onTokenIncorrect() {
-
-                }
-
-                @Override
-                public void onSuccess(String s) {
+                public void run() {
                     initViews();
                     initMianViewPager();
                     changeTextViewColor();
                     changeSelectedTabState(0);
+                    if (RongIM.getInstance() != null && RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED)) {
+                        reconnect();
+                    }
                 }
-
-                @Override
-                public void onError(RongIMClient.ErrorCode e) {
-
-                }
-            });
+            }, 300);
         } else {
             initViews();
             initMianViewPager();
@@ -100,6 +91,27 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
     }
 
+    private void reconnect() {
+        SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
+        String token = sp.getString("loginToken", "");
+        RongIM.connect(token, new RongIMClient.ConnectCallback() {
+            @Override
+            public void onTokenIncorrect() {
+
+            }
+            @Override
+            public void onSuccess(String s) {
+                initViews();
+                initMianViewPager();
+                changeTextViewColor();
+                changeSelectedTabState(0);
+            }
+            @Override
+            public void onError(RongIMClient.ErrorCode e) {
+
+            }
+        });
+    }
     private void initViews() {
         chatRLayout = (RelativeLayout) findViewById(R.id.seal_chat);
         contactRLayout = (RelativeLayout) findViewById(R.id.seal_contact_list);

@@ -76,7 +76,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         editor = sp.edit();
 
         initView();
-        RLog.startLog2File(this.getApplicationContext());
     }
 
     private void initView() {

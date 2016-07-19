@@ -42,6 +42,7 @@ import cn.rongcloud.im.ui.activity.FriendDetailActivity;
 import cn.rongcloud.im.ui.activity.GroupListActivity;
 import cn.rongcloud.im.ui.activity.NewFriendListActivity;
 import cn.rongcloud.im.ui.activity.PublicServiceActivity;
+import cn.rongcloud.im.ui.activity.SingleContactActivity;
 import cn.rongcloud.im.ui.adapter.FriendAdapter;
 import io.rong.imkit.RongIM;
 
@@ -165,10 +166,10 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                     }
                     if (isFilter) {
                         Friend bean = tempList.get(position - 1);
-                        RongIM.getInstance().startPrivateChat(getActivity(), bean.getUserId(), bean.getName());
+                        startFriendDetailsPage(bean);
                     } else {
                         Friend bean = sourceDataList.get(position - 1);
-                        RongIM.getInstance().startPrivateChat(getActivity(), bean.getUserId(), bean.getName());
+                        startFriendDetailsPage(bean);
                     }
                 }
             }
@@ -203,7 +204,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void startFriendDetailsPage(Friend friend) {
-        Intent intent = new Intent(getActivity(), FriendDetailActivity.class);
+        Intent intent = new Intent(getActivity(), SingleContactActivity.class);
         intent.putExtra("FriendDetails", friend);
         startActivity(intent);
     }

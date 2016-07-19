@@ -56,8 +56,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
 
 
     public static final String UPDATEFRIEND = "updatefriend";
-    public static final String UPDATEREDDOT = "updatereddot";
-    public static String NETUPDATEGROUP = "netupdategroup";
+    public static final java.lang.String UPDATEREDDOT = "updatereddot";
     private Context mContext;
 
     private static SealAppContext mRongCloudInstance;
@@ -166,6 +165,7 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
         RongIM.resetInputExtensionProvider(Conversation.ConversationType.DISCUSSION, muiltiProvider);
         RongIM.resetInputExtensionProvider(Conversation.ConversationType.CUSTOMER_SERVICE, muiltiProvider);
         RongIM.resetInputExtensionProvider(Conversation.ConversationType.GROUP, muiltiProvider);
+        RongIM.resetInputExtensionProvider(Conversation.ConversationType.CHATROOM, muiltiProvider);
     }
 
     /**
@@ -273,7 +273,6 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
             } else if (groupNotificationMessage.getOperation().equals("Rename")) {
             }
 
-            BroadcastManager.getInstance(mContext).sendBroadcast(SealAppContext.NETUPDATEGROUP);
         } else if (messageContent instanceof ImageMessage) {
             ImageMessage imageMessage = (ImageMessage) messageContent;
             Log.e("imageMessage", imageMessage.getRemoteUri().toString());

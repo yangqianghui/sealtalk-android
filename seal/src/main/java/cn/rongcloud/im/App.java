@@ -12,7 +12,9 @@ import cn.rongcloud.im.message.provider.ContactNotificationMessageProvider;
 import cn.rongcloud.im.message.provider.GroupNotificationMessageProvider;
 import cn.rongcloud.im.message.provider.NewDiscussionConversationProvider;
 import cn.rongcloud.im.message.provider.RealTimeLocationMessageProvider;
+import cn.rongcloud.im.server.utils.NLog;
 import cn.rongcloud.im.utils.SharedPreferencesContext;
+import io.rong.common.RLog;
 import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.ipc.RongExceptionHandler;
@@ -52,7 +54,6 @@ public class App extends Application {
          */
         //RongIM.setServerInfo("nav.cn.ronghub.com", "img.cn.ronghub.com");
         RongIM.init(this);
-
         SealAppContext.init(this);
         SharedPreferencesContext.init(this);
         Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
@@ -63,15 +64,17 @@ public class App extends Application {
             RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
             RongIM.registerMessageTemplate(new GroupNotificationMessageProvider());
             //@ 消息模板展示
-            RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+            if (RongContext.getInstance() != null) {
+                RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         options = new DisplayImageOptions.Builder()
-        .showImageForEmptyUri(R.drawable.de_default_portrait)
-        .showImageOnFail(R.drawable.de_default_portrait)
-        .showImageOnLoading(R.drawable.de_default_portrait)
+        .showImageForEmptyUri(cn.rongcloud.im.R.drawable.de_default_portrait)
+        .showImageOnFail(cn.rongcloud.im.R.drawable.de_default_portrait)
+        .showImageOnLoading(cn.rongcloud.im.R.drawable.de_default_portrait)
         .displayer(new FadeInBitmapDisplayer(300))
         .cacheInMemory(true)
         .cacheOnDisk(true)
