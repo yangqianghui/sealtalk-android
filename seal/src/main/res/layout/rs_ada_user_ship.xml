@@ -58,7 +58,7 @@
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:text="已添加"
-        android:textColor="#353535"
+        android:textColor="#999999"
         android:textSize="14sp" />
 
 </LinearLayout>

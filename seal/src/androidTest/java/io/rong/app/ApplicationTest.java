@@ -1,4 +1,4 @@
-package io.rong.app;
+package cn.rongcloud.im;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

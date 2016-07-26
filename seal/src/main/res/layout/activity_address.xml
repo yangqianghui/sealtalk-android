@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -9,10 +10,13 @@
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:hint="@string/Search"
+        android:drawablePadding="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:drawableLeft="@drawable/sealtalk_search"
         android:singleLine="true"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
 
     <FrameLayout

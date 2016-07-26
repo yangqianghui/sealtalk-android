@@ -16,7 +16,7 @@ import cn.rongcloud.im.R;
 public class AboutRongCloudActivity extends BaseActionBarActivity {
 
     private TextView mSDKVersion;
-    private String sealtalkVersion = "1.0.4";
+    private String sealtalkVersion = "1.0.5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

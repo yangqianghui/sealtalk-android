@@ -198,6 +198,8 @@
     <string name="select_contact">Select Contact</string>
     <string name="current_password">Current Password</string>
     <string name="password_hint">6-16 characters,case sensitive</string>
+    <string name="start_voice">语音通话</string>
+    <string name="start_video">视频聊天</string>
 
 
 </resources>

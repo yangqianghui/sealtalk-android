@@ -41,15 +41,13 @@ import cn.rongcloud.im.server.pinyin.SideBar;
 import cn.rongcloud.im.server.response.AddGroupMemberResponse;
 import cn.rongcloud.im.server.response.DeleteGroupMemberResponse;
 import cn.rongcloud.im.server.response.GetGroupMemberResponse;
-import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.utils.NLog;
 import cn.rongcloud.im.server.utils.NToast;
+import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.DialogWithYesOrNoUtils;
 import cn.rongcloud.im.server.widget.LoadDialog;
 import cn.rongcloud.im.server.widget.SelectableRoundedImageView;
-import io.rong.imkit.RongContext;
 import io.rong.imkit.RongIM;
-import io.rong.imkit.userInfoCache.RongUserInfoManager;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
 
@@ -61,7 +59,7 @@ public class SelectFriendsActivity extends BaseActivity {
 
     private static final int ADDGROUPMEMBER = 21;
     private static final int DELEGROUPMEMBER = 23;
-    public static final String DISCUSSIONUPDATE = "DISCUSSIONUPDATE";
+    public static final java.lang.String DISCUSSIONUPDATE = "DISCUSSIONUPDATE";
     /**
      * 好友列表的 ListView
      */
@@ -77,7 +75,6 @@ public class SelectFriendsActivity extends BaseActivity {
     private SideBar mSidBar;
     /**
      * 中部展示的字母提示
-     *
      */
     public TextView dialog;
 
