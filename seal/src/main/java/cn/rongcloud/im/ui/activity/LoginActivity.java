@@ -39,7 +39,6 @@ import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.ClearWriteEditText;
 import cn.rongcloud.im.server.widget.LoadDialog;
 import cn.rongcloud.im.utils.SharedPreferencesContext;
-import io.rong.common.RLog;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
