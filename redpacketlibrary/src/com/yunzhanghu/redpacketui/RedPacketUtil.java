@@ -72,22 +72,6 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         return mRedPacketUtil;
     }
 
-    /**
-     * 保存Token
-     *
-     * @param authPartner
-     * @param authUserId
-     * @param authTimestamp
-     * @param authSign
-     */
-    public void saveTokenData(String authPartner, String authUserId, String authTimestamp, String authSign) {
-        mTokenData = new TokenData();
-        mTokenData.authPartner = authPartner;
-        mTokenData.appUserId = authUserId;
-        mTokenData.authTimestamp = authTimestamp;
-        mTokenData.authSign = authSign;
-    }
-
     public TokenData getTokenData() {
         if (mTokenData == null) {
             mTokenData = new TokenData();
@@ -223,7 +207,13 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 String timestamp = jsonObject.getString("timestamp");
                 String sign = jsonObject.getString("sign");
                 //保存红包Token
-                saveTokenData(partner, userId, timestamp, sign);
+                if (mTokenData == null){
+                    mTokenData = new TokenData();
+                }
+                mTokenData.authPartner = partner;
+                mTokenData.appUserId = userId;
+                mTokenData.authTimestamp = timestamp;
+                mTokenData.authSign = sign;
                 mRPValueCallback.onSuccess(mTokenData);
             } catch (JSONException e) {
                 e.printStackTrace();
