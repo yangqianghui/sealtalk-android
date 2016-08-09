@@ -23,7 +23,7 @@
     <View
         android:id="@+id/no_pwd_line"
         style="@style/DividerStyle"
-        android:layout_below="@id/no_pwd_rl" />
+        android:layout_below="@id/no_pwd_rl"/>
 
     <TextView
         android:id="@+id/tv_red_money"
@@ -80,7 +80,7 @@
     <View
         android:id="@+id/no_pwd_line_three"
         style="@style/DividerStyleNoHead"
-        android:layout_below="@id/layout_pay_change" />
+        android:layout_below="@id/layout_pay_change"/>
 
     <TextView
         android:id="@+id/tv_pay_pwd_tip"
@@ -99,12 +99,12 @@
         android:layout_below="@id/tv_pay_pwd_tip"
         android:layout_marginTop="@dimen/size42px"
         android:text="@string/btn_ok" />
-
     <LinearLayout
         android:id="@+id/target_layout"
         android:layout_width="@dimen/size180px"
         android:layout_height="@dimen/size180px"
         android:layout_centerInParent="true"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        />
 
 </RelativeLayout>

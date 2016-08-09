@@ -19,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yunzhanghu.redpacketsdk.RPRefreshSignListener;
+import com.yunzhanghu.redpacketsdk.RPValueCallback;
+import com.yunzhanghu.redpacketsdk.RedPacket;
+import com.yunzhanghu.redpacketsdk.bean.TokenData;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +58,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     private RelativeLayout chatRLayout, contactRLayout, foundRLayout, mineRLayout;
 
-    private ImageView moreImage , mImageChats, mImageContact, mImageFind, mImageMe;
+    private ImageView moreImage, mImageChats, mImageContact, mImageFind, mImageMe;
 
-    private TextView  mTextChats , mTextContact, mTextFind, mTextMe;
+    private TextView mTextChats, mTextContact, mTextFind, mTextMe;
 
     private DragPointView mUnreadNumView;
 
@@ -62,7 +68,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      * 会话列表的fragment
      */
     private Fragment mConversationListFragment = null;
-
 
 
     @Override
@@ -89,6 +94,19 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             changeTextViewColor();
             changeSelectedTabState(0);
         }
+        //刷新签名
+        //App开发者需要去自己服务器请求签名参数,换成自己的URl
+        //@param partner      商户代码 (联系云账户后端获取)
+        // @param userId       商户用户id
+        // @param timestamp    签名使用的时间戳
+        // @param sign         签名
+        final String url = "http://rpv2.easemob.com/api/sign?duid=" + RedPacketUtil.getInstance().getUserID();
+        RedPacket.getInstance().setRefreshSignListener(new RPRefreshSignListener() {
+            @Override
+            public void onRefreshSign(RPValueCallback<TokenData> rpValueCallback) {
+                RedPacketUtil.getInstance().requestSign(mContext, url, rpValueCallback);
+            }
+        });
     }
 
     private void reconnect() {
@@ -99,6 +117,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             public void onTokenIncorrect() {
 
             }
+
             @Override
             public void onSuccess(String s) {
                 initViews();
@@ -106,12 +125,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 changeTextViewColor();
                 changeSelectedTabState(0);
             }
+
             @Override
             public void onError(RongIMClient.ErrorCode e) {
 
             }
         });
     }
+
     private void initViews() {
         chatRLayout = (RelativeLayout) findViewById(R.id.seal_chat);
         contactRLayout = (RelativeLayout) findViewById(R.id.seal_contact_list);
@@ -174,23 +195,23 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             Uri uri;
             if (SealConst.ISOPENDISCUSSION) {
                 uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-                      .appendPath("conversationlist")
-                      .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
-                      .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")//群组
-                      .appendQueryParameter(Conversation.ConversationType.PUBLIC_SERVICE.getName(), "false")//公共服务号
-                      .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")//订阅号
-                      .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")//系统
-                      .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false")
-                      .build();
+                        .appendPath("conversationlist")
+                        .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
+                        .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")//群组
+                        .appendQueryParameter(Conversation.ConversationType.PUBLIC_SERVICE.getName(), "false")//公共服务号
+                        .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")//订阅号
+                        .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")//系统
+                        .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false")
+                        .build();
             } else {
                 uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-                      .appendPath("conversationlist")
-                      .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
-                      .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")//群组
-                      .appendQueryParameter(Conversation.ConversationType.PUBLIC_SERVICE.getName(), "false")//公共服务号
-                      .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")//订阅号
-                      .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")//系统
-                      .build();
+                        .appendPath("conversationlist")
+                        .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
+                        .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")//群组
+                        .appendQueryParameter(Conversation.ConversationType.PUBLIC_SERVICE.getName(), "false")//公共服务号
+                        .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")//订阅号
+                        .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")//系统
+                        .build();
             }
             listFragment.setUri(uri);
             return listFragment;
@@ -274,9 +295,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     protected void initData() {
 
         final Conversation.ConversationType[] conversationTypes = {
-            Conversation.ConversationType.PRIVATE,
-            Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
-            Conversation.ConversationType.PUBLIC_SERVICE, Conversation.ConversationType.APP_PUBLIC_SERVICE
+                Conversation.ConversationType.PRIVATE,
+                Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
+                Conversation.ConversationType.PUBLIC_SERVICE, Conversation.ConversationType.APP_PUBLIC_SERVICE
         };
 
         Handler handler = new Handler();
@@ -327,7 +348,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                             startActivity(new Intent(MainActivity.this, NewFriendListActivity.class));
                         } else {
                             Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon().appendPath("conversation")
-                                      .appendPath(conversationType).appendQueryParameter("targetId", targetId).build();
+                                    .appendPath(conversationType).appendQueryParameter("targetId", targetId).build();
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(uri);
                             startActivity(intent);
@@ -352,7 +373,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             String path = intent.getData().getPath();
             if (path.contains("push_message")) {
                 SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
-                String  cacheToken = sharedPreferences.getString("loginToken", "");
+                String cacheToken = sharedPreferences.getString("loginToken", "");
                 if (TextUtils.isEmpty(cacheToken)) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else {
@@ -403,7 +424,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 
     private void hintKbTwo() {

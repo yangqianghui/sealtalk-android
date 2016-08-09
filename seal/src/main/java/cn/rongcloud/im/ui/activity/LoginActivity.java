@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yunzhanghu.redpacketui.RedPacketUtil;
-import com.yunzhanghu.redpacketui.callback.GetSignInfoCallback;
 
 import java.util.List;
 
@@ -252,7 +251,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             editor.putString("loginpassword", passwordString);
                             editor.apply();
 
-                            RongIM.connect(loginToken , new RongIMClient.ConnectCallback() {
+                            RongIM.connect(loginToken, new RongIMClient.ConnectCallback() {
                                 @Override
                                 public void onTokenIncorrect() {
                                     NLog.e("connect", "onTokenIncorrect");
@@ -344,8 +343,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (groupList.size() == 0 || groupList == null) {
                             request(SYNCGROUP);
                         } else {
-                            //请求签名
-                            initSign();
+                            LoadDialog.dismiss(mContext);
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            NToast.shortToast(mContext, R.string.login_success);
+                            finish();
                         }
                     }
                     break;
@@ -356,7 +357,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (list.size() > 0 && list != null) {
                             for (GetGroupResponse.ResultEntity g : list) {
                                 DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
-                                    new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
+                                        new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
                                 );
                                 NLog.e("sync_group", "-id-" + g.getGroup().getId() + "-num-" + g.getGroup().getMemberCount());
                                 SharedPreferencesContext.getInstance().getSharedPreferences().edit().putInt(g.getGroup().getId(), g.getGroup().getMemberCount()).commit();
@@ -373,19 +374,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             for (UserRelationshipResponse.ResultEntity friend : list) {
                                 if (friend.getStatus() == 20) {
                                     DBManager.getInstance(mContext).getDaoSession().getFriendDao().insertOrReplace(new Friend(
-                                                friend.getUser().getId(),
-                                                friend.getUser().getNickname(),
-                                                friend.getUser().getPortraitUri(),
-                                                friend.getDisplayName(),
-                                                null,
-                                                null
-                                            ));
+                                            friend.getUser().getId(),
+                                            friend.getUser().getNickname(),
+                                            friend.getUser().getPortraitUri(),
+                                            friend.getDisplayName(),
+                                            null,
+                                            null
+                                    ));
                                 }
                             }
 
                         }
-                        //请求签名
-                        initSign();
+                        LoadDialog.dismiss(mContext);
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        NToast.shortToast(mContext, R.string.login_success);
+                        finish();
                     }
                     break;
                 case GETTOKEN:
@@ -451,37 +454,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
         }
     }
-
-    private void initSign() {
-
-        //请求签名然后初始化红包Token
-        String userID = RedPacketUtil.getInstance().getUserID();
-        //App开发者需要去自己服务器请求签名参数,换成自己的URl
-        //@param partner      商户代码 (联系云账户后端获取)
-        // @param userId       商户用户id
-        // @param timestamp    签名使用的时间戳
-        // @param sign         签名
-        // 方法中所涉及到的参数均由AppServer提供，AppServer所采用的签名方法由云账户提供。
-        String url = "http://rpv2.easemob.com/api/sign?duid=" + userID;
-        RedPacketUtil.getInstance().requestSign(LoginActivity.this, url, new GetSignInfoCallback() {
-            @Override
-            public void signInfoSuccess() {
-                LoadDialog.dismiss(mContext);
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                NToast.shortToast(mContext, R.string.login_success);
-                finish();
-            }
-
-            @Override
-            public void signInfoError(String errorMsg) {
-                LoadDialog.dismiss(mContext);
-                NToast.shortToast(mContext, R.string.login_fail);
-
-            }
-        });
-
-    }
-
 
 
 }

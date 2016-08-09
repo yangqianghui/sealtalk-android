@@ -3,7 +3,6 @@ package com.yunzhanghu.redpacketui;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -12,10 +11,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.yunzhanghu.redpacketsdk.RPValueCallback;
 import com.yunzhanghu.redpacketsdk.bean.RedPacketInfo;
 import com.yunzhanghu.redpacketsdk.bean.TokenData;
 import com.yunzhanghu.redpacketsdk.constant.RPConstant;
-import com.yunzhanghu.redpacketui.callback.GetSignInfoCallback;
 import com.yunzhanghu.redpacketui.callback.GetUserInfoCallback;
 import com.yunzhanghu.redpacketui.message.RongEmptyMessage;
 import com.yunzhanghu.redpacketui.message.RongNotificationMessage;
@@ -51,9 +50,9 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
 
     private TokenData mTokenData;
 
-    private GetSignInfoCallback mGetSignInfoCallback;
-
     private GetUserInfoCallback mGetUserInfoCallback;
+
+    private RPValueCallback<TokenData> mRPValueCallback;
 
     private static RedPacketUtil mRedPacketUtil;
 
@@ -74,14 +73,14 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     }
 
     /**
-     * 初始化Token
+     * 保存Token
      *
      * @param authPartner
      * @param authUserId
      * @param authTimestamp
      * @param authSign
      */
-    public void initTokenData(String authPartner, String authUserId, String authTimestamp, String authSign) {
+    public void saveTokenData(String authPartner, String authUserId, String authTimestamp, String authSign) {
         mTokenData = new TokenData();
         mTokenData.authPartner = authPartner;
         mTokenData.appUserId = authUserId;
@@ -90,6 +89,10 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     }
 
     public TokenData getTokenData() {
+        if (mTokenData == null) {
+            mTokenData = new TokenData();
+            mTokenData.authSign = "ASD234";
+        }
         return mTokenData;
     }
 
@@ -154,7 +157,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         redPacketInfo.fromNickName = userName;
         redPacketInfo.fromAvatarUrl = userAvatar;
         intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
-        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA,getTokenData());
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, getTokenData());
         mContext.startActivity(intent);
     }
 
@@ -198,8 +201,8 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
         this.chatType = chatType;
     }
 
-    public void requestSign(Context mContext, String url, final GetSignInfoCallback mCallback) {
-        mGetSignInfoCallback = mCallback;
+    public void requestSign(Context mContext, String url, final RPValueCallback<TokenData> rpValueCallback) {
+        mRPValueCallback = rpValueCallback;
         RequestQueue mRequestQueue = Volley.newRequestQueue(mContext);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, this, this);
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(3000, 2, 2));
@@ -208,8 +211,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
-        Log.e("dxf", "--" + volleyError.toString());
-        mGetSignInfoCallback.signInfoError(volleyError.toString());
+        mRPValueCallback.onError(volleyError.getMessage(), volleyError.toString());
     }
 
     @Override
@@ -220,16 +222,16 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 String userId = jsonObject.getString("user_id");
                 String timestamp = jsonObject.getString("timestamp");
                 String sign = jsonObject.getString("sign");
-                //初始化红包Token
-                initTokenData(partner, userId, timestamp, sign);
-                mGetSignInfoCallback.signInfoSuccess();
+                //保存红包Token
+                saveTokenData(partner, userId, timestamp, sign);
+                mRPValueCallback.onSuccess(mTokenData);
             } catch (JSONException e) {
                 e.printStackTrace();
-                mGetSignInfoCallback.signInfoError(e.getMessage());
+                mRPValueCallback.onError(e.getMessage(), e.getMessage());
             }
 
         } else {
-            mGetSignInfoCallback.signInfoError("sign data is  null");
+            mRPValueCallback.onError("", "sign data is  null");
         }
     }
 }
