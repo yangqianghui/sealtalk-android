@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.yunzhanghu.redpacketsdk.RedPacket;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
 import com.yunzhanghu.redpacketui.RedPacketUtil;
 
 import cn.rongcloud.im.message.provider.ContactNotificationMessageProvider;
@@ -97,7 +98,7 @@ public class App extends Application {
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
         //初始化红包上下文
-        RedPacket.getInstance().initContext(this);
+        RedPacket.getInstance().initContext(this, RPConstant.AUTH_METHOD_SIGN);
         RedPacket.getInstance().setDebugMode(true);
     }
 

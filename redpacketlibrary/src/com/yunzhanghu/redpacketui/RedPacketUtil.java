@@ -75,7 +75,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
     public TokenData getTokenData() {
         if (mTokenData == null) {
             mTokenData = new TokenData();
-            mTokenData.authSign = "ASD234";
+            mTokenData.appUserId=userID;
         }
         return mTokenData;
     }
@@ -212,7 +212,7 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
                 }
                 mTokenData.authPartner = partner;
                 mTokenData.appUserId = userId;
-                mTokenData.authTimestamp = timestamp;
+                mTokenData.timestamp = timestamp;
                 mTokenData.authSign = sign;
                 mRPValueCallback.onSuccess(mTokenData);
             } catch (JSONException e) {
