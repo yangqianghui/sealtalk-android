@@ -102,6 +102,18 @@ public class RedPacketUtil implements Response.Listener<JSONObject>, Response.Er
             this.userAvatar = "default";
         }
     }
+    /**
+     * 是否是自己的回执消息
+     */
+    public boolean isSelfAckMessage(RongNotificationMessage message) {
+        boolean isMyselfAckMsg = false;
+        if (!TextUtils.isEmpty(userID)){
+            if (!userID.equals(message.getSendUserID())&&!userID.equals(message.getReceiveUserID())){
+                isMyselfAckMsg=true;
+            }
+        }
+        return isMyselfAckMsg;
+    }
 
     /**
      * 注册消息类型以及消息展示模板

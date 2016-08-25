@@ -73,7 +73,7 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
         holder.special = (TextView) view.findViewById(R.id.tv_packet_type);
         holder.view = view.findViewById(R.id.bubble);
         view.setTag(holder);
-        this.mContext=context;
+        this.mContext = context;
         return view;
     }
 
@@ -191,30 +191,43 @@ public class RongRedPacketMessageProvider extends IContainerItemProvider.Message
                         }
                     }, null);
         } else {//群聊讨论组回执消息
-            if (content.getSendUserID().equals(receiveID)) {//自己领取了自己的红包
-                RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
-                        message.getTargetId(), receiveID, rongNotificationMessage, null);
-            } else {
-                //1、接受者先向本地插入一条“你领取了XX的红包”，然后发送一条空消息（不在聊天界面展示），
-                // 发送红包者收到消息之后，向本地插入一条“XX领取了你的红包”，
-                // 2、如果接受者和发送者是一个人就直接向本地插入一条“你领取了自己的红包”
-                RongIM.getInstance().getRongIMClient().sendMessage(message.getConversationType(),
-                        message.getTargetId(), rongEmptyMessage, null, null, new RongIMClient.SendMessageCallback() {
-                            @Override
-                            public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-                                Log.e(TAG, "-发送空消息通知类失败-");
+            RongIM.getInstance().sendMessage(message.getConversationType(), message.getTargetId(), rongNotificationMessage, null, null, new RongIMClient.SendMessageCallback() {
+                @Override
+                public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                    Log.e(TAG, "-发送空消息通知类失败-");
 
-                            }
+                }
 
-                            @Override
-                            public void onSuccess(Integer integer) {
+                @Override
+                public void onSuccess(Integer integer) {
+                    Log.e(TAG, "-发送空消息通知类成功-");
 
-                                Log.e(TAG, "-发送空消息通知类成功-");
-                            }
-                        }, null);
-                RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
-                        message.getTargetId(), receiveID, rongNotificationMessage, null);
-            }
+                }
+            });
+//            if (content.getSendUserID().equals(receiveID)) {//自己领取了自己的红包
+//                RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
+//                        message.getTargetId(), receiveID, rongNotificationMessage, null);
+//            } else {
+//                //1、接受者先向本地插入一条“你领取了XX的红包”，然后发送一条空消息（不在聊天界面展示），
+//                // 发送红包者收到消息之后，向本地插入一条“XX领取了你的红包”，
+//                // 2、如果接受者和发送者是一个人就直接向本地插入一条“你领取了自己的红包”
+//                RongIM.getInstance().getRongIMClient().sendMessage(message.getConversationType(),
+//                        message.getTargetId(), rongEmptyMessage, null, null, new RongIMClient.SendMessageCallback() {
+//                            @Override
+//                            public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+//                                Log.e(TAG, "-发送空消息通知类失败-");
+//
+//                            }
+//
+//                            @Override
+//                            public void onSuccess(Integer integer) {
+//
+//                                Log.e(TAG, "-发送空消息通知类成功-");
+//                            }
+//                        }, null);
+//                RongIM.getInstance().getRongIMClient().insertMessage(message.getConversationType(),
+//                        message.getTargetId(), receiveID, rongNotificationMessage, null);
+//            }
         }
 
     }

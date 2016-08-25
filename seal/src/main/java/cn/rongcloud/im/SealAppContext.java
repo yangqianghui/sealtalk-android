@@ -19,6 +19,7 @@ import com.yunzhanghu.redpacketui.callback.NotifyGroupMemberCallback;
 import com.yunzhanghu.redpacketui.callback.SetUserInfoCallback;
 import com.yunzhanghu.redpacketui.callback.ToRedPacketActivity;
 import com.yunzhanghu.redpacketui.message.RongEmptyMessage;
+import com.yunzhanghu.redpacketui.message.RongNotificationMessage;
 import com.yunzhanghu.redpacketui.provider.RongGroupRedPacketProvider;
 import com.yunzhanghu.redpacketui.provider.RongRedPacketProvider;
 import com.yunzhanghu.redpacketui.utils.RPGroupMemberUtil;
@@ -580,7 +581,26 @@ public class SealAppContext implements RongIM.ConversationListBehaviorListener, 
         } else if (messageContent instanceof RongEmptyMessage) {
             //接收到空消息（不展示UI的消息）向本地插入一条“XX领取了你的红包”
             RedPacketUtil.getInstance().insertMessage(message);
+        }else if (messageContent instanceof RongNotificationMessage){
+            if (!RedPacketUtil.getInstance().isSelfAckMessage((RongNotificationMessage) messageContent)){
+                //RongIM.getInstance().getRongIMClient().deleteMessages(new int []{message.getMessageId()});
+                RongIM.getInstance().deleteMessages(new int[]{message.getMessageId()}, new RongIMClient.ResultCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+
+                    }
+                });
+
+            }
+            //RedPacketUtil.getInstance().isSelfAckMessage((RongNotificationMessage) messageContent);
+            //RongIM.getInstance().getRongIMClient().deleteMessages(new int []{message.getMessageId()});
         }
+        Log.e("help","--"+RedPacketUtil.getInstance().getUserID());
         return false;
     }
 
