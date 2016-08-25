@@ -74,6 +74,7 @@
 
         <ImageView
             android:id="@+id/function_new"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -138,12 +139,12 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/sealtalk_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            android:text="1.0.3"
             android:textColor="#999"
             android:textSize="14sp" />
 
@@ -178,7 +179,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            android:text="2.6.5 Stable"
+            android:text="2.6.6 Stable"
             android:textColor="#999"
             android:textSize="14sp" />
 

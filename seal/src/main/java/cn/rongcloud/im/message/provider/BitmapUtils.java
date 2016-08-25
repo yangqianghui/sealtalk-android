@@ -496,7 +496,7 @@ public class BitmapUtils {
      * 保存文件
      * @param bm
      * @param fileName
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static String saveFile(Bitmap bm, String fileName) throws IOException {
         String path = getSDPath() + "/revoeye/";
@@ -516,7 +516,7 @@ public class BitmapUtils {
         boolean sdCardExist = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED); //判断sd卡是否存在
         if (sdCardExist)
         {
-            sdDir = Environment.getExternalStorageDirectory();//获取跟目录
+            sdDir = Environment.getExternalStorageDirectory();//获取根目录
         }
         return sdDir.toString();
     }

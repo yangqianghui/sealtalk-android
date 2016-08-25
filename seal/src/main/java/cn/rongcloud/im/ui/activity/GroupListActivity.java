@@ -1,8 +1,6 @@
 package cn.rongcloud.im.ui.activity;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,18 +19,15 @@ import java.util.List;
 
 import cn.rongcloud.im.App;
 import cn.rongcloud.im.R;
-import cn.rongcloud.im.SealAppContext;
 import cn.rongcloud.im.db.DBManager;
 import cn.rongcloud.im.db.Groups;
 import cn.rongcloud.im.server.SealAction;
-import cn.rongcloud.im.server.broadcast.BroadcastManager;
 import cn.rongcloud.im.server.network.async.AsyncTaskManager;
 import cn.rongcloud.im.server.network.async.OnDataListener;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.response.GetGroupResponse;
-import cn.rongcloud.im.server.utils.RongGenerate;
-import cn.rongcloud.im.server.utils.NLog;
 import cn.rongcloud.im.server.utils.NToast;
+import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.SelectableRoundedImageView;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.model.Conversation;
@@ -62,63 +57,56 @@ public class GroupListActivity extends BaseActivity {
         mGroupListView = (ListView) findViewById(R.id.group_listview);
         mNoGroups = (TextView) findViewById(R.id.show_no_group);
         initData();
-        refreshUIListener();
         initNetUpdateUI();
     }
 
 
     private void initNetUpdateUI() {
-        BroadcastManager.getInstance(this).addAction(SealAppContext.NETUPDATEGROUP, new BroadcastReceiver() {
+        AsyncTaskManager.getInstance(mContext).request(REFRESHGROUPUI, new OnDataListener() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                String command = intent.getAction();
-                if (!TextUtils.isEmpty(command)) {
-                    AsyncTaskManager.getInstance(mContext).request(REFRESHGROUPUI, new OnDataListener() {
-                        @Override
-                        public Object doInBackground(int requsetCode, String id) throws HttpException {
-                            return new SealAction(mContext).getGroups();
-                        }
+            public Object doInBackground(int requsetCode, String id) throws HttpException {
+                return new SealAction(mContext).getGroups();
+            }
 
 
-                        @Override
-                        public void onSuccess(int requestCode, Object result) {
-                            if (result != null) {
-                                GetGroupResponse response = (GetGroupResponse) result;
-                                if (response.getCode() == 200) {
-                                    DBManager.getInstance(mContext).getDaoSession().getGroupsDao().deleteAll();
-                                    List<GetGroupResponse.ResultEntity> list = response.getResult();
-                                    if (list.size() > 0 && list != null) { //服务端上也没有群组数据
-                                        for (GetGroupResponse.ResultEntity g : list) {
-                                            DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
-                                                new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
-                                            );
-                                        }
-                                    }
-                                    new android.os.Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            List<Groups> list = DBManager.getInstance(mContext).getDaoSession().getGroupsDao().loadAll();
-                                            if (adapter != null) {
-                                                adapter.updateListView(list);
-                                            } else {
-                                                GroupAdapter gAdapter = new GroupAdapter(mContext, list);
-                                                mGroupListView.setAdapter(gAdapter);
-                                            }
-                                            NLog.e(SealAppContext.NETUPDATEGROUP, "数据刷新成功");
-                                        }
-                                    }, 500);
+            @Override
+            public void onSuccess(int requestCode, Object result) {
+                if (result != null) {
+                    GetGroupResponse response = (GetGroupResponse) result;
+                    if (response.getCode() == 200) {
+                        if (response.getResult().size() != DBManager.getInstance(mContext).getDaoSession().getGroupsDao().loadAll().size()) {
+                            DBManager.getInstance(mContext).getDaoSession().getGroupsDao().deleteAll();
+                            List<GetGroupResponse.ResultEntity> list = response.getResult();
+                            if (list.size() > 0 && list != null) { //服务端上也没有群组数据
+                                for (GetGroupResponse.ResultEntity g : list) {
+                                    DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
+                                        new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
+                                    );
                                 }
                             }
+                            new android.os.Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    List<Groups> list = DBManager.getInstance(mContext).getDaoSession().getGroupsDao().loadAll();
+                                    if (adapter != null) {
+                                        adapter.updateListView(list);
+                                    } else {
+                                        GroupAdapter gAdapter = new GroupAdapter(mContext, list);
+                                        mGroupListView.setAdapter(gAdapter);
+                                    }
+                                }
+                            }, 500);
                         }
-
-                        @Override
-                        public void onFailure(int requestCode, int state, Object result) {
-                            NToast.shortToast(mContext, "刷新群组数据请求失败");
-                        }
-                    });
+                    }
                 }
             }
+
+            @Override
+            public void onFailure(int requestCode, int state, Object result) {
+                NToast.shortToast(mContext, "刷新群组数据请求失败");
+            }
         });
+
     }
 
 
@@ -142,18 +130,6 @@ public class GroupListActivity extends BaseActivity {
             mNoGroups.setVisibility(View.VISIBLE);
         }
 
-    }
-
-    private void refreshUIListener() {
-        BroadcastManager.getInstance(mContext).addAction(CreateGroupActivity.REFRESHGROUPUI, new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String command = intent.getAction();
-                if (!TextUtils.isEmpty(command)) {
-                    initData();
-                }
-            }
-        });
     }
 
 
@@ -240,8 +216,6 @@ public class GroupListActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        BroadcastManager.getInstance(this).destroy(CreateGroupActivity.REFRESHGROUPUI);
-        BroadcastManager.getInstance(this).destroy(SealAppContext.NETUPDATEGROUP);
         super.onDestroy();
     }
 

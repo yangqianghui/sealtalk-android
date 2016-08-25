@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.yunzhanghu.redpacketui.RedPacketUtil;
+
 import java.util.List;
 
 import cn.rongcloud.im.R;
@@ -35,6 +37,7 @@ import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.widget.ClearWriteEditText;
 import cn.rongcloud.im.server.widget.LoadDialog;
+import cn.rongcloud.im.utils.SharedPreferencesContext;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
@@ -50,6 +53,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private static final int SYNCUSERINFO = 9;
     private static final int SYNCGROUP = 17;
     private static final int AUTOLOGIN = 19;
+    private static final int SYNCFRIEND = 14;
     private ImageView mImgBackgroud;
 
     private ClearWriteEditText mPhoneEdit, mPasswordEdit;
@@ -75,7 +79,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         editor = sp.edit();
 
         initView();
-
     }
 
     private void initView() {
@@ -248,7 +251,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             editor.putString("loginpassword", passwordString);
                             editor.apply();
 
-                            RongIM.connect(loginToken , new RongIMClient.ConnectCallback() {
+                            RongIM.connect(loginToken, new RongIMClient.ConnectCallback() {
                                 @Override
                                 public void onTokenIncorrect() {
                                     NLog.e("connect", "onTokenIncorrect");
@@ -330,6 +333,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (TextUtils.isEmpty(guRes.getResult().getPortraitUri())) {
                             guRes.getResult().setPortraitUri(RongGenerate.generateDefaultAvatar(guRes.getResult().getNickname(), guRes.getResult().getId()));
                         }
+                        //初始化用户信息
+                        RedPacketUtil.getInstance().initUserInfo(guRes.getResult().getId(), guRes.getResult().getNickname(), guRes.getResult().getPortraitUri());
+
                         RongIM.getInstance().setCurrentUserInfo(new UserInfo(guRes.getResult().getId(), guRes.getResult().getNickname(), Uri.parse(guRes.getResult().getPortraitUri())));
                         RongIM.getInstance().setMessageAttachedUserInfo(true);
 
@@ -351,8 +357,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (list.size() > 0 && list != null) {
                             for (GetGroupResponse.ResultEntity g : list) {
                                 DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
-                                    new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
+                                        new Groups(g.getGroup().getId(), g.getGroup().getName(), g.getGroup().getPortraitUri(), String.valueOf(g.getRole()))
                                 );
+                                NLog.e("sync_group", "-id-" + g.getGroup().getId() + "-num-" + g.getGroup().getMemberCount());
+                                SharedPreferencesContext.getInstance().getSharedPreferences().edit().putInt(g.getGroup().getId(), g.getGroup().getMemberCount()).commit();
                             }
                         }
                         request(SYNCFRIEND);
@@ -366,13 +374,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             for (UserRelationshipResponse.ResultEntity friend : list) {
                                 if (friend.getStatus() == 20) {
                                     DBManager.getInstance(mContext).getDaoSession().getFriendDao().insertOrReplace(new Friend(
-                                                friend.getUser().getId(),
-                                                friend.getUser().getNickname(),
-                                                friend.getUser().getPortraitUri(),
-                                                friend.getDisplayName(),
-                                                null,
-                                                null
-                                            ));
+                                            friend.getUser().getId(),
+                                            friend.getUser().getNickname(),
+                                            friend.getUser().getPortraitUri(),
+                                            friend.getDisplayName(),
+                                            null,
+                                            null
+                                    ));
                                 }
                             }
 
@@ -447,6 +455,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private static final int SYNCFRIEND = 14;
 
 }

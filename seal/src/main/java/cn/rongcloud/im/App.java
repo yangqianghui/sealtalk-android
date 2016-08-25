@@ -1,12 +1,17 @@
 package cn.rongcloud.im;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.yunzhanghu.redpacketsdk.RedPacket;
+import com.yunzhanghu.redpacketsdk.constant.RPConstant;
+import com.yunzhanghu.redpacketui.RedPacketUtil;
 
 import cn.rongcloud.im.message.provider.ContactNotificationMessageProvider;
 import cn.rongcloud.im.message.provider.GroupNotificationMessageProvider;
@@ -52,26 +57,29 @@ public class App extends Application {
          */
         //RongIM.setServerInfo("nav.cn.ronghub.com", "img.cn.ronghub.com");
         RongIM.init(this);
-
         SealAppContext.init(this);
         SharedPreferencesContext.init(this);
         Thread.setDefaultUncaughtExceptionHandler(new RongExceptionHandler(this));
 
         try {
+            //注册红包消息、回执消息类以及消息展示模板
+            RedPacketUtil.getInstance().registerMsgTypeAndTemplate(this);
             RongIM.registerMessageType(GroupNotificationMessage.class);
             RongIM.registerMessageTemplate(new ContactNotificationMessageProvider());
             RongIM.registerMessageTemplate(new RealTimeLocationMessageProvider());
             RongIM.registerMessageTemplate(new GroupNotificationMessageProvider());
             //@ 消息模板展示
-            RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+            if (RongContext.getInstance() != null) {
+                RongContext.getInstance().registerConversationTemplate(new NewDiscussionConversationProvider());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         options = new DisplayImageOptions.Builder()
-        .showImageForEmptyUri(R.drawable.de_default_portrait)
-        .showImageOnFail(R.drawable.de_default_portrait)
-        .showImageOnLoading(R.drawable.de_default_portrait)
+        .showImageForEmptyUri(cn.rongcloud.im.R.drawable.de_default_portrait)
+        .showImageOnFail(cn.rongcloud.im.R.drawable.de_default_portrait)
+        .showImageOnLoading(cn.rongcloud.im.R.drawable.de_default_portrait)
         .displayer(new FadeInBitmapDisplayer(300))
         .cacheInMemory(true)
         .cacheOnDisk(true)
@@ -89,6 +97,15 @@ public class App extends Application {
 
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
+        //初始化红包上下文
+        RedPacket.getInstance().initContext(this, RPConstant.AUTH_METHOD_SIGN);
+        RedPacket.getInstance().setDebugMode(true);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public static DisplayImageOptions getOptions() {

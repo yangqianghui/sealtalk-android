@@ -33,8 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="14dp"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:text="用户头像"
             android:textColor="@color/text_color"
             android:textSize="16sp" />
@@ -57,6 +57,34 @@
             android:drawableLeft="@drawable/mine_set"
             android:drawablePadding="14sp"
             android:text="@string/mine_setting"
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="#dfdfdd" />
+
+    <LinearLayout
+        android:id="@+id/mine_change"
+        android:layout_width="match_parent"
+        android:layout_height="45.5dp"
+        android:background="@drawable/btn_list_item_bg"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="14dp"
+            android:drawableLeft="@drawable/mine_change"
+            android:drawablePadding="14sp"
+            android:text="@string/mine_change"
             android:textColor="@color/text_color"
             android:textSize="16sp" />
 
@@ -86,10 +114,10 @@
     </LinearLayout>
 
     <View
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
         android:layout_width="match_parent"
         android:layout_height="0.25dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
         android:background="#dfdfdd" />
 
     <LinearLayout

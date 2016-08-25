@@ -1,12 +1,12 @@
 package cn.rongcloud.im.ui.activity;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +20,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cn.rongcloud.im.App;
@@ -35,12 +44,17 @@ import cn.rongcloud.im.server.pinyin.Friend;
 import cn.rongcloud.im.server.response.DismissGroupResponse;
 import cn.rongcloud.im.server.response.GetGroupInfoResponse;
 import cn.rongcloud.im.server.response.GetGroupMemberResponse;
+import cn.rongcloud.im.server.response.QiNiuTokenResponse;
 import cn.rongcloud.im.server.response.QuitGroupResponse;
 import cn.rongcloud.im.server.response.SetGroupDisplayNameResponse;
+import cn.rongcloud.im.server.response.SetGroupNameResponse;
+import cn.rongcloud.im.server.response.SetGroupPortraitResponse;
 import cn.rongcloud.im.server.utils.CommonUtils;
 import cn.rongcloud.im.server.utils.RongGenerate;
 import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.server.utils.OperationRong;
+import cn.rongcloud.im.server.utils.photo.PhotoUtils;
+import cn.rongcloud.im.server.widget.BottomMenuDialog;
 import cn.rongcloud.im.server.widget.DialogWithYesOrNoUtils;
 import cn.rongcloud.im.server.widget.LoadDialog;
 import cn.rongcloud.im.server.widget.SelectableRoundedImageView;
@@ -49,6 +63,7 @@ import cn.rongcloud.im.ui.widget.switchbutton.SwitchButton;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Group;
 import io.rong.imlib.model.UserInfo;
 
 /**
@@ -63,6 +78,8 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
     private static final int SETGROUPNAME = 29;
     private static final int GETGROUPINFO = 30;
     private static final int GETGROUPINFO2 = 31;
+    private static final int UPDATEGROUPNAME = 32;
+    private static final int GETQINIUTOKEN = 133;
 
 
     private boolean isCreated;
@@ -73,13 +90,11 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
 
     private GridAdapter adapter;
 
-    private TextView mTextViewMemberSize, mGroupName, mGroupDisplayNameText;
-
-    private ImageView showIcon;
+    private TextView mTextViewMemberSize, mGroupDisplayNameText;
 
     private SelectableRoundedImageView mGroupHeader;
 
-    private LinearLayout mGroupInfo, mGroupDisplayName, groupClean;
+    private LinearLayout mGroupDisplayName, groupClean;
 
     private Button mQuitBtn, mDismissBtn;
     private String groupDisplayNmae;
@@ -91,32 +106,31 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
     private String fromConversationId;
     private boolean isFromConversation;
 
+    private TextView mGroupName;
+
+    private LinearLayout mGroupPortL;
+
+    private LinearLayout mGroupNameL;
+
+    private PhotoUtils photoUtils;
+
+    private BottomMenuDialog dialog;
+
+    private UploadManager uploadManager;
+
+    private String imageUrl;
+
+    private Uri selectUri;
+
+    private String newGroupName;
+
+    private static final int UPDATEGROUPHEADER = 25;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_group);
-
-        messageTop = (SwitchButton) findViewById(R.id.sw_group_top);
-        messageNotif = (SwitchButton) findViewById(R.id.sw_group_notfaction);
-        messageTop.setOnCheckedChangeListener(this);
-        messageNotif.setOnCheckedChangeListener(this);
-        groupClean = (LinearLayout) findViewById(R.id.group_clean);
-        gridview = (DemoGridView) findViewById(R.id.gridview);
-        mTextViewMemberSize = (TextView) findViewById(R.id.group_member_size);
-        mGroupName = (TextView) findViewById(R.id.group_name);
-        mGroupInfo = (LinearLayout) findViewById(R.id.group_info);
-        mGroupHeader = (SelectableRoundedImageView) findViewById(R.id.group_header);
-        showIcon = (ImageView) findViewById(R.id.show_icon);
-        mGroupDisplayName = (LinearLayout) findViewById(R.id.group_displayname);
-        mGroupDisplayNameText = (TextView) findViewById(R.id.group_displayname_text);
-        mQuitBtn = (Button) findViewById(R.id.group_quit);
-        mDismissBtn = (Button) findViewById(R.id.group_dismiss);
-        totalGroupMember = (RelativeLayout) findViewById(R.id.group_member_size_item);
-        totalGroupMember.setOnClickListener(this);
-        mGroupDisplayName.setOnClickListener(this);
-        mQuitBtn.setOnClickListener(this);
-        mDismissBtn.setOnClickListener(this);
-        groupClean.setOnClickListener(this);
+        initViews();
         getSupportActionBar().setTitle(R.string.group_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.de_actionbar_back);
@@ -131,19 +145,7 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
             LoadDialog.show(mContext);
             request(GETGROUPINFO2);
         }
-
-
-        BroadcastManager.getInstance(mContext).addAction(ChangeGroupInfoActivity.UPDATEGROUPINFONAME, new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String command = intent.getAction();
-                if (!TextUtils.isEmpty(command)) {
-                    String s = intent.getStringExtra("String");
-                    mGroupName.setText(s);
-                }
-            }
-        });
-
+        setPortraitChangeListener();
     }
 
 
@@ -157,11 +159,17 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
             case DISMISSGROUP:
                 return action.dissmissGroup(fromConversationId);
             case SETGROUPNAME:
-                return action.setGroupDisplayName(fromConversationId, groupDisplayNmae);
+                return action.setGroupDisplayName(fromConversationId, newGroupName);
             case GETGROUPINFO:
                 return action.getGroupInfo(fromConversationId);
             case GETGROUPINFO2:
                 return action.getGroupInfo(fromConversationId);
+            case UPDATEGROUPHEADER:
+                return action.setGroupPortrait(fromConversationId, imageUrl);
+            case GETQINIUTOKEN:
+                return action.getQiNiuToken();
+            case UPDATEGROUPNAME:
+                return action.setGroupName(fromConversationId, newGroupName);
         }
         return super.doInBackground(requestCode, id);
     }
@@ -173,7 +181,7 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                 case GETGROUPMEMBER:
                     GetGroupMemberResponse res = (GetGroupMemberResponse) result;
                     if (res.getCode() == 200) {
-                        mGroupMember = res.getResult();
+                        mGroupMember = setCreatedToTop(res.getResult());
                         if (mGroupMember != null && mGroupMember.size() > 0) {
                             mTextViewMemberSize.setText(getString(R.string.group_member_size) + "(" + mGroupMember.size() + ")");
                             adapter = new GridAdapter(mContext, mGroupMember);
@@ -189,33 +197,35 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                                 }
                             }
                         }
-
-                        if (isCreated) {
-                            mQuitBtn.setVisibility(View.GONE);
-                            mDismissBtn.setVisibility(View.VISIBLE);
-                            showIcon.setVisibility(View.VISIBLE);
-                            mGroupInfo.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(NewGroupDetailActivity.this, ChangeGroupInfoActivity.class);
-                                    if (isFromConversation) {
-                                        intent.putExtra("GroupInfo", (Serializable) new Groups(mGroup.getId(), mGroup.getName(), mGroup.getPortraitUri()));
-                                    }
-                                    startActivityForResult(intent, 102);
-                                }
-                            });
-                        }
                         LoadDialog.dismiss(mContext);
                     }
                     break;
                 case QUITGROUP:
                     QuitGroupResponse response = (QuitGroupResponse) result;
                     if (response.getCode() == 200) {
-                        BroadcastManager.getInstance(mContext).sendBroadcast(SealAppContext.NETUPDATEGROUP);
-                        if (RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId) != null) {
-                            RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId);
-                            RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId);
-                        }
+
+                        RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Conversation>() {
+                            @Override
+                            public void onSuccess(Conversation conversation) {
+                                RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Boolean>() {
+                                    @Override
+                                    public void onSuccess(Boolean aBoolean) {
+                                        RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId, null);
+                                    }
+
+                                    @Override
+                                    public void onError(RongIMClient.ErrorCode e) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(RongIMClient.ErrorCode e) {
+
+                            }
+                        });
+                        setResult(501, new Intent());
                         NToast.shortToast(mContext, getString(R.string.quit_success));
                         LoadDialog.dismiss(mContext);
                         finish();
@@ -225,11 +235,28 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                 case DISMISSGROUP:
                     DismissGroupResponse response1 = (DismissGroupResponse) result;
                     if (response1.getCode() == 200) {
-                        BroadcastManager.getInstance(mContext).sendBroadcast(SealAppContext.NETUPDATEGROUP);
-                        if (RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId) != null) {
-                            RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId);
-                            RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId);
-                        }
+                        RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Conversation>() {
+                            @Override
+                            public void onSuccess(Conversation conversation) {
+                                RongIM.getInstance().clearMessages(Conversation.ConversationType.GROUP, fromConversationId, new RongIMClient.ResultCallback<Boolean>() {
+                                    @Override
+                                    public void onSuccess(Boolean aBoolean) {
+                                        RongIM.getInstance().removeConversation(Conversation.ConversationType.GROUP, fromConversationId, null);
+                                    }
+
+                                    @Override
+                                    public void onError(RongIMClient.ErrorCode e) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(RongIMClient.ErrorCode e) {
+
+                            }
+                        });
+                        setResult(501, new Intent());
                         NToast.shortToast(mContext, getString(R.string.dismiss_success));
                         LoadDialog.dismiss(mContext);
                         finish();
@@ -253,11 +280,12 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                         }
                         GetGroupInfoResponse.ResultEntity bean = response3.getResult();
                         DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
-                            new Groups(bean.getId(), bean.getName(), bean.getPortraitUri(), groupDisplayNmae, String.valueOf(i), null)
+                            new Groups(bean.getId(), bean.getName(), bean.getPortraitUri(), newGroupName, String.valueOf(i), null)
                         );
-                        mGroupDisplayNameText.setText(groupDisplayNmae);
+                        mGroupName.setText(newGroupName);
+                        RongIM.getInstance().refreshGroupInfoCache(new Group(fromConversationId, newGroupName, Uri.parse(bean.getPortraitUri())));
                         LoadDialog.dismiss(mContext);
-                        NToast.shortToast(mContext, "修改成功");
+                        NToast.shortToast(mContext, getString(R.string.update_success));
                     }
                     break;
                 case GETGROUPINFO2:
@@ -265,13 +293,12 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                     if (response4.getCode() == 200) {
                         if (response4.getResult() != null) {
                             mGroup = response4.getResult();
-                            mGroupName.setText(response4.getResult().getName());
                             if (TextUtils.isEmpty(response4.getResult().getPortraitUri())) {
                                 ImageLoader.getInstance().displayImage(RongGenerate.generateDefaultAvatar(response4.getResult().getName(), response4.getResult().getId()), mGroupHeader, App.getOptions());
                             } else {
                                 ImageLoader.getInstance().displayImage(response4.getResult().getPortraitUri(), mGroupHeader, App.getOptions());
                             }
-
+                            mGroupName.setText(mGroup.getName());
 
                             if (RongIM.getInstance() != null) {
                                 RongIM.getInstance().getConversation(Conversation.ConversationType.GROUP, mGroup.getId(), new RongIMClient.ResultCallback<Conversation>() {
@@ -322,6 +349,35 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                         }
                     }
                     break;
+
+                case UPDATEGROUPHEADER:
+                    SetGroupPortraitResponse response5 = (SetGroupPortraitResponse) result;
+                    if (response5.getCode() == 200) {
+                        ImageLoader.getInstance().displayImage(imageUrl, mGroupHeader, App.getOptions());
+                        RongIM.getInstance().refreshGroupInfoCache(new Group(fromConversationId, mGroup.getName(), Uri.parse(imageUrl)));
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, getString(R.string.update_success));
+                    }
+
+                    break;
+                case GETQINIUTOKEN:
+                    QiNiuTokenResponse response6 = (QiNiuTokenResponse) result;
+                    if (response6.getCode() == 200) {
+                        uploadImage(response6.getResult().getDomain(), response6.getResult().getToken(), selectUri);
+                    }
+                    break;
+                case UPDATEGROUPNAME:
+                    SetGroupNameResponse response7 = (SetGroupNameResponse) result;
+                    if (response7.getCode() == 200) {
+                        DBManager.getInstance(mContext).getDaoSession().getGroupsDao().insertOrReplace(
+                            new Groups(mGroup.getId(), mGroup.getName(), mGroup.getPortraitUri(), newGroupName, null, null)
+                        );
+                        mGroupName.setText(newGroupName);
+                        RongIM.getInstance().refreshGroupInfoCache(new Group(fromConversationId, newGroupName, Uri.parse(mGroup.getPortraitUri())));
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, getString(R.string.update_success));
+                    }
+                    break;
             }
         }
     }
@@ -354,30 +410,6 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.group_displayname:
-                DialogWithYesOrNoUtils.getInstance().showEditDialog(mContext, getString(R.string.group_name), getString(R.string.confirm), new DialogWithYesOrNoUtils.DialogCallBack() {
-                    @Override
-                    public void exectEvent() {
-
-                    }
-
-                    @Override
-                    public void exectEditEvent(String editText) {
-                        if (TextUtils.isEmpty(editText)) {
-                            return;
-                        }
-                        groupDisplayNmae = editText;
-                        LoadDialog.show(mContext);
-                        request(SETGROUPNAME);
-                    }
-
-                    @Override
-                    public void updatePassword(String oldPassword, String newPassword) {
-
-                    }
-                });
-
-                break;
             case R.id.group_quit:
                 DialogWithYesOrNoUtils.getInstance().showDialog(mContext, getString(R.string.confirm_quit_group), new DialogWithYesOrNoUtils.DialogCallBack() {
                     @Override
@@ -449,7 +481,39 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
                 });
                 break;
             case R.id.group_member_size_item:
-//                startActivity(new Intent(mContext, TotalGroupMemberActivity.class));
+                Intent intent = new Intent(mContext, TotalGroupMemberActivity.class);
+                intent.putExtra("TotalMember", (Serializable) mGroupMember);
+                startActivity(intent);
+                break;
+            case R.id.ll_group_port:
+                if (isCreated) {
+                    showPhotoDialog();
+                }
+                break;
+            case R.id.ll_group_name:
+                if (isCreated) {
+                    DialogWithYesOrNoUtils.getInstance().showEditDialog(mContext, getString(R.string.new_group_name), getString(R.string.confirm), new DialogWithYesOrNoUtils.DialogCallBack() {
+                        @Override
+                        public void exectEvent() {
+
+                        }
+
+                        @Override
+                        public void exectEditEvent(String editText) {
+                            if (TextUtils.isEmpty(editText)) {
+                                return;
+                            }
+                            newGroupName = editText;
+                            LoadDialog.show(mContext);
+                            request(UPDATEGROUPNAME);
+                        }
+
+                        @Override
+                        public void updatePassword(String oldPassword, String newPassword) {
+
+                        }
+                    });
+                }
                 break;
         }
     }
@@ -620,6 +684,14 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
             }
 
         }
+        switch (requestCode) {
+            case PhotoUtils.INTENT_CROP:
+            case PhotoUtils.INTENT_TAKE:
+            case PhotoUtils.INTENT_SELECT:
+                photoUtils.onActivityResult(NewGroupDetailActivity.this, requestCode, resultCode, data);
+                break;
+        }
+
     }
 
 
@@ -633,7 +705,128 @@ public class NewGroupDetailActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BroadcastManager.getInstance(mContext).destroy(ChangeGroupInfoActivity.UPDATEGROUPINFONAME);
-        BroadcastManager.getInstance(mContext).destroy(ChangeGroupInfoActivity.UPDATEGROUPINFOIMG);
+    }
+
+    private List<GetGroupMemberResponse.ResultEntity> setCreatedToTop(List<GetGroupMemberResponse.ResultEntity> groupMember) {
+        List<GetGroupMemberResponse.ResultEntity> newList = new ArrayList<>();
+        GetGroupMemberResponse.ResultEntity created = null;
+        for (GetGroupMemberResponse.ResultEntity gr : groupMember) {
+            if (gr.getRole() == 0) {
+                created = gr;
+            } else {
+                newList.add(gr);
+            }
+        }
+        if (created != null) {
+            newList.add(created);
+        }
+        Collections.reverse(newList);
+        return newList;
+    }
+
+
+    private void setPortraitChangeListener() {
+        photoUtils = new PhotoUtils(new PhotoUtils.OnPhotoResultListener() {
+            @Override
+            public void onPhotoResult(Uri uri) {
+                if (uri != null && !TextUtils.isEmpty(uri.getPath())) {
+                    selectUri = uri;
+                    LoadDialog.show(mContext);
+                    request(133);
+                }
+            }
+
+            @Override
+            public void onPhotoCancel() {
+
+            }
+        });
+    }
+
+
+    /**
+     * 弹出底部框
+     */
+    private void showPhotoDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+        dialog = new BottomMenuDialog(mContext);
+        dialog.setConfirmListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                photoUtils.takePicture(NewGroupDetailActivity.this);
+            }
+        });
+        dialog.setMiddleListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                photoUtils.selectPicture(NewGroupDetailActivity.this);
+            }
+        });
+        dialog.show();
+    }
+
+
+    public void uploadImage(final String domain, String imageToken, Uri imagePath) {
+        if (TextUtils.isEmpty(domain) && TextUtils.isEmpty(imageToken) && TextUtils.isEmpty(imagePath.toString())) {
+            throw new RuntimeException("upload parameter is null!");
+        }
+        File imageFile = new File(imagePath.getPath());
+
+        if (this.uploadManager == null) {
+            this.uploadManager = new UploadManager();
+        }
+        this.uploadManager.put(imageFile, null, imageToken, new UpCompletionHandler() {
+
+            @Override
+            public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {
+                if (responseInfo.isOK()) {
+                    try {
+                        String key = (String) jsonObject.get("key");
+                        imageUrl = "http://" + domain + "/" + key;
+                        Log.e("uploadImage", imageUrl);
+                        if (!TextUtils.isEmpty(imageUrl)) {
+                            request(UPDATEGROUPHEADER);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, null);
+    }
+
+    private void initViews() {
+        messageTop = (SwitchButton) findViewById(R.id.sw_group_top);
+        messageNotif = (SwitchButton) findViewById(R.id.sw_group_notfaction);
+        messageTop.setOnCheckedChangeListener(this);
+        messageNotif.setOnCheckedChangeListener(this);
+        groupClean = (LinearLayout) findViewById(R.id.group_clean);
+        gridview = (DemoGridView) findViewById(R.id.gridview);
+        mTextViewMemberSize = (TextView) findViewById(R.id.group_member_size);
+        mGroupHeader = (SelectableRoundedImageView) findViewById(R.id.group_header);
+        mGroupDisplayName = (LinearLayout) findViewById(R.id.group_displayname);
+        mGroupDisplayNameText = (TextView) findViewById(R.id.group_displayname_text);
+        mGroupName = (TextView) findViewById(R.id.group_name);
+        mQuitBtn = (Button) findViewById(R.id.group_quit);
+        mDismissBtn = (Button) findViewById(R.id.group_dismiss);
+        totalGroupMember = (RelativeLayout) findViewById(R.id.group_member_size_item);
+        mGroupPortL = (LinearLayout) findViewById(R.id.ll_group_port);
+        mGroupNameL = (LinearLayout) findViewById(R.id.ll_group_name);
+        mGroupPortL.setOnClickListener(this);
+        mGroupNameL.setOnClickListener(this);
+        totalGroupMember.setOnClickListener(this);
+        mGroupDisplayName.setOnClickListener(this);
+        mQuitBtn.setOnClickListener(this);
+        mDismissBtn.setOnClickListener(this);
+        groupClean.setOnClickListener(this);
     }
 }

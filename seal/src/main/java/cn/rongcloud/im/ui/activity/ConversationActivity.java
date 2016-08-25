@@ -40,8 +40,8 @@ import cn.rongcloud.im.model.RongEvent;
 import cn.rongcloud.im.server.network.http.HttpException;
 import cn.rongcloud.im.server.response.GetUserInfoByIdResponse;
 import cn.rongcloud.im.server.utils.NLog;
+import cn.rongcloud.im.server.utils.NToast;
 import cn.rongcloud.im.ui.widget.LoadingDialog;
-import cn.rongcloud.im.ui.widget.WinToast;
 import cn.rongcloud.im.utils.Constants;
 import io.rong.eventbus.EventBus;
 //CallKit start 1
@@ -343,7 +343,12 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
                 if (mDialog != null && !mDialog.isShowing()) {
                     mDialog.show();
                 }
-                enterActivity();
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        enterActivity();
+                    }
+                }, 300);
             } else {
                 enterFragment(mConversationType, mTargetId);
             }
@@ -588,7 +593,11 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.de_conversation_menu, menu);
+        if (mConversationType.equals(Conversation.ConversationType.GROUP)) {
+            inflater.inflate(R.menu.group_conversation_menu, menu);
+        } else {
+            inflater.inflate(R.menu.private_conversation_menu, menu);
+        }
 
         if (mConversationType == null)
             return true;
@@ -645,7 +654,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             mTargetId = fragment.getUri().getQueryParameter("targetId");
 
             if (TextUtils.isEmpty(mTargetId)) {
-                WinToast.toast(ConversationActivity.this, "讨论组尚未创建成功");
+                NToast.shortToast(mContext, "讨论组尚未创建成功");
             }
 
 
@@ -662,7 +671,7 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
             }
             intent.putExtra("TargetId", mTargetId);
             if (intent != null) {
-                startActivity(intent);
+                startActivityForResult(intent, 500);
             }
 
         }
@@ -687,6 +696,8 @@ public class ConversationActivity extends BaseActivity implements RongIMClient.R
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
+        } else if (resultCode == 501) {
+            finish();
         }
     }
 
